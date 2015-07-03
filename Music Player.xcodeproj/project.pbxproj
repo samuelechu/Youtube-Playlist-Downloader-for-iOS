@@ -9,11 +9,15 @@
 /* Begin PBXBuildFile section */
 		22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDA1B47212F00C075FF /* AppDelegate.swift */; };
 		22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDC1B47212F00C075FF /* Music_Player.xcdatamodeld */; };
-		22433FE01B47212F00C075FF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDF1B47212F00C075FF /* ViewController.swift */; };
 		22433FE31B47212F00C075FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE11B47212F00C075FF /* Main.storyboard */; };
 		22433FE51B47212F00C075FF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE41B47212F00C075FF /* Images.xcassets */; };
 		22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE61B47212F00C075FF /* LaunchScreen.xib */; };
 		22433FF41B47212F00C075FF /* Music_PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22433FF31B47212F00C075FF /* Music_PlayerTests.swift */; };
+		22433FFE1B47214400C075FF /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22433FFD1B47214400C075FF /* Entitlements.plist */; };
+		224340001B47248600C075FF /* launchScreen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22433FFF1B47248600C075FF /* launchScreen.jpg */; };
+		224340021B47253C00C075FF /* IDInputvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340011B47253C00C075FF /* IDInputvc.swift */; };
+		224340041B47260500C075FF /* downloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340031B47260500C075FF /* downloadCell.swift */; };
+		224340061B47266F00C075FF /* downloadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340051B47266F00C075FF /* downloadTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,13 +35,17 @@
 		22433FD91B47212F00C075FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22433FDA1B47212F00C075FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22433FDD1B47212F00C075FF /* Music_Player.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Music_Player.xcdatamodel; sourceTree = "<group>"; };
-		22433FDF1B47212F00C075FF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		22433FE21B47212F00C075FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		22433FE41B47212F00C075FF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		22433FE71B47212F00C075FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		22433FED1B47212F00C075FF /* Music PlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Music PlayerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22433FF21B47212F00C075FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22433FF31B47212F00C075FF /* Music_PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music_PlayerTests.swift; sourceTree = "<group>"; };
+		22433FFD1B47214400C075FF /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		22433FFF1B47248600C075FF /* launchScreen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = launchScreen.jpg; sourceTree = "<group>"; };
+		224340011B47253C00C075FF /* IDInputvc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDInputvc.swift; sourceTree = "<group>"; };
+		224340031B47260500C075FF /* downloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = downloadCell.swift; sourceTree = "<group>"; };
+		224340051B47266F00C075FF /* downloadTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = downloadTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +69,7 @@
 		22433FCC1B47212F00C075FF = {
 			isa = PBXGroup;
 			children = (
+				22433FFD1B47214400C075FF /* Entitlements.plist */,
 				22433FD71B47212F00C075FF /* Music Player */,
 				22433FF01B47212F00C075FF /* Music PlayerTests */,
 				22433FD61B47212F00C075FF /* Products */,
@@ -80,7 +89,9 @@
 			isa = PBXGroup;
 			children = (
 				22433FDA1B47212F00C075FF /* AppDelegate.swift */,
-				22433FDF1B47212F00C075FF /* ViewController.swift */,
+				224340031B47260500C075FF /* downloadCell.swift */,
+				224340051B47266F00C075FF /* downloadTableViewController.swift */,
+				224340011B47253C00C075FF /* IDInputvc.swift */,
 				22433FE11B47212F00C075FF /* Main.storyboard */,
 				22433FE41B47212F00C075FF /* Images.xcassets */,
 				22433FE61B47212F00C075FF /* LaunchScreen.xib */,
@@ -93,6 +104,7 @@
 		22433FD81B47212F00C075FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				22433FFF1B47248600C075FF /* launchScreen.jpg */,
 				22433FD91B47212F00C075FF /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -195,7 +207,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22433FFE1B47214400C075FF /* Entitlements.plist in Resources */,
 				22433FE31B47212F00C075FF /* Main.storyboard in Resources */,
+				224340001B47248600C075FF /* launchScreen.jpg in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,
 				22433FE51B47212F00C075FF /* Images.xcassets in Resources */,
 			);
@@ -215,9 +229,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22433FE01B47212F00C075FF /* ViewController.swift in Sources */,
 				22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */,
+				224340041B47260500C075FF /* downloadCell.swift in Sources */,
+				224340021B47253C00C075FF /* IDInputvc.swift in Sources */,
 				22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */,
+				224340061B47266F00C075FF /* downloadTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,7 +292,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -295,7 +313,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -321,7 +339,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -334,7 +354,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

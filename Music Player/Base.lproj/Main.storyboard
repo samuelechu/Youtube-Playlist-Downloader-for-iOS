@@ -1,25 +1,163 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nfX-Dt-vOK">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Tab Bar Controller-->
+        <scene sceneID="xQf-uU-QuQ">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                <tabBarController id="nfX-Dt-vOK" sceneMemberID="viewController">
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="fEX-lI-NPM">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="cw8-fW-WoJ" kind="relationship" relationship="viewControllers" id="etV-Uq-TER"/>
+                        <segue destination="Q5m-0J-m7K" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
+                        <segue destination="RN9-eJ-w8W" kind="relationship" relationship="viewControllers" id="ZYn-q5-lOB"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CIm-3j-r0c" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-436" y="64"/>
+        </scene>
+        <!--Playlist-->
+        <scene sceneID="Tuw-A7-pj9">
+            <objects>
+                <tableViewController id="RN9-eJ-w8W" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="dUW-me-ORu">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="eSf-rQ-8SL">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eSf-rQ-8SL" id="ZEx-m4-fC0">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="RN9-eJ-w8W" id="V0b-Ma-Q9T"/>
+                            <outlet property="delegate" destination="RN9-eJ-w8W" id="dR7-6S-gZm"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Playlist" id="Xi9-TY-fxQ"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mLi-Tm-Pjo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-542" y="849"/>
+        </scene>
+        <!--Input-->
+        <scene sceneID="9c3-vF-bII">
+            <objects>
+                <viewController id="cw8-fW-WoJ" customClass="IDInputvc" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zCL-q7-0XR"/>
+                        <viewControllerLayoutGuide type="bottom" id="cY3-W4-pNj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="o9l-Qg-wlM">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
+                                <rect key="frame" x="204" y="148" width="193" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="193" id="unc-Ub-Ik8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
+                                <rect key="frame" x="266" y="210" width="69" height="30"/>
+                                <state key="normal" title="Download">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wlm-Nq-0uC">
+                                <rect key="frame" x="261" y="91" width="78" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="78" id="auB-gy-1lu"/>
+                                </constraints>
+                                <state key="normal" title="add cell">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addCell" destination="cw8-fW-WoJ" eventType="touchUpInside" id="O20-2m-A6q"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="M2e-Dk-Jnd"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="128" id="RgN-yD-jdB"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="wlm-Nq-0uC" secondAttribute="bottom" constant="27" id="TFo-cw-2UN"/>
+                            <constraint firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Uaf-Sd-SlS"/>
+                            <constraint firstItem="wlm-Nq-0uC" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="aqe-cB-UY3"/>
+                            <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="epL-F7-ays"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Input" id="WfG-U5-38c"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mln-Y5-uMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="320" y="-141"/>
+        </scene>
+        <!--Downloads-->
+        <scene sceneID="a3i-cY-CRc">
+            <objects>
+                <tableViewController id="Q5m-0J-m7K" customClass="downloadTableViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="82" sectionHeaderHeight="10" sectionFooterHeight="10" id="qAB-vY-kLg">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="downloadCell" rowHeight="82" id="iz5-FC-6Ux" customClass="downloadCell" customModule="Music_Player" customModuleProvider="target">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iz5-FC-6Ux" id="bSb-QP-qxp">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRX-qw-41Q">
+                                            <rect key="frame" x="13" y="8" width="162" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="162" id="488-W8-1VT"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jid-D2-xA4">
+                                            <rect key="frame" x="37" y="40" width="526" height="2"/>
+                                        </progressView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="tRX-qw-41Q" firstAttribute="top" secondItem="bSb-QP-qxp" secondAttribute="topMargin" id="EWT-rP-rn8"/>
+                                        <constraint firstItem="jid-D2-xA4" firstAttribute="leading" secondItem="bSb-QP-qxp" secondAttribute="leadingMargin" constant="29" id="R6C-3z-cDS"/>
+                                        <constraint firstAttribute="centerX" secondItem="jid-D2-xA4" secondAttribute="centerX" id="TPs-mi-v6h"/>
+                                        <constraint firstItem="tRX-qw-41Q" firstAttribute="leading" secondItem="bSb-QP-qxp" secondAttribute="leadingMargin" constant="5" id="cpx-fF-kNd"/>
+                                        <constraint firstItem="jid-D2-xA4" firstAttribute="top" secondItem="tRX-qw-41Q" secondAttribute="bottom" constant="11" id="qMj-xt-oyh"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="downloadLabel" destination="tRX-qw-41Q" id="akq-7r-SOe"/>
+                                    <outlet property="progressBar" destination="jid-D2-xA4" id="O7K-WM-7cg"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Q5m-0J-m7K" id="qaO-6W-bjG"/>
+                            <outlet property="delegate" destination="Q5m-0J-m7K" id="exP-GN-5li"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Downloads" id="Hcz-Mg-jfW"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="327" y="526"/>
         </scene>
     </scenes>
 </document>
