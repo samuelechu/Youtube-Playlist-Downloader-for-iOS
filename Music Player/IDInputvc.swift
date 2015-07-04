@@ -7,20 +7,43 @@
 //
 
 import UIKit
+import CoreData
 
 class IDInputvc: UIViewController {
 
     @IBOutlet var vidID: UITextField!
     var numDownloads = 0
+    var appDel : AppDelegate?
+    var context : NSManagedObjectContext!
+    var vidQual : NSManagedObject!
     
-    override func viewDidAppear(animated: Bool) {
+    
+    override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
         var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
+        
+        self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        self.context = appDel!.managedObjectContext
+        
+        //set initial quality to 360P
+        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        if results.count == 0 {
+            vidQual = NSEntityDescription.insertNewObjectForEntityForName("VidQualitySelection", inManagedObjectContext: context) as! NSManagedObject
+            
+            vidQual.setValue(1, forKey: "quality")
+            
+        }
+        
+
+        
+        
         // Do any additional setup after loading the view.
     }
 
@@ -51,7 +74,10 @@ class IDInputvc: UIViewController {
 
     @IBAction func startDownloadTask() {
         var ID = vidID.text
-        
+        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        vidQual = results[0] as! NSManagedObject
+        var qual = vidQual.valueForKey("quality") as! Int
         
         
         
@@ -59,8 +85,16 @@ class IDInputvc: UIViewController {
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
             
             var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-            var desiredURL : NSURL = (streamURLs[18] != nil ? streamURLs[18] : streamURLs[22]) as! NSURL //140 audio only
-            println(desiredURL)
+            
+            var desiredURL : NSURL!
+            
+            if (qual == 1){ //360P
+                desiredURL = (streamURLs[18] != nil ? streamURLs[18] : streamURLs[22]) as! NSURL //140 audio only
+            }
+            
+            else {
+                desiredURL = (streamURLs[22] != nil ? streamURLs[22] : streamURLs[18]) as! NSURL
+            }
             
             var dlObject = dataDownloadObject(coder: NSCoder())
             

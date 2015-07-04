@@ -77,6 +77,7 @@ class downloadTableViewController: UITableViewController {
         cell.downloadLabel.text = "Download \(row)"
         cell.progressBar.progress = progressValues[indexPath.row]
         
+        if cell.progressBar.progress == 1.0 { cell.accessoryType = UITableViewCellAccessoryType.Checkmark}
         // Configure the cell...
 
         return cell
