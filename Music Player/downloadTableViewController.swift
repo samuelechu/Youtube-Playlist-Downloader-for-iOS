@@ -20,7 +20,6 @@ class downloadTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addCell:", name: "addNewCell", object: nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setProgressValue:", name: "setProgressValueID", object: nil)

@@ -19,6 +19,7 @@ class VidQualityvc: UITableViewController {
     
     
     override func viewDidAppear(animated: Bool) {
+        
         self.tableView.selectRowAtIndexPath(selectedRow, animated: false, scrollPosition: UITableViewScrollPosition.None)
     }
     

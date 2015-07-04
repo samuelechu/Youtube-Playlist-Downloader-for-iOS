@@ -31,7 +31,7 @@
             <objects>
                 <tableViewController id="RN9-eJ-w8W" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="dUW-me-ORu">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
@@ -94,6 +94,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="settingsPressed" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Z1k-5G-fZ5"/>
                                     <segue destination="247-Kv-uP9" kind="show" id="pxe-XN-McV"/>
                                 </connections>
                             </button>
@@ -225,7 +226,6 @@
         <!--Input-->
         <scene sceneID="Zji-5K-8iq">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NFP-XV-guN" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="gGG-YT-4yL" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Input" id="WfG-U5-38c"/>
                     <toolbarItems/>
@@ -241,6 +241,7 @@
                         <segue destination="nfX-Dt-vOK" kind="relationship" relationship="rootViewController" id="M3h-bW-Yli"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NFP-XV-guN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1184" y="64"/>
         </scene>

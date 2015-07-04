@@ -13,9 +13,12 @@ class IDInputvc: UIViewController {
     @IBOutlet var vidID: UITextField!
     var numDownloads = 0
     
+    override func viewDidAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationController?.navigationBarHidden = true
         var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         // Do any additional setup after loading the view.
@@ -27,9 +30,17 @@ class IDInputvc: UIViewController {
     }
     
     
+    
+    
     @IBAction func finishedEditing() {
         view.endEditing(true)
     }
+    
+    @IBAction func settingsPressed() {
+        self.navigationController?.navigationBarHidden = false
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
