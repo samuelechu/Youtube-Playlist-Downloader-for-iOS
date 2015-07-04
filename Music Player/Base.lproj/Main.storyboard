@@ -5,10 +5,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Tab Bar Controller-->
+        <!--Root View-->
         <scene sceneID="xQf-uU-QuQ">
             <objects>
-                <tabBarController id="nfX-Dt-vOK" sceneMemberID="viewController">
+                <tabBarController id="nfX-Dt-vOK" customClass="rootView" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fEX-lI-NPM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
