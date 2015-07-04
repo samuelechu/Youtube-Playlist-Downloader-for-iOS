@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nfX-Dt-vOK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gGG-YT-4yL">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -9,6 +9,7 @@
         <scene sceneID="xQf-uU-QuQ">
             <objects>
                 <tabBarController id="nfX-Dt-vOK" customClass="rootView" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="1Mc-cb-5j5"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fEX-lI-NPM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -16,7 +17,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="cw8-fW-WoJ" kind="relationship" relationship="viewControllers" id="etV-Uq-TER"/>
+                        <segue destination="cw8-fW-WoJ" kind="relationship" relationship="viewControllers" id="Hfn-0X-QpX"/>
                         <segue destination="Q5m-0J-m7K" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
                         <segue destination="RN9-eJ-w8W" kind="relationship" relationship="viewControllers" id="ZYn-q5-lOB"/>
                     </connections>
@@ -64,7 +65,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
                                 <rect key="frame" x="204" y="148" width="193" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="193" id="unc-Ub-Ik8"/>
@@ -75,7 +76,7 @@
                                     <action selector="finishedEditing" destination="cw8-fW-WoJ" eventType="editingDidEndOnExit" id="IXL-N1-Jxk"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
                                 <rect key="frame" x="266" y="210" width="69" height="30"/>
                                 <state key="normal" title="Download">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -84,37 +85,90 @@
                                     <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wlm-Nq-0uC">
-                                <rect key="frame" x="261" y="91" width="78" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="re0-Pr-NEp">
+                                <rect key="frame" x="525" y="72" width="59" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="78" id="auB-gy-1lu"/>
+                                    <constraint firstAttribute="width" constant="59" id="4Ha-tq-Q1s"/>
                                 </constraints>
-                                <state key="normal" title="add cell">
+                                <state key="normal" title="Settings">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="addCell" destination="cw8-fW-WoJ" eventType="touchUpInside" id="O20-2m-A6q"/>
+                                    <segue destination="247-Kv-uP9" kind="show" id="pxe-XN-McV"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="re0-Pr-NEp" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="8" id="8x1-3u-pzD"/>
                             <constraint firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="M2e-Dk-Jnd"/>
                             <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="128" id="RgN-yD-jdB"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="wlm-Nq-0uC" secondAttribute="bottom" constant="27" id="TFo-cw-2UN"/>
                             <constraint firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Uaf-Sd-SlS"/>
-                            <constraint firstItem="wlm-Nq-0uC" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="aqe-cB-UY3"/>
+                            <constraint firstItem="re0-Pr-NEp" firstAttribute="trailing" secondItem="o9l-Qg-wlM" secondAttribute="trailingMargin" id="c1C-Ib-DVE"/>
                             <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="epL-F7-ays"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Input" id="WfG-U5-38c"/>
+                    <tabBarItem key="tabBarItem" title="Input" id="ryG-DJ-gJ8"/>
+                    <navigationItem key="navigationItem" id="5Co-qK-ktT"/>
                     <connections>
                         <outlet property="vidID" destination="xx7-RR-xRJ" id="Jph-gl-fuS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mln-Y5-uMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="320" y="-141"/>
+            <point key="canvasLocation" x="531" y="-149"/>
+        </scene>
+        <!--Vid Qualityvc-->
+        <scene sceneID="Cx5-fc-gfh">
+            <objects>
+                <tableViewController id="247-Kv-uP9" customClass="VidQualityvc" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ntR-iT-vga">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Video Quality" id="duV-1l-nqD">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="6Po-09-VHn">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Po-09-VHn" id="HKW-x5-Oie">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="720P" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z4S-Ci-UiN">
+                                                    <rect key="frame" x="8" y="11" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="ndc-hD-yt6">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ndc-hD-yt6" id="f8o-bd-pyR">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="360P" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="duV-Bb-9Ph">
+                                                    <rect key="frame" x="8" y="11" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="247-Kv-uP9" id="JVN-GR-LRP"/>
+                            <outlet property="delegate" destination="247-Kv-uP9" id="6HN-IB-kLX"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dAW-3B-MvP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1227" y="-149"/>
         </scene>
         <!--Downloads-->
         <scene sceneID="a3i-cY-CRc">
@@ -167,6 +221,28 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="327" y="526"/>
+        </scene>
+        <!--Input-->
+        <scene sceneID="Zji-5K-8iq">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NFP-XV-guN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="gGG-YT-4yL" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Input" id="WfG-U5-38c"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xRL-cs-cdb">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="huP-wS-3qx">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="nfX-Dt-vOK" kind="relationship" relationship="rootViewController" id="M3h-bW-Yli"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-1184" y="64"/>
         </scene>
     </scenes>
 </document>

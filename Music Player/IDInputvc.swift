@@ -36,11 +36,7 @@ class IDInputvc: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func addCell() {
-        NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
-        
-        
-    }
+    
 
     @IBAction func startDownloadTask() {
         var ID = vidID.text
