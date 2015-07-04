@@ -62,18 +62,18 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             let newData = NSData(bytes: pointer, length: range.length)
             self!.mutableData.appendData(newData)
             
-            
-            
             var taskProgress = Float(dataTask.countOfBytesReceived) / Float(dataTask.countOfBytesExpectedToReceive)
             
-            var dict = ["ndx" : self!.cellNum, "value" : taskProgress ]
-            
-           // NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil)
-            NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
-            
-            
+            dispatch_async(dispatch_get_main_queue(),{
+                
+                var dict = ["ndx" : self!.cellNum, "value" : taskProgress ]
+                
+                // NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
+                
+            })
             
         }
         
@@ -120,5 +120,5 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     
     
     
-   
+    
 }
