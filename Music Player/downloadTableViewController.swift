@@ -12,7 +12,7 @@ class downloadTableViewController: UITableViewController {
 
     var count : Int = 0
     
-    var progressValues : [Double] = []
+    var progressValues : [Float] = []
     
     override func viewWillAppear(animated: Bool) {
         self.tableView.reloadData()
@@ -22,6 +22,10 @@ class downloadTableViewController: UITableViewController {
         super.viewDidLoad()
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addCell:", name: "addNewCell", object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setProgressValue:", name: "setProgressValueID", object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCells:", name: "reloadCellsID", object: nil)
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
@@ -32,10 +36,24 @@ class downloadTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    func reloadCells(notification: NSNotification){
+        self.tableView.reloadData()
+    }
     
+    func setProgressValue(notification: NSNotification){
+        var dict : NSDictionary = notification.userInfo!
+        
+        var cellNum : Int? = dict.valueForKey("ndx")?.integerValue
+        var taskProgress : Float? = dict.valueForKey("value")?.floatValue
+        progressValues[cellNum!] = taskProgress!
+        
+        
+        
+    }
     
     func addCell(notification: NSNotification){
         count++
+        progressValues += [0.0]
         
     }
     // MARK: - Table view data source
@@ -58,6 +76,8 @@ class downloadTableViewController: UITableViewController {
         var row = indexPath.row
         
         cell.downloadLabel.text = "Download \(row)"
+        cell.progressBar.progress = progressValues[indexPath.row]
+        
         // Configure the cell...
 
         return cell

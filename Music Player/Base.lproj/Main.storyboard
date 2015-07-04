@@ -71,12 +71,18 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="finishedEditing" destination="cw8-fW-WoJ" eventType="editingDidEndOnExit" id="IXL-N1-Jxk"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
                                 <rect key="frame" x="266" y="210" width="69" height="30"/>
                                 <state key="normal" title="Download">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wlm-Nq-0uC">
                                 <rect key="frame" x="261" y="91" width="78" height="30"/>
@@ -102,6 +108,9 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Input" id="WfG-U5-38c"/>
+                    <connections>
+                        <outlet property="vidID" destination="xx7-RR-xRJ" id="Jph-gl-fuS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mln-Y5-uMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
