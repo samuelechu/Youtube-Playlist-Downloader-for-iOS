@@ -116,9 +116,9 @@
 			children = (
 				22433FDA1B47212F00C075FF /* AppDelegate.swift */,
 				224340071B472FB800C075FF /* dataDownloadObject.swift */,
-				22AD6B311B47BB7D00428602 /* VidQualityvc.swift */,
 				224340031B47260500C075FF /* downloadCell.swift */,
 				224340051B47266F00C075FF /* downloadTableViewController.swift */,
+				22AD6B311B47BB7D00428602 /* VidQualityvc.swift */,
 				224340011B47253C00C075FF /* IDInputvc.swift */,
 				2243400C1B476C5D00C075FF /* rootView.swift */,
 				22433FE11B47212F00C075FF /* Main.storyboard */,

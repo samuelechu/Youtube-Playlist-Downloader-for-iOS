@@ -80,7 +80,8 @@ class IDInputvc: UIViewController {
         var qual = vidQual.valueForKey("quality") as! Int
         
         
-        
+        NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
+        NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
         
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
             
@@ -103,7 +104,7 @@ class IDInputvc: UIViewController {
             dlObject.cellNum = self.numDownloads
             self.numDownloads++
             
-            NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
+           
             
             dlObject.setvidInfo(video)
             dlObject.startNewTask(desiredURL)

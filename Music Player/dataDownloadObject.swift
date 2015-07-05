@@ -50,7 +50,24 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         let task = session.dataTaskWithURL(targetUrl, completionHandler: nil)
         task.start()
         
+        var duration = stringFromTimeInterval(video.duration)
         
+        
+        
+        var dict = ["ndx" : cellNum, "name" : video.title, "duration" : duration]
+    
+        NSNotificationCenter.defaultCenter().postNotificationName("setDownloadInfoID", object: nil, userInfo: dict as [NSObject : AnyObject])
+        
+        
+    }
+    
+    //get duration of video
+    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
+        let interval = Int(interval)
+        let seconds = interval % 60
+        let minutes = (interval / 60) % 60
+        let hours = (interval / 3600)
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {

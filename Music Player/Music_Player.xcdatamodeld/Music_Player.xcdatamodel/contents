@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Songs" syncable="YES"/>
     <entity name="VidQualitySelection" syncable="YES">
         <attribute name="quality" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
         <element name="VidQualitySelection" positionX="-63" positionY="-18" width="128" height="60"/>
+        <element name="Songs" positionX="-63" positionY="-9" width="128" height="45"/>
     </elements>
 </model>

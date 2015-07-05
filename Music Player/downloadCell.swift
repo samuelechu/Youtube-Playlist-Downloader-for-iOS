@@ -10,6 +10,8 @@ import UIKit
 
 class downloadCell: UITableViewCell {
 
+    @IBOutlet var initializeIndicator: UIActivityIndicatorView!
+    @IBOutlet var durationLabel: UILabel!
     @IBOutlet var downloadLabel: UILabel!
     
     @IBOutlet var progressBar: UIProgressView!
