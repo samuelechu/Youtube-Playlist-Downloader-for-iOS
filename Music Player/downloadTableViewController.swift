@@ -97,8 +97,7 @@ class downloadTableViewController: UITableViewController {
         var row = indexPath.row
         
         //see if video info has been obtained
-        if vidDurations[indexPath.row] != "" {
-            cell.initializeIndicator.stopAnimating()
+        if vidDurations[indexPath.row] != "" && downloadNames[indexPath.row] != ""{
             cell.durationLabel.text = vidDurations[indexPath.row]
             cell.downloadLabel.text = downloadNames[indexPath.row]
             cell.progressBar.progress = progressValues[indexPath.row]
@@ -107,7 +106,6 @@ class downloadTableViewController: UITableViewController {
         else {
             cell.durationLabel.text = "00:00:00"
             cell.downloadLabel.text = "Initializing download..."
-            
         }
         
         

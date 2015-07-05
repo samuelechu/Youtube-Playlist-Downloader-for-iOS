@@ -204,15 +204,11 @@
                                             <nil key="highlightedColor"/>
                                             <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
                                         </label>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="cuS-ma-rzZ">
-                                            <rect key="frame" x="215" y="12" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="downloadLabel" destination="tRX-qw-41Q" id="akq-7r-SOe"/>
                                     <outlet property="durationLabel" destination="eV3-0C-JGk" id="M1f-5A-DaX"/>
-                                    <outlet property="initializeIndicator" destination="cuS-ma-rzZ" id="Uaj-bk-r7G"/>
                                     <outlet property="progressBar" destination="jid-D2-xA4" id="O7K-WM-7cg"/>
                                 </connections>
                             </tableViewCell>
