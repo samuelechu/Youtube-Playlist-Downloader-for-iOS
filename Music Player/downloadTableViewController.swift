@@ -39,6 +39,7 @@ class downloadTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    //update taskProgress of specific cell
     func setProgressValue(notification: NSNotification){
         var dict : NSDictionary = notification.userInfo!
         

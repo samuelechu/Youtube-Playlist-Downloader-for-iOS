@@ -37,7 +37,7 @@ class IDInputvc: UIViewController {
         if results.count == 0 {
             vidQual = NSEntityDescription.insertNewObjectForEntityForName("VidQualitySelection", inManagedObjectContext: context) as! NSManagedObject
             
-            vidQual.setValue(1, forKey: "quality")
+            vidQual.setValue(0, forKey: "quality")
             
         }
         
@@ -88,24 +88,27 @@ class IDInputvc: UIViewController {
             
             var desiredURL : NSURL!
             
-            if (qual == 1){ //360P
-                desiredURL = (streamURLs[18] != nil ? streamURLs[18] : streamURLs[22]) as! NSURL //140 audio only
+            if (qual == 0){ //360P
+                
+                desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
             }
             
-            else {
-                desiredURL = (streamURLs[22] != nil ? streamURLs[22] : streamURLs[18]) as! NSURL
+            else { //720P
+                desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
             }
             
             var dlObject = dataDownloadObject(coder: NSCoder())
             
+            //set object num on downloadTableView
             dlObject.cellNum = self.numDownloads
             self.numDownloads++
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
             
             dlObject.setvidInfo(video)
             dlObject.startNewTask(desiredURL)
             
             
-            NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
             
         })
     }
