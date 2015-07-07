@@ -105,8 +105,8 @@ class IDInputvc: UIViewController {
             
            
             
-            dlObject.addVidInfo(video)
-            dlObject.startNewTask(desiredURL)
+            self.dlObject.addVidInfo(video)
+            self.dlObject.startNewTask(desiredURL)
             
             
             

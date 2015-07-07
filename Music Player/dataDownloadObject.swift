@@ -17,7 +17,8 @@ extension NSURLSessionTask{
 
 class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     
-    var video : XCDYouTubeVideo!
+    var videoData : [XCDYouTubeVideo] = []
+    var curVid : XCDYouTubeVideo!
     var session : NSURLSession!
     var taskIDs : [Int] = []
     
@@ -34,9 +35,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     
     
     func addVidInfo(vid : XCDYouTubeVideo){
-        
-        video = vid
-        var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+        curVid = vid
+        videoData += [vid]
+        var streamURLs : NSDictionary = curVid.valueForKey("streamURLs") as! NSDictionary
         
     }
     
@@ -46,17 +47,18 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         
         taskIDs += [task.taskIdentifier]
         //let task = session.dataTaskWithURL(targetUrl, completionHandler: nil)
-        task.start()
         
-        var duration = stringFromTimeInterval(video.duration)
+        
+        var duration = stringFromTimeInterval(curVid.duration)
         
         var cellNum = find(taskIDs, task.taskIdentifier)
         
         
-        var dict = ["ndx" : cellNum!, "name" : video.title, "duration" : duration]
+        var dict = ["ndx" : cellNum!, "name" : curVid.title, "duration" : duration]
     
         NSNotificationCenter.defaultCenter().postNotificationName("setDownloadInfoID", object: nil, userInfo: dict as [NSObject : AnyObject])
         
+        task.start()
         
     }
     
@@ -89,7 +91,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 // NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil)
                 NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
                 
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
                 
             })
             

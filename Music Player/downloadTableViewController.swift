@@ -30,7 +30,7 @@ class downloadTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setDownloadInfo:", name: "setDownloadInfoID", object: nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCells:", name: "reloadCellsID", object: nil)
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCellAtNdx:", name: "reloadCellAtNdxID", object: nil)
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
@@ -43,6 +43,17 @@ class downloadTableViewController: UITableViewController {
     func reloadCells(notification: NSNotification){
         self.tableView.reloadData()
     }
+    
+    
+    func reloadCellAtNdx(notification: NSNotification){
+        var dict : NSDictionary = notification.userInfo!
+        
+        var rowNumber : Int? = dict.valueForKey("ndx")?.integerValue
+        var indexPath = NSIndexPath(forRow: rowNumber!, inSection: 0)
+        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+    }
+
+    
     
     //update taskProgress of specific cell
     func setProgressValue(notification: NSNotification){
