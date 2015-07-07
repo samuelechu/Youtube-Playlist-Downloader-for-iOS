@@ -16,7 +16,7 @@ class IDInputvc: UIViewController {
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     var vidQual : NSManagedObject!
-    
+    var dlObject = dataDownloadObject(coder: NSCoder())
     
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
@@ -31,7 +31,7 @@ class IDInputvc: UIViewController {
         self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         self.context = appDel!.managedObjectContext
         
-        //set initial quality to 360P
+        //set initial quality to 360P if uninitialized
         var request = NSFetchRequest(entityName: "VidQualitySelection")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         if results.count == 0 {
@@ -98,15 +98,14 @@ class IDInputvc: UIViewController {
                 desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
             }
             
-            var dlObject = dataDownloadObject(coder: NSCoder())
             
             //set object num on downloadTableView
-            dlObject.cellNum = self.numDownloads
-            self.numDownloads++
+            //dlObject.cellNum = self.numDownloads
+            //self.numDownloads++
             
            
             
-            dlObject.setvidInfo(video)
+            dlObject.addVidInfo(video)
             dlObject.startNewTask(desiredURL)
             
             
