@@ -80,9 +80,6 @@ class IDInputvc: UIViewController {
         var qual = vidQual.valueForKey("quality") as! Int
         
         
-        NSNotificationCenter.defaultCenter().postNotificationName("addNewCell", object: nil)
-        NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
-        
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
             
             var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
@@ -98,10 +95,17 @@ class IDInputvc: UIViewController {
                 desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
             }
             
+            var duration = self.stringFromTimeInterval(video.duration)
             
             //set object num on downloadTableView
             //dlObject.cellNum = self.numDownloads
             //self.numDownloads++
+            var dict = ["name" : video.title, "duration" : duration]
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil, userInfo : dict as [NSObject : AnyObject])
+            
             
            
             
@@ -115,9 +119,13 @@ class IDInputvc: UIViewController {
     
     
     
-    
-    
-    
+    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
+        let interval = Int(interval)
+        let seconds = interval % 60
+        let minutes = (interval / 60) % 60
+        let hours = (interval / 3600)
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
     
     
     

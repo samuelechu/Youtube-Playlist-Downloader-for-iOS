@@ -49,7 +49,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         //let task = session.dataTaskWithURL(targetUrl, completionHandler: nil)
         
         
-        var duration = stringFromTimeInterval(curVid.duration)
+        /*var duration = stringFromTimeInterval(curVid.duration)
         
         var cellNum = find(taskIDs, task.taskIdentifier)
         
@@ -57,6 +57,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         var dict = ["ndx" : cellNum!, "name" : curVid.title, "duration" : duration]
     
         NSNotificationCenter.defaultCenter().postNotificationName("setDownloadInfoID", object: nil, userInfo: dict as [NSObject : AnyObject])
+        
+         NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])*/
         
         task.start()
         
@@ -99,16 +101,20 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             
     }
     
-    func URLSession(session: NSURLSession,downloadTask: NSURLSessionDownloadTask,
+    /*func URLSession(session: NSURLSession,downloadTask: NSURLSessionDownloadTask,
         didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64){
             
-    }
+    }*/
     
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
             
+            var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
+            var dict = ["ndx" : cellNum!, "value" : 1.0 ]
             
+            NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+
             var fileData : NSData = NSData(contentsOfURL: location)!
             var fileURL : NSURL = grabFileURL("narsha.mp4")
             fileData.writeToURL(fileURL, atomically: true)
@@ -116,33 +122,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             
          
     }
-    
-    
-    
-    /*func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        
-        data.enumerateByteRangesUsingBlock{[weak self](pointer : UnsafePointer<()>,
-            range: NSRange,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            
-            let newData = NSData(bytes: pointer, length: range.length)
-            self!.mutableData.appendData(newData)
-            
-            var taskProgress = Float(dataTask.countOfBytesReceived) / Float(dataTask.countOfBytesExpectedToReceive)
-            
-            dispatch_async(dispatch_get_main_queue(),{
-                
-                var dict = ["ndx" : self!.cellNum, "value" : taskProgress ]
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil)
-                
-            })
-            
-        }
-        
-    }*/
     
     func grabFileURL(fileName : String) -> NSURL {
         var url : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
@@ -153,23 +132,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         
     }
     
-    
-    /*
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-        
-        
-        
-        session.finishTasksAndInvalidate()
-        
-        if error == nil {
-            
-            var fileURL : NSURL = grabFileURL("narsha.mp4")
-            mutableData.writeToURL(fileURL, atomically: true)
-            UISaveVideoAtPathToSavedPhotosAlbum(fileURL.path, nil, nil, nil)
-            
-        }
-    }*/
-    
+
     
 
     
