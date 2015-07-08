@@ -16,6 +16,7 @@ extension NSURLSessionTask{
 }
 
 class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
+
     
     var videoData : [XCDYouTubeVideo] = []
     var curVid : XCDYouTubeVideo!
@@ -112,8 +113,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             
             var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
             var dict = ["ndx" : cellNum!, "value" : 1.0 ]
-            
             NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            NSNotificationCenter.defaultCenter().postNotificationName("checkmarkAtNdxID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            
 
             var fileData : NSData = NSData(contentsOfURL: location)!
             var fileURL : NSURL = grabFileURL("narsha.mp4")
