@@ -21,6 +21,7 @@
 		2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */; };
 		2243400D1B476C5D00C075FF /* rootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2243400C1B476C5D00C075FF /* rootView.swift */; };
 		22AD6B321B47BB7D00428602 /* VidQualityvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* VidQualityvc.swift */; };
+		22CE41931B4DBD0400C4BD58 /* transparent-green-checkmark-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = 22CE41921B4DBD0400C4BD58 /* transparent-green-checkmark-hi.png */; };
 		A5699A3ACFF0C478FCB5F30C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 227B696C556F69040FDCBAB7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		2243400C1B476C5D00C075FF /* rootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rootView.swift; sourceTree = "<group>"; };
 		227B696C556F69040FDCBAB7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		22AD6B311B47BB7D00428602 /* VidQualityvc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VidQualityvc.swift; sourceTree = "<group>"; };
+		22CE41921B4DBD0400C4BD58 /* transparent-green-checkmark-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transparent-green-checkmark-hi.png"; sourceTree = "<group>"; };
 		F21E113ABCDB957DFAD2D41E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F5EB519E79CB1AE21C1131B5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -135,6 +137,7 @@
 			children = (
 				22433FFF1B47248600C075FF /* launchScreen.jpg */,
 				22433FD91B47212F00C075FF /* Info.plist */,
+				22CE41921B4DBD0400C4BD58 /* transparent-green-checkmark-hi.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				224340001B47248600C075FF /* launchScreen.jpg in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,
 				22433FE51B47212F00C075FF /* Images.xcassets in Resources */,
+				22CE41931B4DBD0400C4BD58 /* transparent-green-checkmark-hi.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

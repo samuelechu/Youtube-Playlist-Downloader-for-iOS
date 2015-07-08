@@ -194,7 +194,7 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="launchScreen.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="DWx-lP-gjn">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DWx-lP-gjn">
                                             <rect key="frame" x="8" y="11" width="90" height="60"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eV3-0C-JGk">
@@ -209,6 +209,7 @@
                                 <connections>
                                     <outlet property="downloadLabel" destination="tRX-qw-41Q" id="akq-7r-SOe"/>
                                     <outlet property="durationLabel" destination="eV3-0C-JGk" id="M1f-5A-DaX"/>
+                                    <outlet property="imageLabel" destination="DWx-lP-gjn" id="0Im-5R-irR"/>
                                     <outlet property="progressBar" destination="jid-D2-xA4" id="O7K-WM-7cg"/>
                                 </connections>
                             </tableViewCell>
@@ -247,7 +248,4 @@
             <point key="canvasLocation" x="-1184" y="64"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="launchScreen.jpg" width="1800" height="1200"/>
-    </resources>
 </document>

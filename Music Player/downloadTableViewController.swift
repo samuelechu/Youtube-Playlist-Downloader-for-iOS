@@ -18,6 +18,8 @@ class downloadTableViewController: UITableViewController {
     
     var vidDurations : [String] = []
     
+    var images : [UIImage] = []
+    
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
         self.tableView.reloadData()
@@ -33,7 +35,7 @@ class downloadTableViewController: UITableViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCells:", name: "reloadCellsID", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCellAtNdx:", name: "reloadCellAtNdxID", object: nil)
         
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: "checkmarkAtNdx:", name: "checkmarkAtNdxID", object: nil)
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
@@ -42,24 +44,6 @@ class downloadTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
-    func checkmarkAtNdx(notification: NSNotification){
-        var dict : NSDictionary = notification.userInfo!
-        
-        var rowNumber : Int? = dict.valueForKey("ndx")?.integerValue
-        var indexPath = NSIndexPath(forRow: rowNumber!, inSection: 0)
-        
-        println(rowNumber)
-        self.tableView.cellForRowAtIndexPath(indexPath)!.accessoryType = UITableViewCellAccessoryType.Checkmark
-        
-        
-        
-        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        
-    }
-    
-    
     
     func reloadCells(notification: NSNotification){
         self.tableView.reloadData()
@@ -71,16 +55,10 @@ class downloadTableViewController: UITableViewController {
         
         var rowNumber : Int? = dict.valueForKey("ndx")?.integerValue
         var indexPath = NSIndexPath(forRow: rowNumber!, inSection: 0)
-        
-        
-       // if progressValues[rowNumber!] == 1.0 { tableView.cellForRowAtIndexPath(indexPath)!.accessoryType = UITableViewCellAccessoryType.Checkmark}
-        
-        
-        
         self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         
     }
-
+    
     
     
     //update taskProgress of specific cell
@@ -95,19 +73,7 @@ class downloadTableViewController: UITableViewController {
         
     }
     
-    func setDownloadInfo(notification: NSNotification){
-        var dict : NSDictionary = notification.userInfo!
-        
-        var cellNum : Int? = dict.valueForKey("ndx")?.integerValue
-        var cellName : String? = dict.valueForKey("name") as? String
-        var vidDur : String? = dict.valueForKey("duration") as? String
-        downloadNames[cellNum!] = cellName!
-        vidDurations[cellNum!] = vidDur!
-        
-        
-        
-        
-    }
+    
     
     func addCell(notification: NSNotification){
         
@@ -116,14 +82,17 @@ class downloadTableViewController: UITableViewController {
         
         var cellName : String? = dict.valueForKey("name") as? String
         var vidDur : String? = dict.valueForKey("duration") as? String
+        
+        var url = dict.valueForKey("thumbnail") as? NSURL
+        let data = NSData(contentsOfURL: url!)
+        var thumbnail = UIImage(data: data!)
+        
+        
         count++
         progressValues += [0.0]
         downloadNames += [cellName!]
         vidDurations += [vidDur!]
-        
-        
-        
-        
+        images += [thumbnail!]
     }
     // MARK: - Table view data source
     
@@ -145,35 +114,28 @@ class downloadTableViewController: UITableViewController {
         var row = indexPath.row
         
         
-        
         cell.progressBar.progress = progressValues[indexPath.row]
-        //see if video info has been obtained
-        /*if cell.progressBar.progress == 0.0 {
-            cell.durationLabel.text = "00:00:00"
-            cell.downloadLabel.text = "Initializing download..."
-        }*/
-            println(progressValues)
+        println(progressValues)
         
+        
+        if(cell.imageLabel.image == nil){
+            cell.imageLabel?.image = images[indexPath.row]
             cell.durationLabel.text = vidDurations[indexPath.row]
             cell.downloadLabel.text = downloadNames[indexPath.row]
-            //if progressValues[indexPath.row] == 1.0 { cell.accessoryType = UITableViewCellAccessoryType.Checkmark}
-        if progressValues[indexPath.row] == 1.0 {
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         }
-        
         
         // Configure the cell...
         
         return cell
     }
-
-
- 
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 

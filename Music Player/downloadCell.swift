@@ -12,7 +12,7 @@ class downloadCell: UITableViewCell {
 
     @IBOutlet var durationLabel: UILabel!
     @IBOutlet var downloadLabel: UILabel!
-    
+    @IBOutlet var imageLabel: UIImageView!
     @IBOutlet var progressBar: UIProgressView!
     
     
