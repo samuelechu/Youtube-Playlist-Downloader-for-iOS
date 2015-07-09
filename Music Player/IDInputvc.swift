@@ -89,7 +89,7 @@ class IDInputvc: UIViewController {
             return
         }
         
-        var isStored =  vidStored("ID")
+        var isStored =  vidStored(ID)
         
         if (!isStored){
             var request = NSFetchRequest(entityName: "VidQualitySelection")

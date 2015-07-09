@@ -8,6 +8,8 @@
 
 import UIKit
 import Foundation
+import CoreData
+
 
 extension NSURLSessionTask{
     func start() {
@@ -17,7 +19,8 @@ extension NSURLSessionTask{
 
 class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     
-    
+    var appDel : AppDelegate?
+    var context : NSManagedObjectContext!
     var videoData : [XCDYouTubeVideo] = []
     var curVid : XCDYouTubeVideo!
     var session : NSURLSession!
@@ -27,6 +30,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         super.init()
         
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("bgSession")
+        
+        self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        self.context = appDel!.managedObjectContext
         
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
@@ -93,14 +99,33 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
             
-            var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
-            var identifier = videoData[cellNum!].identifier
+            var ndx = find(self.taskIDs, downloadTask.taskIdentifier)
+            var identifier = videoData[ndx!].identifier
             
             
             var fileData : NSData = NSData(contentsOfURL: location)!
             var fileURL : NSURL = grabFileURL("\(identifier).mp4")
             fileData.writeToURL(fileURL, atomically: true)
             UISaveVideoAtPathToSavedPhotosAlbum(fileURL.path, nil, nil, nil)
+            
+            
+            
+            
+            var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
+            
+            
+            
+            newSong.setValue("\(identifier)", forKey: "identifier")
+            newSong.setValue("\(fileURL)", forKey: "location")
+            newSong.setValue("\(videoData[ndx!].title)", forKey: "title")
+            println(newSong)
+            
+            
+            
+            context.save(nil)
+            
+            
+            
             
             
     }

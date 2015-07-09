@@ -19,39 +19,73 @@
                     <connections>
                         <segue destination="cw8-fW-WoJ" kind="relationship" relationship="viewControllers" id="Hfn-0X-QpX"/>
                         <segue destination="Q5m-0J-m7K" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
-                        <segue destination="RN9-eJ-w8W" kind="relationship" relationship="viewControllers" id="ZYn-q5-lOB"/>
+                        <segue destination="ubE-bd-f61" kind="relationship" relationship="viewControllers" id="1Ww-AC-afH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CIm-3j-r0c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-436" y="64"/>
         </scene>
-        <!--Playlist-->
-        <scene sceneID="Tuw-A7-pj9">
+        <!--Item-->
+        <scene sceneID="Bs5-t8-wgl">
             <objects>
-                <tableViewController id="RN9-eJ-w8W" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="dUW-me-ORu">
-                        <rect key="frame" x="0.0" y="64" width="600" height="600"/>
+                <navigationController id="ubE-bd-f61" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="Tb4-hM-t6n"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ePf-MB-fgq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Mzs-fZ-jAu" kind="relationship" relationship="rootViewController" id="DtS-cy-3vj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DbF-Zc-jqv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-436" y="801"/>
+        </scene>
+        <!--Playlist-->
+        <scene sceneID="9Pk-jp-AAT">
+            <objects>
+                <tableViewController id="Mzs-fZ-jAu" customClass="Playlist" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="eSf-rQ-8SL">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SongCell" id="XSV-bR-vo6">
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eSf-rQ-8SL" id="ZEx-m4-fC0">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XSV-bR-vo6" id="Fam-nA-RUr">
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="0Af-T0-k7Q" kind="show" id="jFK-ws-g25"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="RN9-eJ-w8W" id="V0b-Ma-Q9T"/>
-                            <outlet property="delegate" destination="RN9-eJ-w8W" id="dR7-6S-gZm"/>
+                            <outlet property="dataSource" destination="Mzs-fZ-jAu" id="Dt6-mp-YfC"/>
+                            <outlet property="delegate" destination="Mzs-fZ-jAu" id="REU-mc-5Rd"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Playlist" id="Xi9-TY-fxQ"/>
+                    <navigationItem key="navigationItem" id="PNg-YJ-a3o">
+                        <barButtonItem key="rightBarButtonItem" title="Delete All" id="hni-sx-vGP">
+                            <connections>
+                                <action selector="deleteAll" destination="Mzs-fZ-jAu" id="45l-FG-jge"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mLi-Tm-Pjo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jhi-MA-fNU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-542" y="849"/>
+            <point key="canvasLocation" x="-436" y="1582"/>
+        </scene>
+        <!--AV Player View Controller-->
+        <scene sceneID="2B0-Yy-Frq">
+            <objects>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="0Af-T0-k7Q" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nIP-4b-37Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="321" y="1431"/>
         </scene>
         <!--Input-->
         <scene sceneID="9c3-vF-bII">
@@ -204,6 +238,12 @@
                                             <nil key="highlightedColor"/>
                                             <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DO1-Xq-Ach">
+                                            <rect key="frame" x="276" y="30" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
@@ -211,6 +251,7 @@
                                     <outlet property="durationLabel" destination="eV3-0C-JGk" id="M1f-5A-DaX"/>
                                     <outlet property="imageLabel" destination="DWx-lP-gjn" id="0Im-5R-irR"/>
                                     <outlet property="progressBar" destination="jid-D2-xA4" id="O7K-WM-7cg"/>
+                                    <outlet property="progressLabel" destination="DO1-Xq-Ach" id="ey2-D5-mO1"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

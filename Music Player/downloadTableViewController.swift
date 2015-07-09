@@ -115,6 +115,7 @@ class downloadTableViewController: UITableViewController {
         
         
         cell.progressBar.progress = progressValues[indexPath.row]
+        cell.progressLabel.text = "\(progressValues[indexPath.row])"
         println(progressValues)
         
         
