@@ -21,7 +21,7 @@ class downloadTableViewController: UITableViewController {
     var images : [UIImage] = []
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = true
+        //self.navigationController?.navigationBarHidden = falss
         self.tableView.reloadData()
     }
     
@@ -65,9 +65,9 @@ class downloadTableViewController: UITableViewController {
     func setProgressValue(notification: NSNotification){
         var dict : NSDictionary = notification.userInfo!
         
-        var cellNum : Int? = dict.valueForKey("ndx")?.integerValue
-        var taskProgress : Float? = dict.valueForKey("value")?.floatValue
-        progressValues[cellNum!] = taskProgress!
+        var cellNum : Int = dict.valueForKey("ndx")!.integerValue
+        var taskProgress : Float = dict.valueForKey("value")!.floatValue
+        progressValues[cellNum] = taskProgress
         
         
         
@@ -116,7 +116,6 @@ class downloadTableViewController: UITableViewController {
         
         cell.progressBar.progress = progressValues[indexPath.row]
         cell.progressLabel.text = "\(progressValues[indexPath.row])"
-        println(progressValues)
         
         
         if(cell.imageLabel.image == nil){

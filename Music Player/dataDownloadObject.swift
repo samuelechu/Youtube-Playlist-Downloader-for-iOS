@@ -77,8 +77,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 dispatch_async(dispatch_get_main_queue(),{
                     
                     
-                    var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
-                    var dict = ["ndx" : cellNum!, "value" : taskProgress ]
+                    var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)!
+                    var dict = ["ndx" : cellNum, "value" : taskProgress ]
                     
                     NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
                     
