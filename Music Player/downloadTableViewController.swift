@@ -21,7 +21,6 @@ class downloadTableViewController: UITableViewController {
     var images : [UIImage] = []
     
     override func viewWillAppear(animated: Bool) {
-        //self.navigationController?.navigationBarHidden = falss
         self.tableView.reloadData()
     }
     
@@ -53,8 +52,8 @@ class downloadTableViewController: UITableViewController {
     func reloadCellAtNdx(notification: NSNotification){
         var dict : NSDictionary = notification.userInfo!
         
-        var rowNumber : Int? = dict.valueForKey("ndx")?.integerValue
-        var indexPath = NSIndexPath(forRow: rowNumber!, inSection: 0)
+        var rowNumber : Int = dict.valueForKey("ndx")!.integerValue
+        var indexPath = NSIndexPath(forRow: rowNumber, inSection: 0)
         self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         
     }
@@ -80,18 +79,18 @@ class downloadTableViewController: UITableViewController {
         
         var dict : NSDictionary = notification.userInfo!
         
-        var cellName : String? = dict.valueForKey("name") as? String
-        var vidDur : String? = dict.valueForKey("duration") as? String
+        var cellName : String = dict.valueForKey("name") as! String
+        var vidDur : String = dict.valueForKey("duration") as! String
         
-        var url = dict.valueForKey("thumbnail") as? NSURL
-        let data = NSData(contentsOfURL: url!)
-        var thumbnail = UIImage(data: data!)
+        var url = dict.valueForKey("thumbnail") as! NSURL
+        let data = NSData(contentsOfURL: url)!
+        var thumbnail = UIImage(data: data)
         
         
         count++
         progressValues += [0.0]
-        downloadNames += [cellName!]
-        vidDurations += [vidDur!]
+        downloadNames += [cellName]
+        vidDurations += [vidDur]
         images += [thumbnail!]
     }
     // MARK: - Table view data source
@@ -119,7 +118,7 @@ class downloadTableViewController: UITableViewController {
         
         
         if(cell.imageLabel.image == nil){
-            cell.imageLabel?.image = images[indexPath.row]
+            cell.imageLabel.image = images[indexPath.row]
             cell.durationLabel.text = vidDurations[indexPath.row]
             cell.downloadLabel.text = downloadNames[indexPath.row]
         }

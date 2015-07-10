@@ -29,7 +29,6 @@ class Playlist: UITableViewController {
         var request = NSFetchRequest(entityName: "Songs")
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
-        self.navigationController?.navigationBarHidden = false
         self.tableView.reloadData()
     }
     
