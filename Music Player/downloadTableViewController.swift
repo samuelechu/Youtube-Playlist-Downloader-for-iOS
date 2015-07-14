@@ -27,7 +27,6 @@ class downloadTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addCell:", name: "addNewCellID", object: nil)
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setProgressValue:", name: "setProgressValueID", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setDownloadInfo:", name: "setDownloadInfoID", object: nil)
         
@@ -53,9 +52,10 @@ class downloadTableViewController: UITableViewController {
         var dict : NSDictionary = notification.userInfo!
         
         var rowNumber : Int = dict.valueForKey("ndx")!.integerValue
-        var indexPath = NSIndexPath(forRow: rowNumber, inSection: 0)
-        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        
+        if rowNumber < count{
+            var indexPath = NSIndexPath(forRow: rowNumber, inSection: 0)
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        }
     }
     
     
@@ -65,9 +65,11 @@ class downloadTableViewController: UITableViewController {
         var dict : NSDictionary = notification.userInfo!
         
         var cellNum : Int = dict.valueForKey("ndx")!.integerValue
-        var taskProgress : Float = dict.valueForKey("value")!.floatValue
-        progressValues[cellNum] = taskProgress
         
+        if cellNum < count {
+            var taskProgress : Float = dict.valueForKey("value")!.floatValue
+            progressValues[cellNum] = taskProgress
+        }
         
         
     }
@@ -84,14 +86,14 @@ class downloadTableViewController: UITableViewController {
         
         var url = dict.valueForKey("thumbnail") as! NSURL
         let data = NSData(contentsOfURL: url)!
-        var thumbnail = UIImage(data: data)
+        var thumbnail = UIImage(data: data)!
         
         
         count++
         progressValues += [0.0]
         downloadNames += [cellName]
         vidDurations += [vidDur]
-        images += [thumbnail!]
+        images += [thumbnail]
     }
     // MARK: - Table view data source
     
@@ -114,14 +116,16 @@ class downloadTableViewController: UITableViewController {
         
         
         cell.progressBar.progress = progressValues[indexPath.row]
-        cell.progressLabel.text = "\(progressValues[indexPath.row])"
+        var x = UITableViewCellAccessoryType(rawValue: 1)!
         
         
-        if(cell.imageLabel.image == nil){
-            cell.imageLabel.image = images[indexPath.row]
-            cell.durationLabel.text = vidDurations[indexPath.row]
-            cell.downloadLabel.text = downloadNames[indexPath.row]
-        }
+        cell.accessoryType = x
+        
+        
+        cell.imageLabel.image = images[indexPath.row]
+        cell.durationLabel.text = vidDurations[indexPath.row]
+        cell.downloadLabel.text = downloadNames[indexPath.row]
+        
         
         // Configure the cell...
         

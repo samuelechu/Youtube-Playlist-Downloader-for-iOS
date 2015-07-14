@@ -5,5 +5,8 @@
       <ContextState
          contextName = "Music_Player.downloadTableViewController.addCell (Music_Player.downloadTableViewController)(ObjectiveC.NSNotification) -&gt; ():downloadTableViewController.swift">
       </ContextState>
+      <ContextState
+         contextName = "function signature specialization &lt;Arg[2] = Dead, Arg[3] = Value Promoted from InOut&gt; of Music_Player.dataDownloadObject.(URLSession (Music_Player.dataDownloadObject) -&gt; (ObjectiveC.NSURLSession, downloadTask : ObjectiveC.NSURLSessionDownloadTask, didWriteData : Swift.Int64, totalBytesWritten : Swift.Int64, totalBytesExpectedToWrite : Swift.Int64) -&gt; ()).(closure #1):dataDownloadObject.swift">
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

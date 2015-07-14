@@ -77,9 +77,23 @@ class Playlist: UITableViewController {
         
         for entity in results {
             
-            var URL : String? = (entity as! NSManagedObject).valueForKey("location") as? String
-            var fileToRemove = NSURL(string: URL!)
-            fileManager.removeItemAtURL(fileToRemove!, error: nil)
+            var URL = (entity as! NSManagedObject).valueForKey("location") as! String
+            var fileToRemove = NSURL(string: URL)!
+            println(fileToRemove)
+            println(URL)
+            if fileManager.fileExistsAtPath(URL) {
+                println("File exists")
+            } else {
+                println("File not found")
+            }
+            fileManager.removeItemAtURL(fileToRemove, error: nil)
+            
+            
+            if fileManager.fileExistsAtPath(URL) {
+                println("File exists")
+            } else {
+                println("File not found")
+            }
             
             context.deleteObject(entity as! NSManagedObject)
         }
@@ -108,7 +122,7 @@ class Playlist: UITableViewController {
             var location = songs[selectedNdx!].valueForKey("location") as! String
             
             let url = NSURL(string: location)
-        
+            
             playerItem = AVPlayerItem(URL: url)
             
             var player = AVPlayer(playerItem: playerItem)

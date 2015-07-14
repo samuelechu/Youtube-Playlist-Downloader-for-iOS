@@ -19,6 +19,22 @@ class IDInputvc: UIViewController {
     var dlObject = dataDownloadObject(coder: NSCoder())
     
     
+    var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
+    
+    var desiredChannelsArray = ["Apple", "Google", "Microsoft"]
+    
+    var channelIndex = 0
+    
+    var channelsDataArray: Array<Dictionary<NSObject, AnyObject>> = []
+    
+    var videosArray: Array<Dictionary<NSObject, AnyObject>> = []
+    
+    var selectedVideoIndex: Int!
+    
+    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
@@ -38,7 +54,7 @@ class IDInputvc: UIViewController {
         }
         
         
-        
+        getVideosForChannelAtIndex()
         
         // Do any additional setup after loading the view.
     }
@@ -147,23 +163,83 @@ class IDInputvc: UIViewController {
     
     
     
+    func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
+        let request = NSMutableURLRequest(URL: targetURL)
+        request.HTTPMethod = "GET"
+        
+        let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        
+        let session = NSURLSession(configuration: sessionConfiguration)
+        
+        let task = session.dataTaskWithRequest(request, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                completion(data: data, HTTPStatusCode: (response as! NSHTTPURLResponse).statusCode, error: error)
+            })
+        })
+        
+        task.resume()
+    }
     
     
     
+    func getChannelDetails(useChannelIDParam: Bool) {
+        var urlString: String!
+        if !useChannelIDParam {
+           // urlString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=\(desiredChannelsArray[channelIndex])&key=\(apiKey)"
+            urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx&key=\(APIKey)"
+        }
+        else {
+            
+        }
+        
+        let targetURL = NSURL(string: urlString)
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    func getVideosForChannelAtIndex() {
+        // Get the selected channel's playlistID value from the channelsDataArray array and use it for fetching the proper video playlst.
+        //let playlistID = channelsDataArray[index]["playlistID"] as! String
+        
+        // Form the request URL string.
+        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\(playlistID)&key=\(APIKey)"
+        
+        // Create a NSURL object based on the above string.
+        let targetURL = NSURL(string: urlString)
+        
+        // Fetch the playlist from Google.
+        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
+            if HTTPStatusCode == 200 && error == nil {
+                // Convert the JSON data into a dictionary.
+                let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
+                
+                // Get all playlist items ("items" array).
+                let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
+                
+                // Use a loop to go through all video items.
+                for var i=0; i<items.count; ++i {
+                    let playlistSnippetDict = (items[i] as Dictionary<NSObject, AnyObject>)["snippet"] as! Dictionary<NSObject, AnyObject>
+                    
+                    // Initialize a new dictionary and store the data of interest.
+                    var desiredPlaylistItemDataDict = Dictionary<NSObject, AnyObject>()
+                    
+                    desiredPlaylistItemDataDict["title"] = playlistSnippetDict["title"]
+                    desiredPlaylistItemDataDict["thumbnail"] = ((playlistSnippetDict["thumbnails"] as! Dictionary<NSObject, AnyObject>)["default"] as! Dictionary<NSObject, AnyObject>)["url"]
+                    desiredPlaylistItemDataDict["videoID"] = (playlistSnippetDict["resourceId"] as! Dictionary<NSObject, AnyObject>)["videoId"]
+                    
+                    // Append the desiredPlaylistItemDataDict dictionary to the videos array.
+                    self.videosArray.append(desiredPlaylistItemDataDict)
+                    println(self.videosArray)
+                    // Reload the tableview.
+                }
+            }
+            else {
+                println("HTTP Status Code = \(HTTPStatusCode)")
+                println("Error while loading channel videos: \(error)")
+            }
+            
+        })
+    }
+
     
     
     
