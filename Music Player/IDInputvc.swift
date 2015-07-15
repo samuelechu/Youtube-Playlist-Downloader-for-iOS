@@ -21,17 +21,9 @@ class IDInputvc: UIViewController {
     
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
-    var desiredChannelsArray = ["Apple", "Google", "Microsoft"]
+    var videoIDs: Array<String> = []
     
-    var channelIndex = 0
-    
-    var channelsDataArray: Array<Dictionary<NSObject, AnyObject>> = []
-    
-    var videosArray: Array<Dictionary<NSObject, AnyObject>> = []
-    
-    var selectedVideoIndex: Int!
-    
-    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
+    // var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
     
     
     
@@ -54,7 +46,7 @@ class IDInputvc: UIViewController {
         }
         
         
-        getVideosForChannelAtIndex()
+        //   getVideosForChannelAtIndex()
         
         // Do any additional setup after loading the view.
     }
@@ -91,62 +83,91 @@ class IDInputvc: UIViewController {
         return false
     }
     
+    
+    func startDownloadTaskHelper(ID : String, qual : Int){
+        
+        
+        
+        XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
+            
+            var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+            
+            var desiredURL : NSURL!
+            
+            if (qual == 0){ //360P
+                
+                desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
+            }
+                
+            else { //720P
+                desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+            }
+            
+            var duration = self.stringFromTimeInterval(video.duration)
+            
+            //get thumbnail
+            var url = NSURL(string: "\(video.smallThumbnailURL)")
+            let data = NSData(contentsOfURL: url!)
+            var image = UIImage(data: data!)
+            
+            
+            var dict = ["name" : video.title, "duration" : duration, "thumbnail" : video.smallThumbnailURL]
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil, userInfo : dict as [NSObject : AnyObject])
+            
+            
+            
+            
+            self.dlObject.addVidInfo(video)
+            self.dlObject.startNewTask(desiredURL)
+            
+            
+            
+        })
+        
+        
+    }
+    
+    
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
-        if count(ID) != 11{
-            return
+        var isStored : Bool!
+        //get vid quality
+        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        vidQual = results[0] as! NSManagedObject
+        var qual = vidQual.valueForKey("quality") as! Int
+        
+        
+        
+        
+        if count(ID) == 11{
+            isStored =  vidStored(ID)
+            
+            if (!isStored){
+                startDownloadTaskHelper(ID, qual: qual)
+            }
+        }
+            
+            
+        else if count(ID) == 34 {
+            getVideosForChannelAtIndex(ID)
+            
+            for identifier : String in videoIDs {
+                
+                isStored = vidStored(identifier)
+                
+                if (!isStored){
+                    
+                    startDownloadTaskHelper(identifier, qual: qual)
+                }
+            }
+            
         }
         
-        var isStored =  vidStored(ID)
         
-        if (!isStored){
-            var request = NSFetchRequest(entityName: "VidQualitySelection")
-            var results : NSArray = context.executeFetchRequest(request, error: nil)!
-            vidQual = results[0] as! NSManagedObject
-            var qual = vidQual.valueForKey("quality") as! Int
-            
-            
-            
-            
-            XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
-                
-                var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-                
-                var desiredURL : NSURL!
-                
-                if (qual == 0){ //360P
-                    
-                    desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
-                }
-                    
-                else { //720P
-                    desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
-                }
-                
-                var duration = self.stringFromTimeInterval(video.duration)
-                
-                //get thumbnail
-                var url = NSURL(string: "\(video.smallThumbnailURL)")
-                let data = NSData(contentsOfURL: url!)
-                var image = UIImage(data: data!)
-                
-                
-                var dict = ["name" : video.title, "duration" : duration, "thumbnail" : video.smallThumbnailURL]
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil, userInfo : dict as [NSObject : AnyObject])
-                
-                
-                
-                
-                self.dlObject.addVidInfo(video)
-                self.dlObject.startNewTask(desiredURL)
-                
-                
-                
-            })
-        }
     }
     
     
@@ -182,56 +203,33 @@ class IDInputvc: UIViewController {
     
     
     
-    func getChannelDetails(useChannelIDParam: Bool) {
-        var urlString: String!
-        if !useChannelIDParam {
-           // urlString = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails,snippet&forUsername=\(desiredChannelsArray[channelIndex])&key=\(apiKey)"
-            urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx&key=\(APIKey)"
-        }
-        else {
-            
-        }
-        
-        let targetURL = NSURL(string: urlString)
-    }
     
     
-    func getVideosForChannelAtIndex() {
-        // Get the selected channel's playlistID value from the channelsDataArray array and use it for fetching the proper video playlst.
-        //let playlistID = channelsDataArray[index]["playlistID"] as! String
+    func getVideosForChannelAtIndex(playlistID : String) {
         
-        // Form the request URL string.
-        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\(playlistID)&key=\(APIKey)"
-        
-        // Create a NSURL object based on the above string.
+        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
         
         // Fetch the playlist from Google.
         performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
             if HTTPStatusCode == 200 && error == nil {
+                
                 // Convert the JSON data into a dictionary.
                 let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
+                println(resultsDict)
                 
                 // Get all playlist items ("items" array).
                 let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
+                let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
+                var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
                 
-                // Use a loop to go through all video items.
-                for var i=0; i<items.count; ++i {
-                    let playlistSnippetDict = (items[i] as Dictionary<NSObject, AnyObject>)["snippet"] as! Dictionary<NSObject, AnyObject>
-                    
-                    // Initialize a new dictionary and store the data of interest.
-                    var desiredPlaylistItemDataDict = Dictionary<NSObject, AnyObject>()
-                    
-                    desiredPlaylistItemDataDict["title"] = playlistSnippetDict["title"]
-                    desiredPlaylistItemDataDict["thumbnail"] = ((playlistSnippetDict["thumbnails"] as! Dictionary<NSObject, AnyObject>)["default"] as! Dictionary<NSObject, AnyObject>)["url"]
-                    desiredPlaylistItemDataDict["videoID"] = (playlistSnippetDict["resourceId"] as! Dictionary<NSObject, AnyObject>)["videoId"]
-                    
-                    // Append the desiredPlaylistItemDataDict dictionary to the videos array.
-                    self.videosArray.append(desiredPlaylistItemDataDict)
-                    println(self.videosArray)
-                    // Reload the tableview.
+                for item : Dictionary<NSObject, AnyObject> in items {
+                    let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
+                    var vidID : String = playlistContentDict["videoId"] as! String
+                    self.videoIDs += [vidID]
                 }
             }
+                
             else {
                 println("HTTP Status Code = \(HTTPStatusCode)")
                 println("Error while loading channel videos: \(error)")
@@ -239,7 +237,7 @@ class IDInputvc: UIViewController {
             
         })
     }
-
+    
     
     
     
