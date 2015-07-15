@@ -75,30 +75,26 @@ class Playlist: UITableViewController {
         var request = NSFetchRequest(entityName: "Songs")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         
+        
+        
         for entity in results {
             
-            var URL = (entity as! NSManagedObject).valueForKey("location") as! String
-            var fileToRemove = NSURL(string: URL)!
-            println(fileToRemove)
-            println(URL)
-            if fileManager.fileExistsAtPath(URL) {
+            var path = (entity as! NSManagedObject).valueForKey("location") as! String
+            if fileManager.fileExistsAtPath(path) {
                 println("File exists")
             } else {
                 println("File not found")
             }
-            fileManager.removeItemAtURL(fileToRemove, error: nil)
+            fileManager.removeItemAtPath(path, error: nil)
             
             
-            if fileManager.fileExistsAtPath(URL) {
-                println("File exists")
-            } else {
-                println("File not found")
-            }
             
             context.deleteObject(entity as! NSManagedObject)
         }
         
         context.save(nil)
+        
+
         self.tableView.reloadData()
     }
     
@@ -121,8 +117,8 @@ class Playlist: UITableViewController {
             
             var location = songs[selectedNdx!].valueForKey("location") as! String
             
-            let url = NSURL(string: location)
             
+            let url = NSURL(fileURLWithPath: location)
             playerItem = AVPlayerItem(URL: url)
             
             var player = AVPlayer(playerItem: playerItem)

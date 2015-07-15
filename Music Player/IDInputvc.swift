@@ -123,7 +123,6 @@ class IDInputvc: UIViewController {
             self.dlObject.startNewTask(desiredURL)
             
             
-            println("download starting!")
         })
         
         
@@ -139,8 +138,6 @@ class IDInputvc: UIViewController {
         vidQual = results[0] as! NSManagedObject
         var qual = vidQual.valueForKey("quality") as! Int
         
-        
-        println("\(count(ID))")
         
         
         if count(ID) == 11{
@@ -201,7 +198,6 @@ class IDInputvc: UIViewController {
     func getVideosForChannelAtIndex(playlistID : String, quality : Int) {
         
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
-        println(urlString)
         let targetURL = NSURL(string: urlString)
         
         // Fetch the playlist from Google.
@@ -210,7 +206,6 @@ class IDInputvc: UIViewController {
                 
                 // Convert the JSON data into a dictionary.
                 let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
-                println("eh")
                 
                 // Get all playlist items ("items" array).
                 let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
@@ -221,7 +216,6 @@ class IDInputvc: UIViewController {
                     let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
                     var vidID : String = playlistContentDict["videoId"] as! String
                     self.videoIDs += [vidID]
-                    println(self.videoIDs)
                 }
                 
                 
@@ -233,7 +227,6 @@ class IDInputvc: UIViewController {
                     if (!isStored){
                         
                         self.startDownloadTaskHelper(identifier, qual: quality)
-                        println("Download Started!")
                     }
                 }
 
