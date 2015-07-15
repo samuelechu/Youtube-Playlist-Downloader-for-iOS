@@ -23,7 +23,7 @@ class IDInputvc: UIViewController {
     
     var videoIDs: Array<String> = []
     
-    // var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
+    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
     
     
     
@@ -44,7 +44,6 @@ class IDInputvc: UIViewController {
             vidQual.setValue(0, forKey: "quality")
             
         }
-        
         
         //   getVideosForChannelAtIndex()
         
@@ -124,7 +123,7 @@ class IDInputvc: UIViewController {
             self.dlObject.startNewTask(desiredURL)
             
             
-            
+            println("download starting!")
         })
         
         
@@ -133,7 +132,7 @@ class IDInputvc: UIViewController {
     
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
-        var isStored : Bool!
+        
         //get vid quality
         var request = NSFetchRequest(entityName: "VidQualitySelection")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
@@ -141,10 +140,11 @@ class IDInputvc: UIViewController {
         var qual = vidQual.valueForKey("quality") as! Int
         
         
+        println("\(count(ID))")
         
         
         if count(ID) == 11{
-            isStored =  vidStored(ID)
+            var isStored =  vidStored(ID)
             
             if (!isStored){
                 startDownloadTaskHelper(ID, qual: qual)
@@ -153,18 +153,11 @@ class IDInputvc: UIViewController {
             
             
         else if count(ID) == 34 {
-            getVideosForChannelAtIndex(ID)
-            
-            for identifier : String in videoIDs {
-                
-                isStored = vidStored(identifier)
-                
-                if (!isStored){
-                    
-                    startDownloadTaskHelper(identifier, qual: qual)
-                }
-            }
-            
+            getVideosForChannelAtIndex(ID, quality: qual)
+        }
+        
+        else{
+            return
         }
         
         
@@ -205,9 +198,10 @@ class IDInputvc: UIViewController {
     
     
     
-    func getVideosForChannelAtIndex(playlistID : String) {
+    func getVideosForChannelAtIndex(playlistID : String, quality : Int) {
         
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
+        println(urlString)
         let targetURL = NSURL(string: urlString)
         
         // Fetch the playlist from Google.
@@ -216,7 +210,7 @@ class IDInputvc: UIViewController {
                 
                 // Convert the JSON data into a dictionary.
                 let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
-                println(resultsDict)
+                println("eh")
                 
                 // Get all playlist items ("items" array).
                 let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
@@ -227,8 +221,23 @@ class IDInputvc: UIViewController {
                     let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
                     var vidID : String = playlistContentDict["videoId"] as! String
                     self.videoIDs += [vidID]
+                    println(self.videoIDs)
                 }
-            }
+                
+                
+                
+                for identifier : String in self.videoIDs {
+                    
+                    var isStored = self.vidStored(identifier)
+                    
+                    if (!isStored){
+                        
+                        self.startDownloadTaskHelper(identifier, qual: quality)
+                        println("Download Started!")
+                    }
+                }
+
+           }
                 
             else {
                 println("HTTP Status Code = \(HTTPStatusCode)")
