@@ -21,8 +21,7 @@ class Playlist: UITableViewController {
     
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
-    
-    var playerItem : AVPlayerItem!
+    var playerQueue = AVQueuePlayer()
     var videoTracks : [AVPlayerItemTrack]!
     
     //sort + reload data
@@ -79,24 +78,24 @@ class Playlist: UITableViewController {
         //var docDir : NSArray = [NSFileManager.defaultManager().contentsOfDirectoryAtPath(, error: <#NSErrorPointer#>)]
         println(tmpDir)
         for file in tmpDir{
-            var pathToRemove = "\(NSTemporaryDirectory())\(file)"
-            
-            let fileManager = NSFileManager.defaultManager()
-            var cacheURL : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
-            let enumerator = fileManager.enumeratorAtURL(cacheURL, includingPropertiesForKeys: nil, options: nil, errorHandler: nil)
-            while let file = enumerator?.nextObject() as? String {
-                fileManager.removeItemAtURL(cacheURL.URLByAppendingPathComponent(file), error: nil)
-            }
-            
-            
-            if NSFileManager.defaultManager().fileExistsAtPath(pathToRemove) {
-                println("\(file) removed!")
-            } else {
-                println("File not found")
-            }
-            
-            NSFileManager.defaultManager().removeItemAtPath(pathToRemove, error: nil)
-            
+        var pathToRemove = "\(NSTemporaryDirectory())\(file)"
+        
+        let fileManager = NSFileManager.defaultManager()
+        var cacheURL : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
+        let enumerator = fileManager.enumeratorAtURL(cacheURL, includingPropertiesForKeys: nil, options: nil, errorHandler: nil)
+        while let file = enumerator?.nextObject() as? String {
+        fileManager.removeItemAtURL(cacheURL.URLByAppendingPathComponent(file), error: nil)
+        }
+        
+        
+        if NSFileManager.defaultManager().fileExistsAtPath(pathToRemove) {
+        println("\(file) removed!")
+        } else {
+        println("File not found")
+        }
+        
+        NSFileManager.defaultManager().removeItemAtPath(pathToRemove, error: nil)
+        
         }*/
         
         var fileManager = NSFileManager.defaultManager()
@@ -107,7 +106,7 @@ class Playlist: UITableViewController {
         
         for entity in results {
             
-
+            
             var file = (entity as! NSManagedObject).valueForKey("identifier") as! String
             file = file.stringByAppendingString(".mp4")
             var filePath = documentsDir.stringByAppendingPathComponent(file)
@@ -127,7 +126,7 @@ class Playlist: UITableViewController {
         context.save(nil)
         
         
-
+        
         self.tableView.reloadData()
     }
     
@@ -137,7 +136,7 @@ class Playlist: UITableViewController {
         if segue.identifier == "playVideoSegue" {
             
             var selectedNdx = tableView.indexPathForSelectedRow()?.row
-            var playerQueue = AVQueuePlayer()
+            
             
             
             for song in songs{
@@ -147,11 +146,11 @@ class Playlist: UITableViewController {
                 var filePath = documentsDir.stringByAppendingPathComponent(file)
                 
                 let url = NSURL(fileURLWithPath: filePath)
-                playerItem = AVPlayerItem(URL: url)
+                var playerItem = AVPlayerItem(URL: url)
                 
-               // var player = AVPlayer(playerItem: playerItem)
+                // var player = AVPlayer(playerItem: playerItem)
                 playerQueue.insertItem(playerItem, afterItem: nil)
-            
+                
             }
             
             //set audio to play in bg
@@ -178,8 +177,8 @@ class Playlist: UITableViewController {
     }
     
     func enteredForeground(notification: NSNotification){
-        if playerItem != nil{
-            videoTracks = playerItem.tracks as! [AVPlayerItemTrack]
+        if playerQueue.currentItem != nil{
+            videoTracks = playerQueue.currentItem.tracks as! [AVPlayerItemTrack]
             
             for track : AVPlayerItemTrack in videoTracks{
                 
@@ -191,8 +190,8 @@ class Playlist: UITableViewController {
     //disable vidTracks
     func enteredBackground(notification: NSNotification){
         
-        if playerItem != nil {
-            videoTracks = playerItem.tracks as! [AVPlayerItemTrack]
+        if playerQueue.currentItem != nil {
+            videoTracks = playerQueue.currentItem.tracks as! [AVPlayerItemTrack]
             
             for track : AVPlayerItemTrack in videoTracks{
                 
