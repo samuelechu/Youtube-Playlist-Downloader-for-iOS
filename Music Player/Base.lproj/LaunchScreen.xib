@@ -10,25 +10,16 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Music Player" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="8ie-xW-0ye">
-                    <rect key="frame" x="20" y="439" width="441" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="launchScreen.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="RbE-7H-Ir3">
-                    <rect key="frame" x="20" y="18" width="409" height="413"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="droplets.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="cqd-q3-obn">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="RbE-7H-Ir3" secondAttribute="trailing" id="CZs-ap-tUD"/>
-                <constraint firstItem="RbE-7H-Ir3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="GGW-1w-wLe"/>
-                <constraint firstAttribute="bottom" secondItem="8ie-xW-0ye" secondAttribute="bottom" constant="20" id="Kzo-t9-V3l"/>
-                <constraint firstItem="8ie-xW-0ye" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" symbolic="YES" id="MfP-vx-nX0"/>
-                <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="RbE-7H-Ir3" secondAttribute="bottom" id="Nn5-UL-nJu"/>
-                <constraint firstAttribute="centerX" secondItem="8ie-xW-0ye" secondAttribute="centerX" id="ZEH-qu-HZ9"/>
-                <constraint firstItem="RbE-7H-Ir3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ptl-aj-1U6"/>
+                <constraint firstItem="cqd-q3-obn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5q3-yB-NRA"/>
+                <constraint firstItem="cqd-q3-obn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="aZV-as-PTS"/>
+                <constraint firstAttribute="bottom" secondItem="cqd-q3-obn" secondAttribute="bottom" id="cCe-W4-YTC"/>
+                <constraint firstAttribute="trailing" secondItem="cqd-q3-obn" secondAttribute="trailing" id="nny-c6-fyh"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -36,6 +27,6 @@
         </view>
     </objects>
     <resources>
-        <image name="launchScreen.jpg" width="1800" height="1200"/>
+        <image name="droplets.jpg" width="900" height="1600"/>
     </resources>
 </document>

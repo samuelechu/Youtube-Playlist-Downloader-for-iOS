@@ -116,8 +116,17 @@ class downloadTableViewController: UITableViewController {
         
         
         cell.progressBar.progress = progressValues[indexPath.row]
-        var x = UITableViewCellAccessoryType(rawValue: 1)!
         
+        var x : UITableViewCellAccessoryType!
+        
+        if progressValues[indexPath.row] != 1.0 {
+            x = UITableViewCellAccessoryType(rawValue: 0)!
+        
+        }
+        
+        else{
+            x = UITableViewCellAccessoryType(rawValue: 2)!
+        }
         
         cell.accessoryType = x
         

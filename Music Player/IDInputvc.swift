@@ -89,6 +89,7 @@ class IDInputvc: UIViewController {
         
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
             
+            if error == nil {
             var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
             
             var desiredURL : NSURL!
@@ -122,7 +123,7 @@ class IDInputvc: UIViewController {
             self.dlObject.addVidInfo(video)
             self.dlObject.startNewTask(desiredURL)
             
-            
+            }
         })
         
         
@@ -149,13 +150,24 @@ class IDInputvc: UIViewController {
         }
             
             
-        else if count(ID) == 34 {
-            getVideosForChannelAtIndex(ID, quality: qual)
+        else {
+            getVideosForChannelAtIndex(ID)
+            
+            
+            for identifier : String in self.videoIDs {
+                
+                var isStored = self.vidStored(identifier)
+                
+                if (!isStored){
+                    
+                    self.startDownloadTaskHelper(identifier, qual: qual)
+                }
+            }
+
+            
         }
         
-        else{
-            return
-        }
+        
         
         
     }
@@ -195,7 +207,7 @@ class IDInputvc: UIViewController {
     
     
     
-    func getVideosForChannelAtIndex(playlistID : String, quality : Int) {
+    func getVideosForChannelAtIndex(playlistID : String) {
         
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
@@ -220,16 +232,7 @@ class IDInputvc: UIViewController {
                 
                 
                 
-                for identifier : String in self.videoIDs {
-                    
-                    var isStored = self.vidStored(identifier)
-                    
-                    if (!isStored){
-                        
-                        self.startDownloadTaskHelper(identifier, qual: quality)
-                    }
-                }
-
+               
            }
                 
             else {
