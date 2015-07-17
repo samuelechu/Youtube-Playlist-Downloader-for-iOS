@@ -114,7 +114,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 
                 
                 var fileData : NSData = NSData(contentsOfURL: location)!
-                var filePath = grabFileURL("\(identifier).mp4")
+                var filePath = grabFilePath("\(identifier).mp4")
                 //fileData.writeToURL(fileURL, atomically: true)
                 fileData.writeToFile(filePath, atomically: true)
                 
@@ -125,7 +125,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 
                 
                 newSong.setValue("\(identifier)", forKey: "identifier")
-                newSong.setValue(filePath, forKey: "location")
+                //newSong.setValue(filePath, forKey: "location")
                 newSong.setValue("\(videoData[ndx!].title)", forKey: "title")
                 println(newSong)
                 
@@ -139,15 +139,14 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             
     }
     
-    func grabFileURL(fileName : String) -> String {
-        //var url : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
+    func grabFilePath(fileName : String) -> String {
+        
         let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
         let writePath = documents.stringByAppendingPathComponent("\(fileName)")
         
         return writePath
-       // url = url.URLByAppendingPathComponent(fileName)
         
-       // return url
+        
     }
     
     

@@ -19,6 +19,7 @@ class Playlist: UITableViewController {
     var songs : NSArray!
     let songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
     
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
     
     var playerItem : AVPlayerItem!
@@ -71,6 +72,33 @@ class Playlist: UITableViewController {
     
     
     @IBAction func deleteAll() {
+        
+        
+        
+        /*var tmpDir : NSArray = [NSFileManager.defaultManager().contentsOfDirectoryAtPath("/", error:nil)!]
+        //var docDir : NSArray = [NSFileManager.defaultManager().contentsOfDirectoryAtPath(, error: <#NSErrorPointer#>)]
+        println(tmpDir)
+        for file in tmpDir{
+            var pathToRemove = "\(NSTemporaryDirectory())\(file)"
+            
+            let fileManager = NSFileManager.defaultManager()
+            var cacheURL : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
+            let enumerator = fileManager.enumeratorAtURL(cacheURL, includingPropertiesForKeys: nil, options: nil, errorHandler: nil)
+            while let file = enumerator?.nextObject() as? String {
+                fileManager.removeItemAtURL(cacheURL.URLByAppendingPathComponent(file), error: nil)
+            }
+            
+            
+            if NSFileManager.defaultManager().fileExistsAtPath(pathToRemove) {
+                println("\(file) removed!")
+            } else {
+                println("File not found")
+            }
+            
+            NSFileManager.defaultManager().removeItemAtPath(pathToRemove, error: nil)
+            
+        }*/
+        
         var fileManager = NSFileManager.defaultManager()
         var request = NSFetchRequest(entityName: "Songs")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
@@ -79,13 +107,17 @@ class Playlist: UITableViewController {
         
         for entity in results {
             
-            var path = (entity as! NSManagedObject).valueForKey("location") as! String
-            if fileManager.fileExistsAtPath(path) {
+
+            var file = (entity as! NSManagedObject).valueForKey("identifier") as! String
+            file = file.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
+            
+            if fileManager.fileExistsAtPath(filePath) {
                 println("File exists")
             } else {
                 println("File not found")
             }
-            fileManager.removeItemAtPath(path, error: nil)
+            fileManager.removeItemAtPath(filePath, error: nil)
             
             
             
@@ -93,6 +125,7 @@ class Playlist: UITableViewController {
         }
         
         context.save(nil)
+        
         
 
         self.tableView.reloadData()
@@ -104,8 +137,22 @@ class Playlist: UITableViewController {
         if segue.identifier == "playVideoSegue" {
             
             var selectedNdx = tableView.indexPathForSelectedRow()?.row
+            var playerQueue = AVQueuePlayer()
             
             
+            for song in songs{
+                
+                var file = song.valueForKey("identifier") as! String
+                file = file.stringByAppendingString(".mp4")
+                var filePath = documentsDir.stringByAppendingPathComponent(file)
+                
+                let url = NSURL(fileURLWithPath: filePath)
+                playerItem = AVPlayerItem(URL: url)
+                
+               // var player = AVPlayer(playerItem: playerItem)
+                playerQueue.insertItem(playerItem, afterItem: nil)
+            
+            }
             
             //set audio to play in bg
             var audio : AVAudioSession = AVAudioSession()
@@ -115,14 +162,17 @@ class Playlist: UITableViewController {
             //if download finished, initialize avplayer
             let destination = segue.destinationViewController as! AVPlayerViewController
             
-            var location = songs[selectedNdx!].valueForKey("location") as! String
+            /*var file = songs[selectedNdx!].valueForKey("identifier") as! String
+            file = file.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
             
-            
-            let url = NSURL(fileURLWithPath: location)
+            let url = NSURL(fileURLWithPath: filePath)
             playerItem = AVPlayerItem(URL: url)
             
             var player = AVPlayer(playerItem: playerItem)
-            destination.player = player
+            destination.player = player*/
+            destination.player = playerQueue
+            
             
         }
     }
