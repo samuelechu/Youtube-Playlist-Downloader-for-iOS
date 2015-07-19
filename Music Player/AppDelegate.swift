@@ -18,53 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        //if fileManager.fileExistsAtPath
         
-        let fileMgr = NSFileManager.defaultManager()
-        
-        //remove excess documents and data
-        var cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] as! String
-        
-        var cacheDir1 = cacheFolder.stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
-        var cacheDir2 = cacheFolder.stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
-        
-        if fileMgr.fileExistsAtPath(cacheDir1){
-            var dir1Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir1, error: nil) as! [String]
-            
-            for file : String in dir1Contents {
-                fileMgr.removeItemAtPath(cacheDir1.stringByAppendingPathComponent(file), error: nil)
-            }
-        }
-        
-        if fileMgr.fileExistsAtPath(cacheDir2){
-            var dir2Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir2, error: nil) as! [String]
-            
-            for file : String in dir2Contents {
-                fileMgr.removeItemAtPath(cacheDir2.stringByAppendingPathComponent(file), error: nil)
-            }
-        }
-        
-        /* var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        println(documentsDir)
-        var docDir : [String] = NSFileManager.defaultManager().contentsOfDirectoryAtPath(documentsDir, error: nil) as! [String]
-        
-        println(docDir)
-        for file : String in docDir {
-        NSFileManager.defaultManager().removeItemAtPath(documentsDir.stringByAppendingPathComponent("/\(file)"), error: nil)
-        }
-        
-        docDir = NSFileManager.defaultManager().contentsOfDirectoryAtPath(documentsDir, error: nil) as! [String]
-        
-        
-        println(docDir)*/
-        
-        
-        var tmpDir : [String] = fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory(), error: nil) as! [String]
-        
-        for file : String in tmpDir {
-            fileMgr.removeItemAtPath(NSTemporaryDirectory().stringByAppendingPathComponent(file), error: nil)
-            
-        }
         
         return true
     }
@@ -80,13 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         
         NSNotificationCenter.defaultCenter().postNotificationName("enteredBackgroundID", object: nil)
-        println("entered bg!")
     }
     
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         NSNotificationCenter.defaultCenter().postNotificationName("enteredForegroundID", object: nil)
-        println("entered fg!")
         
         
     }
@@ -99,6 +51,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
+        
+        
+        let fileMgr = NSFileManager.defaultManager()
+        
+        //remove excess documents and data
+        var cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] as! String
+        
+        //var cacheDir1 = cacheFolder.stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
+        var cacheDir2 = cacheFolder.stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
+        
+        /*if fileMgr.fileExistsAtPath(cacheDir1){
+            var dir1Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir1, error: nil) as! [String]
+            
+            for file : String in dir1Contents {
+                fileMgr.removeItemAtPath(cacheDir1.stringByAppendingPathComponent(file), error: nil)
+            }
+        }*/
+        
+        if fileMgr.fileExistsAtPath(cacheDir2){
+            var dir2Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir2, error: nil) as! [String]
+            
+            for file : String in dir2Contents {
+                fileMgr.removeItemAtPath(cacheDir2.stringByAppendingPathComponent(file), error: nil)
+            }
+        }
+        
+        var tmpDir : [String] = fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory(), error: nil) as! [String]
+        
+        for file : String in tmpDir {
+            fileMgr.removeItemAtPath(NSTemporaryDirectory().stringByAppendingPathComponent(file), error: nil)
+            
+        }
         self.saveContext()
     }
     

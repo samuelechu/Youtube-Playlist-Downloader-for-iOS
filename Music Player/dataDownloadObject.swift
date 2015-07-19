@@ -22,7 +22,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     var videoData : [XCDYouTubeVideo] = []
-    var curVid : XCDYouTubeVideo!
     var session : NSURLSession!
     var taskIDs : [Int] = []
     
@@ -40,7 +39,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     
     
     func addVidInfo(vid : XCDYouTubeVideo){
-        curVid = vid
         videoData += [vid]
         
     }
@@ -51,17 +49,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         taskIDs += [task.taskIdentifier]
         task.start()
         
-    }
-    
-    
-    
-    //get duration of video
-    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
-        let interval = Int(interval)
-        let seconds = interval % 60
-        let minutes = (interval / 60) % 60
-        let hours = (interval / 3600)
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     
@@ -79,9 +66,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             if cellNum != nil{
                 var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 
-                var num = taskProgress * 100
+                //var num = taskProgress * 100
                 
-                if ( num % 10 ) < 0.6 {
+               // if ( num % 10 ) < 0.6 {
                     dispatch_async(dispatch_get_main_queue(),{
                         
                         
@@ -94,15 +81,10 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                         NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
                         
                     })
-                }
+               // }
                 
             }
     }
-    
-    /*func URLSession(session: NSURLSession,downloadTask: NSURLSessionDownloadTask,
-    didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64){
-    
-    }*/
     
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
@@ -134,6 +116,13 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 context.save(nil)
                 
             }
+            
+            var dict = ["ndx" : ndx!, "value" : "1.0" ]
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
+
             
             
             

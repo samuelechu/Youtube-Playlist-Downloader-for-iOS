@@ -72,32 +72,7 @@ class Playlist: UITableViewController {
     
     @IBAction func deleteAll() {
         
-        
-        
-        /*var tmpDir : NSArray = [NSFileManager.defaultManager().contentsOfDirectoryAtPath("/", error:nil)!]
-        //var docDir : NSArray = [NSFileManager.defaultManager().contentsOfDirectoryAtPath(, error: <#NSErrorPointer#>)]
-        println(tmpDir)
-        for file in tmpDir{
-        var pathToRemove = "\(NSTemporaryDirectory())\(file)"
-        
-        let fileManager = NSFileManager.defaultManager()
-        var cacheURL : NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as! NSURL
-        let enumerator = fileManager.enumeratorAtURL(cacheURL, includingPropertiesForKeys: nil, options: nil, errorHandler: nil)
-        while let file = enumerator?.nextObject() as? String {
-        fileManager.removeItemAtURL(cacheURL.URLByAppendingPathComponent(file), error: nil)
-        }
-        
-        
-        if NSFileManager.defaultManager().fileExistsAtPath(pathToRemove) {
-        println("\(file) removed!")
-        } else {
-        println("File not found")
-        }
-        
-        NSFileManager.defaultManager().removeItemAtPath(pathToRemove, error: nil)
-        
-        }*/
-        
+                
         var fileManager = NSFileManager.defaultManager()
         var request = NSFetchRequest(entityName: "Songs")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!

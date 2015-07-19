@@ -10,7 +10,7 @@ import UIKit
 
 class downloadTableViewController: UITableViewController {
     
-    var count : Int = 0
+    var count = 0
     
     var progressValues : [Float] = []
     
@@ -20,9 +20,9 @@ class downloadTableViewController: UITableViewController {
     
     var images : [UIImage] = []
     
-    override func viewWillAppear(animated: Bool) {
+    /*override func viewWillAppear(animated: Bool) {
         self.tableView.reloadData()
-    }
+    }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,21 +114,19 @@ class downloadTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("downloadCell", forIndexPath: indexPath) as! downloadCell
         var row = indexPath.row
         
+        cell.accessoryType = UITableViewCellAccessoryType.None
         
         cell.progressBar.progress = progressValues[indexPath.row]
         
-        var x : UITableViewCellAccessoryType!
         
-        if progressValues[indexPath.row] != 1.0 {
-            x = UITableViewCellAccessoryType(rawValue: 0)!
         
+        if progressValues[indexPath.row] == 1.0 {
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         }
         
-        else{
-            x = UITableViewCellAccessoryType(rawValue: 2)!
-        }
         
-        cell.accessoryType = x
+        
+        
         
         
         cell.imageLabel.image = images[indexPath.row]

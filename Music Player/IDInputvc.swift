@@ -17,7 +17,7 @@ class IDInputvc: UIViewController {
     var context : NSManagedObjectContext!
     var vidQual : NSManagedObject!
     var dlObject = dataDownloadObject(coder: NSCoder())
-    
+    var qual : Int!
     
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
@@ -91,7 +91,6 @@ class IDInputvc: UIViewController {
             
             if error == nil {
             var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-            
             var desiredURL : NSURL!
             
             if (qual == 0){ //360P
@@ -137,7 +136,7 @@ class IDInputvc: UIViewController {
         var request = NSFetchRequest(entityName: "VidQualitySelection")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         vidQual = results[0] as! NSManagedObject
-        var qual = vidQual.valueForKey("quality") as! Int
+        qual = vidQual.valueForKey("quality") as! Int
         
         
         
@@ -151,10 +150,10 @@ class IDInputvc: UIViewController {
             
             
         else {
-            getVideosForChannelAtIndex(ID)
+            downloadVideosForChannelAtIndex(ID)
             
             
-            for identifier : String in self.videoIDs {
+            /*for identifier : String in self.videoIDs {
                 
                 var isStored = self.vidStored(identifier)
                 
@@ -162,7 +161,7 @@ class IDInputvc: UIViewController {
                     
                     self.startDownloadTaskHelper(identifier, qual: qual)
                 }
-            }
+            }*/
 
             
         }
@@ -207,14 +206,14 @@ class IDInputvc: UIViewController {
     
     
     
-    func getVideosForChannelAtIndex(playlistID : String) {
+    func downloadVideosForChannelAtIndex(playlistID : String) {
         
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
         
         // Fetch the playlist from Google.
         performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
-            if HTTPStatusCode == 200 && error == nil {
+           // if HTTPStatusCode == 200 && error == nil {
                 
                 // Convert the JSON data into a dictionary.
                 let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
@@ -230,16 +229,25 @@ class IDInputvc: UIViewController {
                     self.videoIDs += [vidID]
                 }
                 
+            for identifier : String in self.videoIDs {
                 
+                var isStored = self.vidStored(identifier)
                 
+                if (!isStored){
+                    
+                    self.startDownloadTaskHelper(identifier, qual: self.qual)
+                }
+            }
+
+            
                
-           }
+          /* }
                 
             else {
                 println("HTTP Status Code = \(HTTPStatusCode)")
                 println("Error while loading channel videos: \(error)")
             }
-            
+            */
         })
     }
     
