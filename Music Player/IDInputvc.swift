@@ -12,6 +12,7 @@ import CoreData
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
+    @IBOutlet var downloadButton: UIButton!
     var numDownloads = 0
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
@@ -47,6 +48,7 @@ class IDInputvc: UIViewController {
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
+        
     }
     
     func resetDownloadTasks(notification: NSNotification){
@@ -112,12 +114,12 @@ class IDInputvc: UIViewController {
                     var duration = self.stringFromTimeInterval(video.duration)
                     
                     //get thumbnail
-                    var url = NSURL(string: "\(video.smallThumbnailURL)")
+                    /*var url = NSURL(string: "\(video.smallThumbnailURL)")
                     let data = NSData(contentsOfURL: url!)
-                    var image = UIImage(data: data!)
+                    var image = UIImage(data: data!)*/
+                    var thumbnailURL = "\(video.smallThumbnailURL)"
                     
-                    
-                    var dict = ["name" : video.title, "duration" : duration, "thumbnail" : video.smallThumbnailURL]
+                    var dict : [String : String] = ["name" : video.title, "duration" : duration, "thumbnail" : thumbnailURL]
                     
                     NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
                     
@@ -132,10 +134,18 @@ class IDInputvc: UIViewController {
             })
         }
     }
-    
+    func showButton() {
+        downloadButton.hidden = false
+    }
     
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
+        
+        downloadButton.hidden = true
+        var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("showButton"), userInfo: nil, repeats: false)
+        
+        
+        
         
         //get vid quality
         var request = NSFetchRequest(entityName: "VidQualitySelection")

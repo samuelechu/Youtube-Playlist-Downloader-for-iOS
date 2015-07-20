@@ -115,13 +115,15 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 
                 context.save(nil)
                 
+                var dict = ["ndx" : ndx!, "value" : "1.0" ]
+                NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
+
             }
             
-            var dict = ["ndx" : ndx!, "value" : "1.0" ]
             
-            NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
             
-            NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
 
             
             

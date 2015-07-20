@@ -95,7 +95,7 @@
                                     <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="IMCfWlem924" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
                                 <rect key="frame" x="204" y="148" width="193" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="193" id="unc-Ub-Ik8"/>
@@ -128,7 +128,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="vidID" destination="xx7-RR-xRJ" id="Jph-gl-fuS"/>
+                        <outlet property="downloadButton" destination="u3l-iB-VeN" id="tcv-3v-8h2"/>
+                        <outlet property="vidID" destination="xx7-RR-xRJ" id="bht-SN-Ovd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mln-Y5-uMk" userLabel="First Responder" sceneMemberID="firstResponder"/>

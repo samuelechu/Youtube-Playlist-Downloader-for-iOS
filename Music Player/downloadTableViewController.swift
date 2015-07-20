@@ -84,8 +84,9 @@ class downloadTableViewController: UITableViewController {
         var cellName : String = dict.valueForKey("name") as! String
         var vidDur : String = dict.valueForKey("duration") as! String
         
-        var url = dict.valueForKey("thumbnail") as! NSURL
-        let data = NSData(contentsOfURL: url)!
+        var url = dict.valueForKey("thumbnail") as! String
+        var thumbnailURL = NSURL(string: url)!
+        let data = NSData(contentsOfURL: thumbnailURL)!
         var thumbnail = UIImage(data: data)!
         
         
