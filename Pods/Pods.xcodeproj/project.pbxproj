@@ -392,7 +392,7 @@
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos8.3;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -408,7 +408,7 @@
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos8.3;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

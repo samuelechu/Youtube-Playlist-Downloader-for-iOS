@@ -66,9 +66,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
             if cellNum != nil{
                 var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 
-                //var num = taskProgress * 100
+                var num = taskProgress * 100
                 
-               // if ( num % 10 ) < 0.6 {
+               if ( num % 10 ) < 0.6 {
                     dispatch_async(dispatch_get_main_queue(),{
                         
                         
@@ -81,7 +81,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                         NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
                         
                     })
-               // }
+                }
                 
             }
     }

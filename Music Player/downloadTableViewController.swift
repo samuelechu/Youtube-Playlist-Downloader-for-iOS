@@ -119,7 +119,6 @@ class downloadTableViewController: UITableViewController {
         cell.progressBar.progress = progressValues[indexPath.row]
         
         
-        
         if progressValues[indexPath.row] == 1.0 {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         }
