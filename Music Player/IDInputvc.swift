@@ -26,7 +26,7 @@ class IDInputvc: UIViewController {
     var downloadTasks : [String] = []
     
     var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
-    
+    //var table = downloadTableViewController
     
     
     override func viewDidLoad() {

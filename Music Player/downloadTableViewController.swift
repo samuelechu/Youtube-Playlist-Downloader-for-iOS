@@ -47,6 +47,10 @@ class downloadTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    func reloadTable(){
+        self.tableView.reloadData()
+        println("hey there")
+    }
     
     func reloadCellAtNdx(notification: NSNotification){
         var dict : NSDictionary = notification.userInfo!

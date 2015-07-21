@@ -68,7 +68,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 
                 var num = taskProgress * 100
                 
-               if ( num % 10 ) < 0.6 {
+               if ( num % 10 ) < 0.8 {
                     dispatch_async(dispatch_get_main_queue(),{
                         
                         
