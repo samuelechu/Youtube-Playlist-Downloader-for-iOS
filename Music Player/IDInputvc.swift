@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 
+protocol downloadTableDelegate{
+    func addCell(dict : NSDictionary)
+    func setDLObject(session : dataDownloadObject)
+    func getDLObject() -> dataDownloadObject?
+}
+
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
@@ -17,7 +23,7 @@ class IDInputvc: UIViewController {
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     var vidQual : NSManagedObject!
-    var dlObject = dataDownloadObject(coder: NSCoder())
+    var dlObject : dataDownloadObject!
     var qual : Int!
     
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
@@ -27,6 +33,9 @@ class IDInputvc: UIViewController {
     
     var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
     //var table = downloadTableViewController
+    
+    var tableDelegate : downloadTableDelegate? = nil
+    
     
     
     override func viewDidLoad() {
@@ -48,6 +57,15 @@ class IDInputvc: UIViewController {
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
+        
+        
+        //A background URLSession does not exist, create and save through table delegate for future reuse
+        dlObject = tableDelegate?.getDLObject()
+        
+        if dlObject == nil{
+            dlObject = dataDownloadObject(coder: NSCoder())
+            tableDelegate?.setDLObject(dlObject!)
+        }
         
     }
     
@@ -121,8 +139,8 @@ class IDInputvc: UIViewController {
                     
                     var dict : [String : String] = ["name" : video.title, "duration" : duration, "thumbnail" : thumbnailURL]
                     
-                    NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
-                    
+                    //NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
+                    self.tableDelegate!.addCell(dict)
                     NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil, userInfo : dict as [NSObject : AnyObject])
                     
                     
@@ -169,6 +187,9 @@ class IDInputvc: UIViewController {
         else {
             downloadVideosForChannelAtIndex(ID)
         }
+        
+        
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     

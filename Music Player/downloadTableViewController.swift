@@ -8,7 +8,7 @@
 
 import UIKit
 
-class downloadTableViewController: UITableViewController {
+class downloadTableViewController: UITableViewController, downloadTableDelegate {
     
     var count = 0
     
@@ -19,7 +19,7 @@ class downloadTableViewController: UITableViewController {
     var vidDurations : [String] = []
     
     var images : [UIImage] = []
-    
+    var dlObject : dataDownloadObject!
     /*override func viewWillAppear(animated: Bool) {
         self.tableView.reloadData()
     }*/
@@ -43,9 +43,12 @@ class downloadTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func reloadCells(notification: NSNotification){
-        self.tableView.reloadData()
-    }
+    
+    func setDLObject(session : dataDownloadObject){ dlObject = session }
+    
+    func getDLObject() -> dataDownloadObject? { return dlObject }
+    
+    func reloadCells(notification: NSNotification){ self.tableView.reloadData() }
     
     func reloadTable(){
         self.tableView.reloadData()
@@ -80,10 +83,11 @@ class downloadTableViewController: UITableViewController {
     
     
     
-    func addCell(notification: NSNotification){
+    //func addCell(notification: NSNotification){
         
-        
-        var dict : NSDictionary = notification.userInfo!
+    func addCell(dict : NSDictionary){
+    
+        //var dict : NSDictionary = notification.userInfo!
         
         var cellName : String = dict.valueForKey("name") as! String
         var vidDur : String = dict.valueForKey("duration") as! String
@@ -144,7 +148,12 @@ class downloadTableViewController: UITableViewController {
     }
     
     
-    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showDownloader" {
+            let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
+            downloader.tableDelegate = self
+        }
+    }
     
     
     

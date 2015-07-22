@@ -103,6 +103,7 @@ class Playlist: UITableViewController {
         
         
         self.tableView.reloadData()
+        self.tableView.reloadData()
         NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
     

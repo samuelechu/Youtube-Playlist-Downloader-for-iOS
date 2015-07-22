@@ -16,14 +16,13 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Z7T-zN-JTh" kind="relationship" relationship="viewControllers" id="Hfn-0X-QpX"/>
                         <segue destination="XV7-dE-mCo" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
                         <segue destination="Ab2-ns-uI0" kind="relationship" relationship="viewControllers" id="K34-3p-NQl"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CIm-3j-r0c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-436" y="64"/>
+            <point key="canvasLocation" x="814" y="-213"/>
         </scene>
         <!--Playlist-->
         <scene sceneID="9Pk-jp-AAT">
@@ -32,7 +31,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SongCell" id="XSV-bR-vo6">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -60,7 +59,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jhi-MA-fNU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="353" y="880"/>
+            <point key="canvasLocation" x="814" y="1292"/>
         </scene>
         <!--AV Player View Controller-->
         <scene sceneID="2B0-Yy-Frq">
@@ -68,12 +67,12 @@
                 <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="0Af-T0-k7Q" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nIP-4b-37Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1133" y="1431"/>
+            <point key="canvasLocation" x="1665" y="1292"/>
         </scene>
         <!--Inputvc-->
         <scene sceneID="9c3-vF-bII">
             <objects>
-                <viewController id="cw8-fW-WoJ" customClass="IDInputvc" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="cw8-fW-WoJ" customClass="IDInputvc" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zCL-q7-0XR"/>
                         <viewControllerLayoutGuide type="bottom" id="cY3-W4-pNj"/>
@@ -134,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mln-Y5-uMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1343" y="-149"/>
+            <point key="canvasLocation" x="2379" y="-257"/>
         </scene>
         <!--Vid Qualityvc-->
         <scene sceneID="Cx5-fc-gfh">
@@ -186,7 +185,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAW-3B-MvP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2039" y="-149"/>
+            <point key="canvasLocation" x="2379" y="613"/>
         </scene>
         <!--Downloads-->
         <scene sceneID="a3i-cY-CRc">
@@ -236,11 +235,18 @@
                             <outlet property="delegate" destination="Q5m-0J-m7K" id="exP-GN-5li"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Downloads" id="mlh-H0-P4H"/>
+                    <navigationItem key="navigationItem" title="Downloads" id="mlh-H0-P4H">
+                        <barButtonItem key="backBarButtonItem" title=" " id="3kx-1X-hpj"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="QOF-Hr-Iks">
+                            <connections>
+                                <segue destination="cw8-fW-WoJ" kind="show" identifier="showDownloader" id="bh4-5g-bf8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1951" y="526"/>
+            <point key="canvasLocation" x="1665" y="553"/>
         </scene>
         <!--Playlist-->
         <scene sceneID="zSr-RI-K1K">
@@ -259,7 +265,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TeX-e2-mhb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-459" y="880"/>
+            <point key="canvasLocation" x="814" y="553"/>
         </scene>
         <!--Downloads-->
         <scene sceneID="ijH-WM-FQ8">
@@ -278,26 +284,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3lO-R7-eIC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1139" y="526"/>
-        </scene>
-        <!--Input-->
-        <scene sceneID="fPg-cm-7rM">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Z7T-zN-JTh" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Input" id="ryG-DJ-gJ8"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="GVf-ba-359">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="cw8-fW-WoJ" kind="relationship" relationship="rootViewController" id="W2M-6A-3P6"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oKl-ja-Ra5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="531" y="-149"/>
+            <point key="canvasLocation" x="1665" y="-213"/>
         </scene>
     </scenes>
     <resources>
