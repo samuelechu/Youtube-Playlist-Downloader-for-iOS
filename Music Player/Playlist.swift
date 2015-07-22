@@ -100,9 +100,8 @@ class Playlist: UITableViewController {
         
         context.save(nil)
         
+        songs = context.executeFetchRequest(request, error: nil)
         
-        
-        self.tableView.reloadData()
         self.tableView.reloadData()
         NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
