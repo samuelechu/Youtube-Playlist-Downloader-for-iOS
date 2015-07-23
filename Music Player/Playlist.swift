@@ -23,7 +23,7 @@ class Playlist: UITableViewController {
     
     var playerQueue = AVQueuePlayer()
     var videoTracks : [AVPlayerItemTrack]!
-    
+    var selectedNdx : Int?
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
         var request = NSFetchRequest(entityName: "Songs")
@@ -39,6 +39,7 @@ class Playlist: UITableViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredBackground:", name: "enteredBackgroundID", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
         
     }
     
@@ -106,28 +107,49 @@ class Playlist: UITableViewController {
         NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
     
-    
+    func addSongToQueue(index : Int) {
+        var file = songs[index].valueForKey("identifier") as! String
+        file = file.stringByAppendingString(".mp4")
+        var filePath = documentsDir.stringByAppendingPathComponent(file)
+        
+        let url = NSURL(fileURLWithPath: filePath)
+        var playerItem = AVPlayerItem(URL: url)
+        
+        // var player = AVPlayer(playerItem: playerItem)
+        playerQueue.insertItem(playerItem, afterItem: nil)
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "playVideoSegue" {
             
-            var selectedNdx = tableView.indexPathForSelectedRow()?.row
+            playerQueue.removeAllItems()
             
             
+            selectedNdx = tableView.indexPathForSelectedRow()?.row
             
-            for song in songs{
+            for var index = selectedNdx!; index < songs.count; index++ {
                 
-                var file = song.valueForKey("identifier") as! String
-                file = file.stringByAppendingString(".mp4")
-                var filePath = documentsDir.stringByAppendingPathComponent(file)
-                
-                let url = NSURL(fileURLWithPath: filePath)
-                var playerItem = AVPlayerItem(URL: url)
-                
-                // var player = AVPlayer(playerItem: playerItem)
-                playerQueue.insertItem(playerItem, afterItem: nil)
-                
+                addSongToQueue(index)
             }
+            
+            for var index = 0; index < selectedNdx!; index++ {
+                
+                addSongToQueue(index)
+            }
+            
+            /* for song in songs{
+            
+            var file = song.valueForKey("identifier") as! String
+            file = file.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
+            
+            let url = NSURL(fileURLWithPath: filePath)
+            var playerItem = AVPlayerItem(URL: url)
+            
+            // var player = AVPlayer(playerItem: playerItem)
+            playerQueue.insertItem(playerItem, afterItem: nil)
+            
+            }*/
             
             //set audio to play in bg
             var audio : AVAudioSession = AVAudioSession()
@@ -151,6 +173,24 @@ class Playlist: UITableViewController {
             
         }
     }
+    
+    func playerItemDidReachEnd(notification : NSNotification){
+        if playerQueue.items().count == 1{
+            
+            playerQueue.advanceToNextItem()
+            for var index = selectedNdx!; index < songs.count; index++ {
+                
+                addSongToQueue(index)
+            }
+            
+            for var index = 0; index < selectedNdx!; index++ {
+                
+                addSongToQueue(index)
+            }
+            
+        }
+    }
+    
     
     func enteredForeground(notification: NSNotification){
         if playerQueue.currentItem != nil{
