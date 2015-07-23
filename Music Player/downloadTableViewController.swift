@@ -8,95 +8,57 @@
 
 import UIKit
 
-class downloadTableViewController: UITableViewController, downloadTableDelegate {
-    
-    var count = 0
+class downloadTableViewController: UITableViewController, downloadTableDelegate, downloadObjectDelegate {
     
     var progressValues : [Float] = []
-    
     var downloadNames : [String] = []
-    
     var vidDurations : [String] = []
-    
     var images : [UIImage] = []
+    var count = 0
+    
     var dlObject : dataDownloadObject!
-    /*override func viewWillAppear(animated: Bool) {
-        self.tableView.reloadData()
-    }*/
+    var downloadTasks : [String] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addCell:", name: "addNewCellID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setProgressValue:", name: "setProgressValueID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setDownloadInfo:", name: "setDownloadInfoID", object: nil)
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCells:", name: "reloadCellsID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadCellAtNdx:", name: "reloadCellAtNdxID", object: nil)
-        
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
     func setDLObject(session : dataDownloadObject){ dlObject = session }
-    
     func getDLObject() -> dataDownloadObject? { return dlObject }
-    
-    func reloadCells(notification: NSNotification){ self.tableView.reloadData() }
-    
-    func reloadTable(){
-        self.tableView.reloadData()
-        println("hey there")
+    func setDLTasks(tasks : [String]){ downloadTasks = tasks }
+    func getDLTasks() -> [String] { return downloadTasks }
+    func resetDownloadTasks(notification: NSNotification){
+        downloadTasks = []
+        
     }
     
-    func reloadCellAtNdx(notification: NSNotification){
-        var dict : NSDictionary = notification.userInfo!
-        
-        var rowNumber : Int = dict.valueForKey("ndx")!.integerValue
-        if rowNumber < count{
-            var indexPath = NSIndexPath(forRow: rowNumber, inSection: 0)
+    
+    func reloadCells(){ self.tableView.reloadData() }
+    
+    func reloadCellAtNdx(cellNum : Int){
+        if cellNum < count{
+            var indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         }
     }
     
-    
-    
     //update taskProgress of specific cell
-    func setProgressValue(notification: NSNotification){
-        var dict : NSDictionary = notification.userInfo!
-        
+    func setProgressValue(dict : NSDictionary){
         var cellNum : Int = dict.valueForKey("ndx")!.integerValue
         
         if cellNum < count {
             var taskProgress : Float = dict.valueForKey("value")!.floatValue
             progressValues[cellNum] = taskProgress
         }
-        
-        
     }
     
-    
-    
-    //func addCell(notification: NSNotification){
-        
     func addCell(dict : NSDictionary){
-    
-        //var dict : NSDictionary = notification.userInfo!
-        
         var cellName : String = dict.valueForKey("name") as! String
         var vidDur : String = dict.valueForKey("duration") as! String
-        
-        var url = dict.valueForKey("thumbnail") as! String
-        var thumbnailURL = NSURL(string: url)!
-        let data = NSData(contentsOfURL: thumbnailURL)!
-        var thumbnail = UIImage(data: data)!
-        
+        var thumbnail = dict.valueForKey("thumbnail") as! UIImage
         
         count++
         progressValues += [0.0]
@@ -104,7 +66,6 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate 
         vidDurations += [vidDur]
         images += [thumbnail]
     }
-    // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
@@ -113,8 +74,6 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate 
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
         return count
     }
     
@@ -124,29 +83,15 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate 
         var row = indexPath.row
         
         cell.accessoryType = UITableViewCellAccessoryType.None
+        if progressValues[indexPath.row] == 1.0 { cell.accessoryType = UITableViewCellAccessoryType.Checkmark }
         
         cell.progressBar.progress = progressValues[indexPath.row]
-        
-        
-        if progressValues[indexPath.row] == 1.0 {
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-        }
-        
-        
-        
-        
-        
-        
         cell.imageLabel.image = images[indexPath.row]
         cell.durationLabel.text = vidDurations[indexPath.row]
         cell.downloadLabel.text = downloadNames[indexPath.row]
         
-        
-        // Configure the cell...
-        
         return cell
     }
-    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDownloader" {
@@ -154,11 +99,6 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate 
             downloader.tableDelegate = self
         }
     }
-    
-    
-    
-    
-    
 }
 
 

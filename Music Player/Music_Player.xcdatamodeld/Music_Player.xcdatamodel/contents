@@ -2,14 +2,13 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Songs" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="VidQualitySelection" syncable="YES">
         <attribute name="quality" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Songs" positionX="-63" positionY="-9" width="128" height="90"/>
+        <element name="Songs" positionX="-63" positionY="-9" width="128" height="75"/>
         <element name="VidQualitySelection" positionX="-63" positionY="-18" width="128" height="60"/>
     </elements>
 </model>

@@ -10,24 +10,26 @@ import UIKit
 import Foundation
 import CoreData
 
-
-extension NSURLSessionTask{
-    func start() {
-        self.resume()
-    }
+protocol downloadObjectDelegate{
+    func setProgressValue(dict : NSDictionary)
+    func reloadCellAtNdx(cellNum : Int)
 }
+
 
 class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
+    
     var videoData : [XCDYouTubeVideo] = []
+    
     var session : NSURLSession!
     var taskIDs : [Int] = []
     
+    var tableDelegate : downloadObjectDelegate!
+    
     required init(coder aDecoder: NSCoder){
         super.init()
-        
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("bgSession")
         
         self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
@@ -36,21 +38,19 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
     
-    
+    func setDownloadObjectDelegate(del : downloadObjectDelegate){ tableDelegate = del }
     
     func addVidInfo(vid : XCDYouTubeVideo){
         videoData += [vid]
-        
     }
     
     func startNewTask(targetUrl : NSURL) {
         
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
-        task.start()
+        task.resume()
         
     }
-    
     
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
@@ -58,31 +58,20 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
             
-            
             var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
-            
-            
             
             if cellNum != nil{
                 var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                
                 var num = taskProgress * 100
                 
-               if ( num % 10 ) < 0.8 {
+                if ( num % 10 ) < 0.8 {
                     dispatch_async(dispatch_get_main_queue(),{
-                        
-                        
-                        
-                        
                         var dict = ["ndx" : cellNum!, "value" : taskProgress ]
                         
-                        NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
-                        
-                        NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
-                        
+                        self.tableDelegate.setProgressValue(dict)
+                        self.tableDelegate.reloadCellAtNdx(cellNum!)
                     })
                 }
-                
             }
     }
     
@@ -90,54 +79,30 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
             
-            var ndx = find(self.taskIDs, downloadTask.taskIdentifier)
-            if ndx != nil{
-                var identifier = videoData[ndx!].identifier
-                
-                
+            var cellNum  = find(self.taskIDs, downloadTask.taskIdentifier)
+            if cellNum != nil{
                 var fileData : NSData = NSData(contentsOfURL: location)!
+                var identifier = videoData[cellNum!].identifier
                 var filePath = grabFilePath("\(identifier).mp4")
-                //fileData.writeToURL(fileURL, atomically: true)
                 fileData.writeToFile(filePath, atomically: true)
                 
-                
-                
                 var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
-                
-                
-                
                 newSong.setValue("\(identifier)", forKey: "identifier")
-                //newSong.setValue(filePath, forKey: "location")
-                newSong.setValue("\(videoData[ndx!].title)", forKey: "title")
-                println(newSong)
-                
-                
-                
+                newSong.setValue("\(videoData[cellNum!].title)", forKey: "title")
                 context.save(nil)
                 
-                var dict = ["ndx" : ndx!, "value" : "1.0" ]
-                NSNotificationCenter.defaultCenter().postNotificationName("setProgressValueID", object: nil, userInfo: dict as [NSObject : AnyObject])
+                var dict = ["ndx" : cellNum!, "value" : "1.0" ]
                 
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadCellAtNdxID", object: nil, userInfo : dict as [NSObject : AnyObject])
-
+                self.tableDelegate.setProgressValue(dict)
+                self.tableDelegate.reloadCellAtNdx(cellNum!)
             }
-            
-            
-            
-
-            
-            
-            
     }
     
     func grabFilePath(fileName : String) -> String {
-        
         let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
         let writePath = documents.stringByAppendingPathComponent("\(fileName)")
         
         return writePath
-        
-        
     }
     
     

@@ -72,7 +72,7 @@ class Playlist: UITableViewController {
     
     @IBAction func deleteAll() {
         
-                
+        
         var fileManager = NSFileManager.defaultManager()
         var request = NSFetchRequest(entityName: "Songs")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!

@@ -11,32 +11,30 @@ import CoreData
 
 protocol downloadTableDelegate{
     func addCell(dict : NSDictionary)
+    func reloadCells()
+    
+    //necessary because IDInputvc view is reset when it is popped
     func setDLObject(session : dataDownloadObject)
     func getDLObject() -> dataDownloadObject?
+    func setDLTasks(tasks : [String])
+    func getDLTasks() -> [String]
 }
 
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
     @IBOutlet var downloadButton: UIButton!
-    var numDownloads = 0
+    
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
-    var vidQual : NSManagedObject!
-    var dlObject : dataDownloadObject!
-    var qual : Int!
-    
-    var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
-    
-    var videoIDs : [String] = []
-    var downloadTasks : [String] = []
-    
-    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
-    //var table = downloadTableViewController
     
     var tableDelegate : downloadTableDelegate? = nil
+    var dlObject : dataDownloadObject!
     
-    
+    var downloadTasks : [String] = []//array of video identifiers
+    var numDownloads = 0
+    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
+    var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,46 +48,32 @@ class IDInputvc: UIViewController {
         var request = NSFetchRequest(entityName: "VidQualitySelection")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         if results.count == 0 {
-            vidQual = NSEntityDescription.insertNewObjectForEntityForName("VidQualitySelection", inManagedObjectContext: context) as! NSManagedObject
+            var vidQual = NSEntityDescription.insertNewObjectForEntityForName("VidQualitySelection", inManagedObjectContext: context) as! NSManagedObject
             
             vidQual.setValue(0, forKey: "quality")
             
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
-        
-        
-        //A background URLSession does not exist, create and save through table delegate for future reuse
+        downloadTasks = (tableDelegate?.getDLTasks())!
         dlObject = tableDelegate?.getDLObject()
         
+        //If a background URLSession does not exist, create and save through table delegate for future reuse
         if dlObject == nil{
             dlObject = dataDownloadObject(coder: NSCoder())
+            dlObject.setDownloadObjectDelegate((tableDelegate as? downloadObjectDelegate)!)
             tableDelegate?.setDLObject(dlObject!)
         }
         
     }
     
-    func resetDownloadTasks(notification: NSNotification){
-        downloadTasks = []
-    }
-    
     func DismissKeyboard(){
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
-    
-    
-    
-    
     @IBAction func finishedEditing() {
         view.endEditing(true)
     }
-    
-    
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     //check if video in stored memory
@@ -111,17 +95,13 @@ class IDInputvc: UIViewController {
     
     
     func startDownloadTaskHelper(ID : String, qual : Int){
-        
-        
         if(find(downloadTasks, ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
-                
                 if error == nil {
                     var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
                     var desiredURL : NSURL!
                     
                     if (qual == 0){ //360P
-                        
                         desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
                     }
                         
@@ -132,19 +112,14 @@ class IDInputvc: UIViewController {
                     var duration = self.stringFromTimeInterval(video.duration)
                     
                     //get thumbnail
-                    /*var url = NSURL(string: "\(video.smallThumbnailURL)")
-                    let data = NSData(contentsOfURL: url!)
-                    var image = UIImage(data: data!)*/
-                    var thumbnailURL = "\(video.smallThumbnailURL)"
+                    var thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+                    let data = NSData(contentsOfURL: thumbnailURL!)
+                    var image = UIImage(data: data!)
                     
-                    var dict : [String : String] = ["name" : video.title, "duration" : duration, "thumbnail" : thumbnailURL]
+                    var dict = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
                     
-                    //NSNotificationCenter.defaultCenter().postNotificationName("addNewCellID", object: nil, userInfo: dict as [NSObject : AnyObject])
                     self.tableDelegate!.addCell(dict)
-                    NSNotificationCenter.defaultCenter().postNotificationName("reloadCellsID", object: nil, userInfo : dict as [NSObject : AnyObject])
-                    
-                    
-                    
+                    self.tableDelegate!.reloadCells()
                     
                     self.dlObject.addVidInfo(video)
                     self.dlObject.startNewTask(desiredURL)
@@ -152,24 +127,16 @@ class IDInputvc: UIViewController {
             })
         }
     }
-    func showButton() {
-        downloadButton.hidden = false
-    }
     
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
-        
-        downloadButton.hidden = true
-        var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("showButton"), userInfo: nil, repeats: false)
-        
-        
         
         
         //get vid quality
         var request = NSFetchRequest(entityName: "VidQualitySelection")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
-        vidQual = results[0] as! NSManagedObject
-        qual = vidQual.valueForKey("quality") as! Int
+        var vidQual = results[0] as! NSManagedObject
+        var qual = vidQual.valueForKey("quality") as! Int
         
         
         
@@ -180,19 +147,18 @@ class IDInputvc: UIViewController {
                 
                 startDownloadTaskHelper(ID, qual: qual)
                 downloadTasks += [ID]
+                tableDelegate?.setDLTasks(downloadTasks)
             }
         }
             
             
         else {
-            downloadVideosForChannelAtIndex(ID)
+            downloadVideosForChannelAtIndex(ID, qual: qual)
         }
         
         
         self.navigationController?.popViewControllerAnimated(true)
     }
-    
-    
     
     func stringFromTimeInterval(interval: NSTimeInterval) -> String {
         let interval = Int(interval)
@@ -201,10 +167,6 @@ class IDInputvc: UIViewController {
         let hours = (interval / 3600)
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
-    
-    
-    
-    
     
     func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: targetURL)
@@ -223,11 +185,7 @@ class IDInputvc: UIViewController {
         task.resume()
     }
     
-    
-    
-    
-    
-    func downloadVideosForChannelAtIndex(playlistID : String) {
+    func downloadVideosForChannelAtIndex(playlistID : String, qual : Int) {
         
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
@@ -243,25 +201,24 @@ class IDInputvc: UIViewController {
                 let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
                 let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
                 var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
+                var videoIDs : [String] = []
                 
                 for item : Dictionary<NSObject, AnyObject> in items {
                     let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
                     var vidID : String = playlistContentDict["videoId"] as! String
-                    self.videoIDs += [vidID]
+                    videoIDs += [vidID]
                 }
                 
-                for identifier : String in self.videoIDs {
+                for identifier : String in videoIDs {
                     
                     var isStored = self.vidStored(identifier)
                     
                     if (!isStored){
-                        self.startDownloadTaskHelper(identifier, qual: self.qual)
+                        self.startDownloadTaskHelper(identifier, qual: qual)
                         self.downloadTasks += [identifier]
                     }
                 }
-                
-                
-                
+                self.tableDelegate?.setDLTasks(self.downloadTasks)
             }
                 
             else {
@@ -271,20 +228,4 @@ class IDInputvc: UIViewController {
             
         })
     }
-    
-    
-    
-    
-    
-    
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
-    
 }

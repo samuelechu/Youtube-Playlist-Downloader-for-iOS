@@ -9,24 +9,22 @@
 import UIKit
 
 class downloadCell: UITableViewCell {
-
+    
     @IBOutlet var durationLabel: UILabel!
     @IBOutlet var downloadLabel: UILabel!
     @IBOutlet var imageLabel: UIImageView!
     @IBOutlet var progressBar: UIProgressView!
-    
-    @IBOutlet var progressLabel: UILabel!
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
 }
