@@ -64,10 +64,45 @@
         <!--AV Player View Controller-->
         <scene sceneID="2B0-Yy-Frq">
             <objects>
-                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="0Af-T0-k7Q" sceneMemberID="viewController"/>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="0Af-T0-k7Q" customClass="Player" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </avPlayerViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nIP-4b-37Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1665" y="1292"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="80Z-1k-Z2B">
+            <objects>
+                <viewController id="oyD-ux-RlT" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UdB-UD-sMt"/>
+                        <viewControllerLayoutGuide type="bottom" id="O1S-Ku-4Bd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e4o-3N-lr9" userLabel="overlay">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oHl-Wr-19E">
+                                <rect key="frame" x="137" y="145" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zgz-PX-5T4">
+                                <rect key="frame" x="137" y="509" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e4M-P8-aIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2353" y="1292"/>
         </scene>
         <!--Inputvc-->
         <scene sceneID="9c3-vF-bII">
@@ -185,7 +220,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAW-3B-MvP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2379" y="613"/>
+            <point key="canvasLocation" x="2379" y="553"/>
         </scene>
         <!--Downloads-->
         <scene sceneID="a3i-cY-CRc">
