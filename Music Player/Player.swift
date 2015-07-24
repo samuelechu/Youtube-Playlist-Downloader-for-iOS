@@ -10,32 +10,73 @@ import UIKit
 import AVKit
 import AVFoundation
 
-class Player: AVPlayerViewController {
 
+protocol PlaylistDelegate{
+    func advance()
+    func retreat()
+}
+
+class Player: AVPlayerViewController {
+    
+    @IBOutlet var overlay: UIView!
+    @IBOutlet var button: UIButton!
+    
+    
+    var playlistDelegate : PlaylistDelegate? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let label = UILabel()
-        label.text = "TEST"
-        label.textColor = UIColor.whiteColor()
-        label.sizeToFit()
-        self.contentOverlayView.addSubview(label)
-        // Do any additional setup after loading the view.
+        
+        var swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        swipeRight.direction = UISwipeGestureRecognizerDirection.Right
+        self.view.addGestureRecognizer(swipeRight)
+        
+        var swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
+        self.view.addGestureRecognizer(swipeLeft)
     }
-
+    
+    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+        
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.Right:
+                playlistDelegate?.retreat()
+            case UISwipeGestureRecognizerDirection.Left:
+                playlistDelegate?.advance()
+            default:
+                break
+            }
+        }
+    }
+    
+    @IBAction func buttonPressed() {
+        println("hi")
+    }
+    func bringButtonToFront(){
+        //button.hidden = false
+        println("hih")
+        // view.bringSubviewToFront(overlay)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        //overlay.frame = view.bounds
+    }
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
 }

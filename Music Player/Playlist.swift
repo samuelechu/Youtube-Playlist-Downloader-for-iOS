@@ -11,7 +11,7 @@ import CoreData
 import AVFoundation
 import AVKit
 
-class Playlist: UITableViewController {
+class Playlist: UITableViewController, PlaylistDelegate {
     
     
     var appDel : AppDelegate!
@@ -23,7 +23,7 @@ class Playlist: UITableViewController {
     
     var playerQueue = AVQueuePlayer()
     var videoTracks : [AVPlayerItemTrack]!
-    var selectedNdx : Int?
+    var selectedNdx : Int!
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
         var request = NSFetchRequest(entityName: "Songs")
@@ -41,7 +41,17 @@ class Playlist: UITableViewController {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
         
+        
+        
+        //set audio to play in bg
+        var audio : AVAudioSession = AVAudioSession()
+        audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
+        audio.setActive(true, error: nil)
     }
+    
+    
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -107,7 +117,8 @@ class Playlist: UITableViewController {
         NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
     
-    func addSongToQueue(index : Int) {
+    
+    func getSongAtIndex(index : Int) -> AVPlayerItem {
         var file = songs[index].valueForKey("identifier") as! String
         file = file.stringByAppendingString(".mp4")
         var filePath = documentsDir.stringByAppendingPathComponent(file)
@@ -115,82 +126,103 @@ class Playlist: UITableViewController {
         let url = NSURL(fileURLWithPath: filePath)
         var playerItem = AVPlayerItem(URL: url)
         
+        return playerItem
+    }
+    
+    
+    func addSongToQueue(index : Int) {
+        
+        var playerItem = getSongAtIndex(index)
+        
         // var player = AVPlayer(playerItem: playerItem)
         playerQueue.insertItem(playerItem, afterItem: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "playVideoSegue" {
+        
+        
+        
+        
+        if segue.identifier == "showPlayer" {
             
             playerQueue.removeAllItems()
             
-            
             selectedNdx = tableView.indexPathForSelectedRow()?.row
+            fillPlaylistQueue()
             
-            for var index = selectedNdx!; index < songs.count; index++ {
-                
-                addSongToQueue(index)
-            }
             
-            for var index = 0; index < selectedNdx!; index++ {
-                
-                addSongToQueue(index)
-            }
             
-            /* for song in songs{
             
-            var file = song.valueForKey("identifier") as! String
-            file = file.stringByAppendingString(".mp4")
-            var filePath = documentsDir.stringByAppendingPathComponent(file)
-            
-            let url = NSURL(fileURLWithPath: filePath)
-            var playerItem = AVPlayerItem(URL: url)
-            
-            // var player = AVPlayer(playerItem: playerItem)
-            playerQueue.insertItem(playerItem, afterItem: nil)
-            
-            }*/
-            
-            //set audio to play in bg
-            var audio : AVAudioSession = AVAudioSession()
-            audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
-            audio.setActive(true, error: nil)
-            
-            //if download finished, initialize avplayer
-            let destination = segue.destinationViewController as! AVPlayerViewController
-            
-            /*var file = songs[selectedNdx!].valueForKey("identifier") as! String
-            file = file.stringByAppendingString(".mp4")
-            var filePath = documentsDir.stringByAppendingPathComponent(file)
-            
-            let url = NSURL(fileURLWithPath: filePath)
-            playerItem = AVPlayerItem(URL: url)
-            
-            var player = AVPlayer(playerItem: playerItem)
-            destination.player = player*/
-            destination.player = playerQueue
+            //if download finished, initialize avplayer\
+            let player : Player = segue.destinationViewController as! Player
+            player.playlistDelegate = self
+            player.player = playerQueue
             
             
         }
     }
     
     func playerItemDidReachEnd(notification : NSNotification){
-        if playerQueue.items().count == 1{
-            
-            playerQueue.advanceToNextItem()
-            for var index = selectedNdx!; index < songs.count; index++ {
-                
-                addSongToQueue(index)
-            }
-            
-            for var index = 0; index < selectedNdx!; index++ {
-                
-                addSongToQueue(index)
-            }
-            
-        }
+        var curItem = playerQueue.currentItem
+        curItem.seekToTime(kCMTimeZero)
+        playerQueue.advanceToNextItem()
+        playerQueue.insertItem(curItem, afterItem: nil)
+        
+        /*if playerQueue.items().count == 0{
+            fillPlaylistQueue()
+        }*/
     }
     
+    func advance(){
+        var curItem = playerQueue.currentItem
+        curItem.seekToTime(kCMTimeZero)
+        playerQueue.advanceToNextItem()
+        playerQueue.insertItem(curItem, afterItem: nil)
+        
+        
+        
+        
+    }
+    
+    func retreat(){
+        
+        
+        if selectedNdx == 0 {
+            selectedNdx = songs.count - 1
+        }
+        else {
+            selectedNdx = selectedNdx - 1
+        }
+        
+        var lastItemNdx = playerQueue.items().count - 1
+        var lastItem = playerQueue.items()[lastItemNdx] as! AVPlayerItem
+        playerQueue.removeItem(lastItem)
+        
+        var curItem = playerQueue.currentItem
+        curItem.seekToTime(kCMTimeZero)
+        playerQueue.insertItem(lastItem, afterItem: curItem)
+        playerQueue.advanceToNextItem()
+        playerQueue.insertItem(curItem, afterItem: lastItem)
+        
+        
+        
+        
+        //var playerItem = getSongAtIndex(index)
+    }
+    
+    func fillPlaylistQueue(){
+        for var index = selectedNdx!; index < songs.count; index++ {
+            
+            addSongToQueue(index)
+        }
+        
+        for var index = 0; index < selectedNdx!; index++ {
+            
+            addSongToQueue(index)
+        }
+        
+
+    }
     
     func enteredForeground(notification: NSNotification){
         if playerQueue.currentItem != nil{
@@ -227,7 +259,6 @@ class Playlist: UITableViewController {
         var cell = self.tableView.cellForRowAtIndexPath(indexPath)
         println(cell!.textLabel?.text)
     }
-    
     
     
     /*
