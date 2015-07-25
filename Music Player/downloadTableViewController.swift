@@ -10,6 +10,7 @@ import UIKit
 
 class downloadTableViewController: UITableViewController, downloadTableDelegate, downloadObjectDelegate {
     
+    @IBOutlet var overlay: UIView!
     var progressValues : [Float] = []
     var downloadNames : [String] = []
     var vidDurations : [String] = []
@@ -23,7 +24,17 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
+        
+        view.addSubview(overlay)
+        view.sendSubviewToBack(overlay)
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        overlay.frame = view.bounds
+    }
+    
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
     func setDLObject(session : dataDownloadObject){ dlObject = session }

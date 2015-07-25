@@ -48,7 +48,7 @@
                             <outlet property="delegate" destination="Mzs-fZ-jAu" id="REU-mc-5Rd"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Playlist" id="Zv2-5Q-Bvi"/>
+                    <tabBarItem key="tabBarItem" title="Playlist" image="clef.png" selectedImage="clef.png" id="Zv2-5Q-Bvi"/>
                     <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
                         <barButtonItem key="leftBarButtonItem" title="Delete All" id="hni-sx-vGP">
                             <connections>
@@ -156,12 +156,12 @@
                         <constraints>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="Adk-4o-lup"/>
                             <constraint firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="M2e-Dk-Jnd"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="RgN-yD-jdB"/>
                             <constraint firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Uaf-Sd-SlS"/>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="ehv-if-bh7"/>
                             <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="epL-F7-ays"/>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="fZ3-GH-cL0"/>
                             <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="huP-Uo-ag9"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="jQg-pe-nrk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5Co-qK-ktT">
@@ -273,6 +273,8 @@
                                             </variation>
                                         </progressView>
                                     </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="downloadLabel" destination="tRX-qw-41Q" id="akq-7r-SOe"/>
@@ -295,7 +297,25 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="overlay" destination="Pvi-nq-wiG" id="hVO-cC-8PD"/>
+                    </connections>
                 </tableViewController>
+                <view contentMode="scaleToFill" id="Pvi-nq-wiG">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="hills.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="pfc-cY-sVm">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="pfc-cY-sVm" secondAttribute="bottom" id="OGq-fB-qGq"/>
+                        <constraint firstItem="pfc-cY-sVm" firstAttribute="top" secondItem="Pvi-nq-wiG" secondAttribute="top" id="jQp-Mf-xCV"/>
+                        <constraint firstItem="pfc-cY-sVm" firstAttribute="leading" secondItem="Pvi-nq-wiG" secondAttribute="leading" id="lgg-T3-DRA"/>
+                    </constraints>
+                </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1665" y="552"/>
@@ -340,6 +360,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="clef.png" width="30" height="30"/>
         <image name="hills.jpg" width="900" height="1600"/>
     </resources>
 </document>
