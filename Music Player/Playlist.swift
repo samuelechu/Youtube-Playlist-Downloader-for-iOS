@@ -11,6 +11,7 @@ import CoreData
 import AVFoundation
 import AVKit
 
+
 class Playlist: UITableViewController, PlaylistDelegate {
     
     
@@ -18,9 +19,9 @@ class Playlist: UITableViewController, PlaylistDelegate {
     var context : NSManagedObjectContext!
     var songs : NSArray!
     let songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
-    
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
+    var x : [Int] = []
     var playerQueue = AVQueuePlayer()
     var videoTracks : [AVPlayerItemTrack]!
     var selectedNdx : Int!
@@ -30,6 +31,14 @@ class Playlist: UITableViewController, PlaylistDelegate {
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
         self.tableView.reloadData()
+        
+        x = []
+        if songs.count > 0 {
+            for var index = 0; index < songs.count; ++index {
+                x += [index]
+            }
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -42,11 +51,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
         
         
-        
         //set audio to play in bg
         var audio : AVAudioSession = AVAudioSession()
         audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
         audio.setActive(true, error: nil)
+        
     }
     
     
@@ -76,10 +85,34 @@ class Playlist: UITableViewController, PlaylistDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! UITableViewCell
         
-        cell.textLabel?.text = songs[indexPath.row].valueForKey("title") as? String
+        
+        
+        var row = x[indexPath.row]
+        cell.textLabel?.text = songs[row].valueForKey("title") as? String
         return cell
     }
     
+    func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
+        let c = count(list)
+        for i in 0..<(c - 1) {
+            let j = Int(arc4random_uniform(UInt32(c - i))) + i
+            swap(&list[i], &list[j])
+        }
+    }
+    
+    @IBAction func shufflePlaylist() {
+        x = []
+        if songs.count > 0 {
+            for var index = 0; index < songs.count; ++index {
+                x += [index]
+            }
+        }
+        shuffle(&x)
+        println(x)
+        self.tableView.reloadData()
+        
+        
+    }
     
     @IBAction func deleteAll() {
         
@@ -132,7 +165,8 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     func addSongToQueue(index : Int) {
         
-        var playerItem = getSongAtIndex(index)
+        var ndx = x[index]
+        var playerItem = getSongAtIndex(ndx)
         
         // var player = AVPlayer(playerItem: playerItem)
         playerQueue.insertItem(playerItem, afterItem: nil)
@@ -164,12 +198,18 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     func playerItemDidReachEnd(notification : NSNotification){
         var curItem = playerQueue.currentItem
+        
+        videoTracks = curItem.tracks as! [AVPlayerItemTrack]
+        for track : AVPlayerItemTrack in videoTracks{
+            track.enabled = true; // enable the track
+        }
+        
         curItem.seekToTime(kCMTimeZero)
         playerQueue.advanceToNextItem()
         playerQueue.insertItem(curItem, afterItem: nil)
         
         /*if playerQueue.items().count == 0{
-            fillPlaylistQueue()
+        fillPlaylistQueue()
         }*/
     }
     
@@ -221,7 +261,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             addSongToQueue(index)
         }
         
-
+        
     }
     
     func enteredForeground(notification: NSNotification){
@@ -244,7 +284,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
             for track : AVPlayerItemTrack in videoTracks{
                 
                 if(!track.assetTrack.hasMediaCharacteristic("AVMediaCharacteristicAudible")){
-                    println("disabled track")
                     track.enabled = false; // disable the track
                 }
             }

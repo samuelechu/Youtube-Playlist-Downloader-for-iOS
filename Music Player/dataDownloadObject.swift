@@ -64,7 +64,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
                 var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 var num = taskProgress * 100
                 
-                if ( num % 10 ) < 0.8 {
+                if ( num % 10 ) < 0.8 && taskProgress != 1.0 {
                     dispatch_async(dispatch_get_main_queue(),{
                         var dict = ["ndx" : cellNum!, "value" : taskProgress ]
                         
@@ -78,19 +78,23 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
-            
+            var loc = location
             var cellNum  = find(self.taskIDs, downloadTask.taskIdentifier)
             if cellNum != nil{
-                var fileData : NSData = NSData(contentsOfURL: location)!
-                var identifier = videoData[cellNum!].identifier
-                var filePath = grabFilePath("\(identifier).mp4")
-                fileData.writeToFile(filePath, atomically: true)
                 
-                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
+                //move file from temporary folder to documents folder
+                var fileData : NSData? = NSData(contentsOfURL: loc)
+                var identifier = self.videoData[cellNum!].identifier
+                var filePath = self.grabFilePath("\(identifier).mp4")
+                NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath, error: nil)
+                
+                //save to CoreData
+                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
                 newSong.setValue("\(identifier)", forKey: "identifier")
-                newSong.setValue("\(videoData[cellNum!].title)", forKey: "title")
-                context.save(nil)
+                newSong.setValue("\(self.videoData[cellNum!].title)", forKey: "title")
+                self.context.save(nil)
                 
+                //display checkmark for completion
                 var dict = ["ndx" : cellNum!, "value" : "1.0" ]
                 
                 self.tableDelegate.setProgressValue(dict)

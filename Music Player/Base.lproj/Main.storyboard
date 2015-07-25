@@ -16,8 +16,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="XV7-dE-mCo" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
                         <segue destination="Ab2-ns-uI0" kind="relationship" relationship="viewControllers" id="K34-3p-NQl"/>
+                        <segue destination="XV7-dE-mCo" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CIm-3j-r0c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -50,9 +50,14 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Playlist" id="Zv2-5Q-Bvi"/>
                     <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
-                        <barButtonItem key="rightBarButtonItem" title="Delete All" id="hni-sx-vGP">
+                        <barButtonItem key="leftBarButtonItem" title="Delete All" id="hni-sx-vGP">
                             <connections>
                                 <action selector="deleteAll" destination="Mzs-fZ-jAu" id="45l-FG-jge"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Shuffle" id="afX-v4-wak">
+                            <connections>
+                                <action selector="shufflePlaylist" destination="Mzs-fZ-jAu" id="GvR-tj-fZU"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -242,14 +247,14 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iz5-FC-6Ux" id="bSb-QP-qxp">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jid-D2-xA4">
-                                            <rect key="frame" x="106" y="40" width="162" height="2"/>
-                                        </progressView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Initializing download... " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRX-qw-41Q">
                                             <rect key="frame" x="106" y="11" width="162" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
+                                            <variation key="heightClass=compact" fixedFrame="YES">
+                                                <rect key="frame" x="106" y="11" width="405" height="21"/>
+                                            </variation>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DWx-lP-gjn">
                                             <rect key="frame" x="8" y="11" width="90" height="60"/>
@@ -261,6 +266,12 @@
                                             <nil key="highlightedColor"/>
                                             <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jid-D2-xA4">
+                                            <rect key="frame" x="106" y="40" width="162" height="2"/>
+                                            <variation key="heightClass=compact" fixedFrame="YES">
+                                                <rect key="frame" x="106" y="40" width="405" height="2"/>
+                                            </variation>
+                                        </progressView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
@@ -287,13 +298,13 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1665" y="553"/>
+            <point key="canvasLocation" x="1665" y="552"/>
         </scene>
-        <!--Playlist-->
+        <!--Navigation Controller-->
         <scene sceneID="zSr-RI-K1K">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ab2-ns-uI0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Playlist" id="2p4-8c-j5E"/>
+                    <tabBarItem key="tabBarItem" id="2p4-8c-j5E"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="iAh-ZT-Yw8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -308,11 +319,11 @@
             </objects>
             <point key="canvasLocation" x="814" y="553"/>
         </scene>
-        <!--Downloads-->
+        <!--Navigation Controller-->
         <scene sceneID="ijH-WM-FQ8">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XV7-dE-mCo" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Downloads" id="Hcz-Mg-jfW"/>
+                    <tabBarItem key="tabBarItem" systemItem="downloads" id="Hcz-Mg-jfW"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7N-wB-HxD">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
