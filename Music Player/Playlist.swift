@@ -58,6 +58,9 @@ class Playlist: UITableViewController, PlaylistDelegate {
         super.didReceiveMemoryWarning()
     }
     
+    
+
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -71,6 +74,9 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         var row = x[indexPath.row]
         cell.textLabel?.text = songs[row].valueForKey("title") as? String
+        
+        cell.contentView.backgroundColor = UIColor.clearColor()
+        cell.backgroundColor = UIColor.clearColor()
         return cell
     }
     
@@ -90,11 +96,45 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     
     @IBAction func deleteAll() {
-        var fileManager = NSFileManager.defaultManager()
         var request = NSFetchRequest(entityName: "Songs")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         
-        for entity in results {//remove item in both documents directory and persistentData
+        deleteSongs(results)
+        songs = context.executeFetchRequest(request, error: nil)
+        self.tableView.reloadData()
+        NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
+    }
+    
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            var row = x[indexPath.row]
+            x.removeAtIndex(indexPath.row)
+            
+            for var index = 0; index < x.count; ++index {
+                if x[index] > row {
+                    x[index]--
+                }
+            }
+            
+            var selectedSong = fetchSong(row)
+            
+            var dict = ["identifier" : selectedSong[0].valueForKey("identifier")!]
+            NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            
+            deleteSongs(selectedSong)
+            
+            var request = NSFetchRequest(entityName: "Songs")
+            request.sortDescriptors = [songSortDescriptor]
+            songs = context.executeFetchRequest(request, error: nil)
+            self.tableView.reloadData()
+        }
+    }
+    
+    func deleteSongs(songsToDelete : NSArray){
+        var fileManager = NSFileManager.defaultManager()
+        
+        for entity in songsToDelete {//remove item in both documents directory and persistentData
             var file = (entity as! NSManagedObject).valueForKey("identifier") as! String
             file = file.stringByAppendingString(".mp4")
             var filePath = documentsDir.stringByAppendingPathComponent(file)
@@ -103,11 +143,22 @@ class Playlist: UITableViewController, PlaylistDelegate {
         }
         
         context.save(nil)
-        songs = context.executeFetchRequest(request, error: nil)
         
-        self.tableView.reloadData()
-        NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
+    
+    
+    
+    func fetchSong (ndx : Int) -> NSArray{
+        
+        var identifier = songs[ndx].valueForKey("identifier") as! String
+        var request = NSFetchRequest(entityName: "Songs")
+        request.predicate = NSPredicate(format: "identifier = %@", identifier)
+        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        return results
+    }
+    
+    
+    
     
     func getSongAtIndex(index : Int) -> AVPlayerItem {
         var file = songs[index].valueForKey("identifier") as! String

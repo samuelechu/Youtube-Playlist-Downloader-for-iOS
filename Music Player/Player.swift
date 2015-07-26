@@ -24,6 +24,16 @@ class Player: AVPlayerViewController {
     
     var playlistDelegate : PlaylistDelegate? = nil
     
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.becomeFirstResponder()
+        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +59,20 @@ class Player: AVPlayerViewController {
                 break
             }
         }
+    }
+    
+    
+    override func remoteControlReceivedWithEvent(event: UIEvent) {
+        let rc = event.subtype
+        
+        switch rc {
+        case .RemoteControlNextTrack:
+            playlistDelegate?.advance()
+        case .RemoteControlPreviousTrack:
+            playlistDelegate?.retreat()
+        default:break
+        }
+        
     }
     
     @IBAction func buttonPressed() {

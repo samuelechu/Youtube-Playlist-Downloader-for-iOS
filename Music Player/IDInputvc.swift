@@ -130,7 +130,9 @@ class IDInputvc: UIViewController {
     
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
-        
+        if let index = find(ID, "=") {
+            ID = ID.substringFromIndex(advance(index, 1)) 
+        }
         
         //get vid quality
         var request = NSFetchRequest(entityName: "VidQualitySelection")

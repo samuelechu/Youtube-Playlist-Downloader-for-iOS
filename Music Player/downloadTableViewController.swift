@@ -10,7 +10,6 @@ import UIKit
 
 class downloadTableViewController: UITableViewController, downloadTableDelegate, downloadObjectDelegate {
     
-    @IBOutlet var overlay: UIView!
     var progressValues : [Float] = []
     var downloadNames : [String] = []
     var vidDurations : [String] = []
@@ -24,16 +23,8 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
-        
-        view.addSubview(overlay)
-        view.sendSubviewToBack(overlay)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        overlay.frame = view.bounds
-    }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
@@ -41,9 +32,21 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
     func getDLObject() -> dataDownloadObject? { return dlObject }
     func setDLTasks(tasks : [String]){ downloadTasks = tasks }
     func getDLTasks() -> [String] { return downloadTasks }
+    
     func resetDownloadTasks(notification: NSNotification){
-        downloadTasks = []
+        var dict : NSDictionary? = notification.userInfo
+        if dict == nil {
+            downloadTasks = []
+        }
         
+        else {
+            var identifier = dict!.valueForKey("identifier") as! String
+            var x = find(downloadTasks, identifier)
+            if x != nil {
+                downloadTasks.removeAtIndex(x!)
+            }
+            
+        }
     }
     
     
@@ -100,7 +103,9 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
         cell.imageLabel.image = images[indexPath.row]
         cell.durationLabel.text = vidDurations[indexPath.row]
         cell.downloadLabel.text = downloadNames[indexPath.row]
-        
+        cell.contentView.backgroundColor = UIColor.clearColor()
+        cell.backgroundColor = UIColor.clearColor()
+
         return cell
     }
     

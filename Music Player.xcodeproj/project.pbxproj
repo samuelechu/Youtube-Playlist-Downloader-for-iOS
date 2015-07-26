@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2242ADDB1B64229700DB900C /* clef.png in Resources */ = {isa = PBXBuildFile; fileRef = 228DA8461B63650900A71391 /* clef.png */; };
 		22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDA1B47212F00C075FF /* AppDelegate.swift */; };
 		22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDC1B47212F00C075FF /* Music_Player.xcdatamodeld */; };
 		22433FE31B47212F00C075FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE11B47212F00C075FF /* Main.storyboard */; };
@@ -19,7 +20,6 @@
 		224340081B472FB800C075FF /* dataDownloadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* dataDownloadObject.swift */; };
 		2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
-		228DA8471B63650900A71391 /* clef.png in Resources */ = {isa = PBXBuildFile; fileRef = 228DA8461B63650900A71391 /* clef.png */; };
 		22AD6B321B47BB7D00428602 /* VidQualityvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* VidQualityvc.swift */; };
 		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
 		22E0BD581B596A7700292FD4 /* droplets.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22E0BD571B596A7700292FD4 /* droplets.jpg */; };
@@ -267,7 +267,7 @@
 				22E0BD5E1B596C8900292FD4 /* purplewaterdroplet.jpg in Resources */,
 				22E0BD5D1B596C8900292FD4 /* hills.jpg in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,
-				228DA8471B63650900A71391 /* clef.png in Resources */,
+				2242ADDB1B64229700DB900C /* clef.png in Resources */,
 				22E0BD581B596A7700292FD4 /* droplets.jpg in Resources */,
 				22433FE51B47212F00C075FF /* Images.xcassets in Resources */,
 				22E0BD5C1B596C8900292FD4 /* abstract.jpg in Resources */,
