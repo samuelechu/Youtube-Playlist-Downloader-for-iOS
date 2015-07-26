@@ -74,7 +74,7 @@
             </objects>
             <point key="canvasLocation" x="1665" y="1292"/>
         </scene>
-        <!--Inputvc-->
+        <!-- -->
         <scene sceneID="9c3-vF-bII">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="cw8-fW-WoJ" customClass="IDInputvc" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
@@ -89,16 +89,6 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hills.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="xGJ-5N-C4b">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
-                                <rect key="frame" x="266" y="210" width="69" height="30"/>
-                                <state key="normal" title="Download">
-                                    <color key="titleColor" red="0.25490197539329529" green="0.94509810209274292" blue="0.38823533058166504" alpha="1" colorSpace="deviceRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
                                 <rect key="frame" x="204" y="148" width="193" height="30"/>
                                 <constraints>
@@ -110,20 +100,30 @@
                                     <action selector="finishedEditing" destination="cw8-fW-WoJ" eventType="editingDidEndOnExit" id="IXL-N1-Jxk"/>
                                 </connections>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
+                                <rect key="frame" x="266" y="210" width="69" height="30"/>
+                                <state key="normal" title="Download">
+                                    <color key="titleColor" red="0.25490197539329529" green="0.94509810209274292" blue="0.38823533058166504" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="Adk-4o-lup"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="IYA-vr-zn9"/>
                             <constraint firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="M2e-Dk-Jnd"/>
                             <constraint firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Uaf-Sd-SlS"/>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="ehv-if-bh7"/>
                             <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="epL-F7-ays"/>
                             <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="fZ3-GH-cL0"/>
                             <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="huP-Uo-ag9"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="jQg-pe-nrk"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="5Co-qK-ktT">
+                    <navigationItem key="navigationItem" title=" " id="5Co-qK-ktT">
                         <barButtonItem key="backBarButtonItem" title=" " id="EOn-GP-LQW"/>
                         <barButtonItem key="rightBarButtonItem" title="Settings" id="j7V-n6-BKZ">
                             <connections>
@@ -187,7 +187,25 @@
                             <outlet property="delegate" destination="247-Kv-uP9" id="6HN-IB-kLX"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="overlay" destination="HEy-ow-ssK" id="VRz-f0-HWZ"/>
+                    </connections>
                 </tableViewController>
+                <view contentMode="scaleToFill" id="HEy-ow-ssK">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="hills.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Gkv-ZE-8JM">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Gkv-ZE-8JM" secondAttribute="bottom" id="QL1-7N-KVs"/>
+                        <constraint firstItem="Gkv-ZE-8JM" firstAttribute="leading" secondItem="HEy-ow-ssK" secondAttribute="leading" id="bMs-vE-feu"/>
+                        <constraint firstItem="Gkv-ZE-8JM" firstAttribute="top" secondItem="HEy-ow-ssK" secondAttribute="top" id="zIr-Rg-EtW"/>
+                    </constraints>
+                </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAW-3B-MvP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2379" y="553"/>
@@ -247,6 +265,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Downloads" id="mlh-H0-P4H">
+                        <barButtonItem key="backBarButtonItem" title=" " id="qYP-Bu-n4M"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="QOF-Hr-Iks">
                             <connections>
                                 <segue destination="cw8-fW-WoJ" kind="show" identifier="showDownloader" id="bh4-5g-bf8"/>

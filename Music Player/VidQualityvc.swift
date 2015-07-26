@@ -12,6 +12,7 @@ import CoreData
 class VidQualityvc: UITableViewController {
     
     
+    @IBOutlet var overlay: UIView!
     var selectedRow : NSIndexPath!
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
@@ -34,6 +35,9 @@ class VidQualityvc: UITableViewController {
         
         self.tableView.selectRowAtIndexPath(selectedRow, animated: true, scrollPosition: UITableViewScrollPosition.None)
         self.tableView.cellForRowAtIndexPath(selectedRow)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        
+        view.addSubview(overlay)
+        view.sendSubviewToBack(overlay)
     }
     
     override func didReceiveMemoryWarning() {
