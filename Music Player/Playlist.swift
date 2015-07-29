@@ -30,7 +30,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
         self.tableView.reloadData()
-        
+        println(songs.count)
+        resetX()
+    }
+    
+    func resetX(){
         x = []
         if songs.count > 0 {
             for var index = 0; index < songs.count; ++index {
@@ -108,6 +112,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         deleteSongs(songsToDelete)
         songs = context.executeFetchRequest(request, error: nil)
+        resetX()
         self.tableView.reloadData()
     }
     
@@ -133,6 +138,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             var request = NSFetchRequest(entityName: "Songs")
             request.sortDescriptors = [songSortDescriptor]
             songs = context.executeFetchRequest(request, error: nil)
+            resetX()
             self.tableView.reloadData()
         }
     }

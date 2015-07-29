@@ -25,6 +25,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var session : NSURLSession!
     var taskIDs : [Int] = []
+    var tasks : [NSURLSessionDownloadTask] = []
     
     var tableDelegate : downloadObjectTableDelegate!
     
@@ -50,6 +51,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
+        tasks += [task]
         task.resume()
         
     }

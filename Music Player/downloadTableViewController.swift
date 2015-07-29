@@ -33,6 +33,31 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     func addDLTask(tasks : [String]){ downloadTasks += tasks }
     func getDLTasks() -> [String] { return downloadTasks }
     
+    
+    /*override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            //var row = x[indexPath.row]
+            //x.removeAtIndex(indexPath.row)
+            
+            
+            
+            var row = indexPath.row
+            
+            
+            dlObject.taskIDs.removeAtIndex(row)
+            dlObject.tasks[row].cancel()
+            dlObject.tasks.removeAtIndex(row)
+            
+            count--
+            progressValues.removeAtIndex(row)
+            downloadNames.removeAtIndex(row)
+            vidDurations.removeAtIndex(row)
+            images.removeAtIndex(row)
+
+            
+            self.tableView.reloadData()
+        }
+    }*/
     func resetDownloadTasks(notification: NSNotification){
         var dict : NSDictionary? = notification.userInfo
         if dict == nil {

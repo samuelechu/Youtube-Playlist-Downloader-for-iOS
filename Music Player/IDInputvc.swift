@@ -31,13 +31,13 @@ class IDInputvc: UIViewController {
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
+
     
     var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
     
     var downloadTasks : [String] = []//array of video identifiers
     var numDownloads = 0
-    var playlistID = "PL8mG-RkN2uTzFS_ljRvTdL9rF6aAWf_Dx"
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
     override func viewDidLoad() {
@@ -75,14 +75,14 @@ class IDInputvc: UIViewController {
     
     //hide download button and show download intializing buttons
     func manageButtons(dlButtonHidden : Bool){
-            self.downloadButton.hidden = dlButtonHidden
-            self.initializingLabel.hidden = !dlButtonHidden
-            if dlButtonHidden {
-                self.indicator.startAnimating()
-            }
-            else{
-                self.indicator.stopAnimating()
-            }
+        self.downloadButton.hidden = dlButtonHidden
+        self.initializingLabel.hidden = !dlButtonHidden
+        if dlButtonHidden {
+            self.indicator.startAnimating()
+        }
+        else{
+            self.indicator.stopAnimating()
+        }
         
         
     }
@@ -177,7 +177,7 @@ class IDInputvc: UIViewController {
             
         else {
             tableDelegate?.setDLButton(true)
-            downloadVideosForChannelAtIndex(ID, qual: qual)
+            downloadVideosForPlayist(ID, pageToken: "", qual: qual)
         }
         
         
@@ -209,21 +209,28 @@ class IDInputvc: UIViewController {
         task.resume()
     }
     
-    func downloadVideosForChannelAtIndex(playlistID : String, qual : Int) {
+    func downloadVideosForPlayist(playlistID : String, pageToken : String?, qual : Int) {
         
+        if pageToken != nil{
+            
+            var urlString = ""
+            if pageToken == "" {
+                urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
+            }
+            else{
+                urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&pageToken=\(pageToken!)&playlistId=\(playlistID)&key=\(APIKey)"
+            }
         
-        
-        let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
-        
         // Fetch the playlist from Google.
         performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
             if HTTPStatusCode == 200 && error == nil {
                 
                 // Convert the JSON data into a dictionary.
-                let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! Dictionary<NSObject, AnyObject>
+                let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary//Dictionary<NSObject, AnyObject>
                 
                 // Get all playlist items ("items" array).
+                var nextPageToken = resultsDict["nextPageToken"] as! String?
                 let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
                 let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
                 var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
@@ -246,6 +253,9 @@ class IDInputvc: UIViewController {
                     }
                 }
                 self.tableDelegate?.setDLButton(false)
+                self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
+                
+                
             }
                 
             else {
@@ -258,5 +268,17 @@ class IDInputvc: UIViewController {
             
             
         })
+
+        
+        
+        
+        
+        
+        
+        }
+        
     }
+    
+    
+   
 }
