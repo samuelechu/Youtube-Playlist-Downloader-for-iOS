@@ -9,26 +9,30 @@
 import UIKit
 import CoreData
 
-protocol downloadTableDelegate{
+protocol inputVCTableDelegate{
     func addCell(dict : NSDictionary)
     func reloadCells()
     
     //necessary because IDInputvc view is reset when it is popped
     func setDLObject(session : dataDownloadObject)
     func getDLObject() -> dataDownloadObject?
-    func setDLTasks(tasks : [String])
+    func addDLTask(tasks : [String])
     func getDLTasks() -> [String]
+    func setDLButton(value : Bool)
+    func dlButtonHidden() -> Bool
 }
 
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
     @IBOutlet var downloadButton: UIButton!
+    @IBOutlet var initializingLabel: UILabel!
+    @IBOutlet var indicator: UIActivityIndicatorView!
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     
-    var tableDelegate : downloadTableDelegate? = nil
+    var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
     
     var downloadTasks : [String] = []//array of video identifiers
@@ -60,9 +64,26 @@ class IDInputvc: UIViewController {
         //If a background URLSession does not exist, create and save through table delegate for future reuse
         if dlObject == nil{
             dlObject = dataDownloadObject(coder: NSCoder())
-            dlObject.setDownloadObjectDelegate((tableDelegate as? downloadObjectDelegate)!)
+            dlObject.setDownloadObjectDelegate((tableDelegate as? downloadObjectTableDelegate)!)
             tableDelegate?.setDLObject(dlObject!)
         }
+        
+        //hide download button if downloads are being queued
+        manageButtons((tableDelegate?.dlButtonHidden())!)
+        
+    }
+    
+    //hide download button and show download intializing buttons
+    func manageButtons(dlButtonHidden : Bool){
+            self.downloadButton.hidden = dlButtonHidden
+            self.initializingLabel.hidden = !dlButtonHidden
+            if dlButtonHidden {
+                self.indicator.startAnimating()
+            }
+            else{
+                self.indicator.stopAnimating()
+            }
+        
         
     }
     
@@ -131,7 +152,7 @@ class IDInputvc: UIViewController {
     @IBAction func startDownloadTask() {
         var ID  = vidID.text
         if let index = find(ID, "=") {
-            ID = ID.substringFromIndex(advance(index, 1)) 
+            ID = ID.substringFromIndex(advance(index, 1))
         }
         
         //get vid quality
@@ -149,12 +170,13 @@ class IDInputvc: UIViewController {
                 
                 startDownloadTaskHelper(ID, qual: qual)
                 downloadTasks += [ID]
-                tableDelegate?.setDLTasks(downloadTasks)
+                tableDelegate?.addDLTask([ID])
             }
         }
             
             
         else {
+            tableDelegate?.setDLButton(true)
             downloadVideosForChannelAtIndex(ID, qual: qual)
         }
         
@@ -189,6 +211,8 @@ class IDInputvc: UIViewController {
     
     func downloadVideosForChannelAtIndex(playlistID : String, qual : Int) {
         
+        
+        
         let urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=\(playlistID)&key=\(APIKey)"
         let targetURL = NSURL(string: urlString)
         
@@ -218,15 +242,20 @@ class IDInputvc: UIViewController {
                     if (!isStored){
                         self.startDownloadTaskHelper(identifier, qual: qual)
                         self.downloadTasks += [identifier]
+                        self.tableDelegate?.addDLTask([identifier])
                     }
                 }
-                self.tableDelegate?.setDLTasks(self.downloadTasks)
+                self.tableDelegate?.setDLButton(false)
             }
                 
             else {
                 println("HTTP Status Code = \(HTTPStatusCode)")
                 println("Error while loading channel videos: \(error)")
+                self.tableDelegate?.setDLButton(false)
+                
             }
+            
+            
             
         })
     }

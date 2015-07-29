@@ -92,7 +92,7 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
                                 <rect key="frame" x="204" y="148" width="193" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="193" id="unc-Ub-Ik8"/>
+                                    <constraint firstAttribute="width" constant="193" id="bi9-5n-WsB"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -103,24 +103,41 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
                                 <rect key="frame" x="266" y="210" width="69" height="30"/>
                                 <state key="normal" title="Download">
-                                    <color key="titleColor" red="0.25490197539329529" green="0.94509810209274292" blue="0.38823533058166504" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="titleColor" red="0.97647064924240112" green="0.77647066116333008" blue="0.039215687662363052" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Starting downloads..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MZp-zP-PWr">
+                                <rect key="frame" x="216" y="196" width="181" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="181" id="EkZ-ci-X3l"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.99215692280000001" green="0.67058825489999996" blue="0.02745098248" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-PH-7f2">
+                                <rect key="frame" x="368" y="196" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="Adk-4o-lup"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="IYA-vr-zn9"/>
-                            <constraint firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="M2e-Dk-Jnd"/>
-                            <constraint firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Uaf-Sd-SlS"/>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="ehv-if-bh7"/>
-                            <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="epL-F7-ays"/>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="fZ3-GH-cL0"/>
-                            <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="huP-Uo-ag9"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="trailing" secondItem="xx7-RR-xRJ" secondAttribute="trailing" id="1h5-Mj-4Xi"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="AhP-YA-Ou1"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="Gld-ST-u4D"/>
+                            <constraint firstItem="NTP-PH-7f2" firstAttribute="leading" secondItem="u3l-iB-VeN" secondAttribute="trailing" constant="33" id="P2E-h8-KJF"/>
+                            <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="32" id="PkY-t4-zql"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="Sh8-hR-oi3"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="18" id="VSY-Rv-ary"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="Y0d-Ow-iB6"/>
+                            <constraint firstAttribute="trailing" secondItem="xGJ-5N-C4b" secondAttribute="trailing" id="b87-6A-rXe"/>
+                            <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="cff-bI-cAa"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="centerY" secondItem="NTP-PH-7f2" secondAttribute="centerY" id="g1l-9a-rz4"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="NTP-PH-7f2" secondAttribute="top" id="ig5-UA-nie"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="ruA-tQ-q7e"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title=" " id="5Co-qK-ktT">
@@ -133,6 +150,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="downloadButton" destination="u3l-iB-VeN" id="tcv-3v-8h2"/>
+                        <outlet property="indicator" destination="NTP-PH-7f2" id="ttN-NM-NeD"/>
+                        <outlet property="initializingLabel" destination="MZp-zP-PWr" id="hhf-Jc-NBb"/>
                         <outlet property="vidID" destination="xx7-RR-xRJ" id="bht-SN-Ovd"/>
                     </connections>
                 </viewController>

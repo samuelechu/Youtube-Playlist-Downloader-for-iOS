@@ -8,7 +8,7 @@
 
 import UIKit
 
-class downloadTableViewController: UITableViewController, downloadTableDelegate, downloadObjectDelegate {
+class downloadTableViewController: UITableViewController, inputVCTableDelegate, downloadObjectTableDelegate {
     
     var progressValues : [Float] = []
     var downloadNames : [String] = []
@@ -18,7 +18,7 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
     
     var dlObject : dataDownloadObject!
     var downloadTasks : [String] = []
-    
+    var dlButton = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
     
     func setDLObject(session : dataDownloadObject){ dlObject = session }
     func getDLObject() -> dataDownloadObject? { return dlObject }
-    func setDLTasks(tasks : [String]){ downloadTasks = tasks }
+    func addDLTask(tasks : [String]){ downloadTasks += tasks }
     func getDLTasks() -> [String] { return downloadTasks }
     
     func resetDownloadTasks(notification: NSNotification){
@@ -49,6 +49,14 @@ class downloadTableViewController: UITableViewController, downloadTableDelegate,
         }
     }
     
+    
+    func setDLButton(value : Bool){
+        dlButton = value
+    }
+    
+    func dlButtonHidden() -> Bool{
+        return dlButton
+    }
     
     func reloadCells(){ self.tableView.reloadData() }
     

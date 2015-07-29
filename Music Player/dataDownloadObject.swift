@@ -10,13 +10,13 @@ import UIKit
 import Foundation
 import CoreData
 
-protocol downloadObjectDelegate{
+protocol downloadObjectTableDelegate{
     func setProgressValue(dict : NSDictionary)
     func reloadCellAtNdx(cellNum : Int)
 }
 
 
-class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelegate {
+class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
@@ -26,11 +26,13 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
     var session : NSURLSession!
     var taskIDs : [Int] = []
     
-    var tableDelegate : downloadObjectDelegate!
+    var tableDelegate : downloadObjectTableDelegate!
     
     required init(coder aDecoder: NSCoder){
         super.init()
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("bgSession")
+        config.timeoutIntervalForRequest = 600
+        config.timeoutIntervalForResource = 600
         
         self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         self.context = appDel!.managedObjectContext
@@ -38,7 +40,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate, NSURLSessionDataDelega
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
     
-    func setDownloadObjectDelegate(del : downloadObjectDelegate){ tableDelegate = del }
+    func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
     
     func addVidInfo(vid : XCDYouTubeVideo){
         videoData += [vid]

@@ -96,13 +96,19 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     
     @IBAction func deleteAll() {
+        var fileManager = NSFileManager.defaultManager()
         var request = NSFetchRequest(entityName: "Songs")
-        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        var songsToDelete : NSArray = context.executeFetchRequest(request, error: nil)!
         
-        deleteSongs(results)
+        for entity in songsToDelete {//remove item in downloadTasks
+            var identifier = (entity as! NSManagedObject).valueForKey("identifier") as! String
+            var dict = ["identifier" : identifier]
+            NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            }
+        
+        deleteSongs(songsToDelete)
         songs = context.executeFetchRequest(request, error: nil)
         self.tableView.reloadData()
-        NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil)
     }
     
     
