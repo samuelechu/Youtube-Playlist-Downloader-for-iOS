@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -13,13 +14,32 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="droplets.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="cqd-q3-obn">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVc-R8-fq0">
+                    <rect key="frame" x="384" y="453" width="88" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="19" id="7eW-aZ-YOP"/>
+                        <constraint firstAttribute="width" constant="88" id="l2H-AB-bSf"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="Music Player">
+                            <attributes>
+                                <color key="NSColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <font key="NSFont" size="14" name="ArialMT"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="cqd-q3-obn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5q3-yB-NRA"/>
-                <constraint firstItem="cqd-q3-obn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="aZV-as-PTS"/>
-                <constraint firstAttribute="bottom" secondItem="cqd-q3-obn" secondAttribute="bottom" id="cCe-W4-YTC"/>
-                <constraint firstAttribute="trailing" secondItem="cqd-q3-obn" secondAttribute="trailing" id="nny-c6-fyh"/>
+                <constraint firstItem="cqd-q3-obn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="973-YD-UiJ"/>
+                <constraint firstItem="cqd-q3-obn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="BYJ-4o-frL"/>
+                <constraint firstItem="gVc-R8-fq0" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottomMargin" id="PCb-tw-ceT"/>
+                <constraint firstItem="gVc-R8-fq0" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailingMargin" id="f0I-jL-bJq"/>
+                <constraint firstAttribute="trailing" secondItem="cqd-q3-obn" secondAttribute="trailing" id="pMS-TM-2XV"/>
+                <constraint firstAttribute="bottom" secondItem="cqd-q3-obn" secondAttribute="bottom" id="qbr-zu-q2A"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

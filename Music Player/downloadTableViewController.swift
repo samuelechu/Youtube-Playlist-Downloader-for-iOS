@@ -23,6 +23,12 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
+        
+        self.tableView.backgroundColor = UIColor.clearColor()
+        var imgView = UIImageView(image: UIImage(named: "gradient.jpg"))
+        imgView.frame = self.tableView.frame
+        view.insertSubview(imgView, belowSubview: self.tableView)
+        
     }
     
     

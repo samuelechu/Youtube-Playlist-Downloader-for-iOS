@@ -48,7 +48,7 @@
                             <outlet property="delegate" destination="Mzs-fZ-jAu" id="REU-mc-5Rd"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Playlist" image="clef.png" selectedImage="clef.png" id="Zv2-5Q-Bvi"/>
+                    <tabBarItem key="tabBarItem" title="Playlist" image="video.png" id="Zv2-5Q-Bvi"/>
                     <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
                         <barButtonItem key="leftBarButtonItem" title="Delete All" id="hni-sx-vGP">
                             <connections>
@@ -336,7 +336,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="clef.png" width="30" height="30"/>
         <image name="hills.jpg" width="900" height="1600"/>
+        <image name="video.png" width="30" height="30"/>
     </resources>
 </document>
