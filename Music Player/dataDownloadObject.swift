@@ -103,6 +103,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 
                 self.tableDelegate.setProgressValue(dict)
                 self.tableDelegate.reloadCellAtNdx(cellNum!)
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
     }
     

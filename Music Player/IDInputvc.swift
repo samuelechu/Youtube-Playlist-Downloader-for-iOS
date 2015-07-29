@@ -31,7 +31,7 @@ class IDInputvc: UIViewController {
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
-
+    
     
     var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
@@ -220,65 +220,68 @@ class IDInputvc: UIViewController {
             else{
                 urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&pageToken=\(pageToken!)&playlistId=\(playlistID)&key=\(APIKey)"
             }
-        
-        let targetURL = NSURL(string: urlString)
-        // Fetch the playlist from Google.
-        performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
-            if HTTPStatusCode == 200 && error == nil {
-                
-                // Convert the JSON data into a dictionary.
-                let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary//Dictionary<NSObject, AnyObject>
-                
-                // Get all playlist items ("items" array).
-                var nextPageToken = resultsDict["nextPageToken"] as! String?
-                let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
-                let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
-                var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
-                var videoIDs : [String] = []
-                
-                for item : Dictionary<NSObject, AnyObject> in items {
-                    let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
-                    var vidID : String = playlistContentDict["videoId"] as! String
-                    videoIDs += [vidID]
-                }
-                
-                for identifier : String in videoIDs {
+            
+            let targetURL = NSURL(string: urlString)
+            // Fetch the playlist from Google.
+            performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
+                if HTTPStatusCode == 200 && error == nil {
                     
-                    var isStored = self.vidStored(identifier)
+                    // Convert the JSON data into a dictionary.
+                    let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary//Dictionary<NSObject, AnyObject>
                     
-                    if (!isStored){
-                        self.startDownloadTaskHelper(identifier, qual: qual)
-                        self.downloadTasks += [identifier]
-                        self.tableDelegate?.addDLTask([identifier])
+                    // Get all playlist items ("items" array).
+                    var nextPageToken = resultsDict["nextPageToken"] as! String?
+                    let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
+                    let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
+                    var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
+                    var videoIDs : [String] = []
+                    
+                    for item : Dictionary<NSObject, AnyObject> in items {
+                        let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
+                        var vidID : String = playlistContentDict["videoId"] as! String
+                        videoIDs += [vidID]
                     }
+                    
+                    for identifier : String in videoIDs {
+                        
+                        var isStored = self.vidStored(identifier)
+                        
+                        if (!isStored){
+                            self.startDownloadTaskHelper(identifier, qual: qual)
+                            self.downloadTasks += [identifier]
+                            self.tableDelegate?.addDLTask([identifier])
+                        }
+                    }
+                    self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
+                    
+                    
                 }
-                self.tableDelegate?.setDLButton(false)
-                self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
+                    
+                else {
+                    println("HTTP Status Code = \(HTTPStatusCode)")
+                    println("Error while loading channel videos: \(error)")
+                    self.tableDelegate?.setDLButton(false)
+                    
+                }
                 
                 
-            }
                 
-            else {
-                println("HTTP Status Code = \(HTTPStatusCode)")
-                println("Error while loading channel videos: \(error)")
-                self.tableDelegate?.setDLButton(false)
-                
-            }
+            })
             
             
             
-        })
-
+            
+            
+            
+            
+        }
         
-        
-        
-        
-        
-        
+        else{
+            self.tableDelegate?.setDLButton(false)
         }
         
     }
     
     
-   
+    
 }
