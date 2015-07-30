@@ -20,15 +20,20 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     var downloadTasks : [String] = []
     var dlButton = false
     
+    
+    override func viewWillAppear(animated: Bool) {
+        reloadCells()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
         
         self.tableView.backgroundColor = UIColor.clearColor()
-        var imgView = UIImageView(image: UIImage(named: "gradient.jpg"))
+        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = self.tableView.frame
-        view.insertSubview(imgView, belowSubview: self.tableView)
-        
+        self.tableView.backgroundView = imgView
+        navigationController?.hidesBarsOnSwipe = true
     }
     
     

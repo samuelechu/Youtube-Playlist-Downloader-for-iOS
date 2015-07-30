@@ -63,6 +63,12 @@ class Playlist: UITableViewController, PlaylistDelegate {
         var audio : AVAudioSession = AVAudioSession()
         audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
         audio.setActive(true, error: nil)
+        
+        self.tableView.backgroundColor = UIColor.clearColor()
+        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
+        imgView.frame = self.tableView.frame
+        self.tableView.backgroundView = imgView
+        navigationController?.hidesBarsOnSwipe = true
     }
     
     override func didReceiveMemoryWarning() {

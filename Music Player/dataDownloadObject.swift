@@ -31,16 +31,29 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     required init(coder aDecoder: NSCoder){
         super.init()
-        let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("bgSession")
+        var randomString = randomStringWithLength(30)
+        let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
-        config.timeoutIntervalForResource = 600
-        
         self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         self.context = appDel!.managedObjectContext
         
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
     
+    func randomStringWithLength (len : Int) -> NSString {
+        
+        let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        
+        var randomString : NSMutableString = NSMutableString(capacity: len)
+        
+        for (var i=0; i < len; i++){
+            var length = UInt32 (letters.length)
+            var rand = arc4random_uniform(length)
+            randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
+        }
+        
+        return randomString
+    }
     func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
     
     func addVidInfo(vid : XCDYouTubeVideo){

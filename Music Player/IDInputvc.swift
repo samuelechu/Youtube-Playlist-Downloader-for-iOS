@@ -32,7 +32,6 @@ class IDInputvc: UIViewController {
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     
-    
     var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
     
@@ -267,8 +266,6 @@ class IDInputvc: UIViewController {
                 
                 
             })
-            
-            
             
             
             
