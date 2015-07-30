@@ -20,6 +20,8 @@
 		2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */; };
 		22480A251B695C4400B63F53 /* video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22480A241B695C4400B63F53 /* video@2x.png */; };
 		22480A2F1B69A88000B63F53 /* pastel.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22480A2E1B69A88000B63F53 /* pastel.jpg */; };
+		22480A331B6A02F900B63F53 /* hillsGradient.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22480A321B6A02F900B63F53 /* hillsGradient.jpg */; };
+		22480A351B6A03AD00B63F53 /* hillsTransition.png in Resources */ = {isa = PBXBuildFile; fileRef = 22480A341B6A03AD00B63F53 /* hillsTransition.png */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		22AD6B321B47BB7D00428602 /* VidQualityvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* VidQualityvc.swift */; };
 		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
@@ -58,6 +60,8 @@
 		2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-XCDYouTubeKit.a"; path = "Pods/../build/Debug-iphoneos/libPods-XCDYouTubeKit.a"; sourceTree = "<group>"; };
 		22480A241B695C4400B63F53 /* video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video@2x.png"; sourceTree = "<group>"; };
 		22480A2E1B69A88000B63F53 /* pastel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pastel.jpg; sourceTree = "<group>"; };
+		22480A321B6A02F900B63F53 /* hillsGradient.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hillsGradient.jpg; sourceTree = "<group>"; };
+		22480A341B6A03AD00B63F53 /* hillsTransition.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hillsTransition.png; sourceTree = "<group>"; };
 		225F06111B613BB6005D0DEA /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		227B696C556F69040FDCBAB7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		22AD6B311B47BB7D00428602 /* VidQualityvc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VidQualityvc.swift; sourceTree = "<group>"; };
@@ -126,10 +130,10 @@
 				224340071B472FB800C075FF /* dataDownloadObject.swift */,
 				224340031B47260500C075FF /* downloadCell.swift */,
 				224340051B47266F00C075FF /* downloadTableViewController.swift */,
+				224340011B47253C00C075FF /* IDInputvc.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
 				22AD6B311B47BB7D00428602 /* VidQualityvc.swift */,
-				224340011B47253C00C075FF /* IDInputvc.swift */,
 				22433FE11B47212F00C075FF /* Main.storyboard */,
 				22433FE41B47212F00C075FF /* Images.xcassets */,
 				22433FE61B47212F00C075FF /* LaunchScreen.xib */,
@@ -146,6 +150,8 @@
 				22480A241B695C4400B63F53 /* video@2x.png */,
 				22433FD91B47212F00C075FF /* Info.plist */,
 				22E0BD5A1B596C8900292FD4 /* hills.jpg */,
+				22480A341B6A03AD00B63F53 /* hillsTransition.png */,
+				22480A321B6A02F900B63F53 /* hillsGradient.jpg */,
 				22E0BD571B596A7700292FD4 /* droplets.jpg */,
 			);
 			name = "Supporting Files";
@@ -262,6 +268,8 @@
 				22433FFE1B47214400C075FF /* Entitlements.plist in Resources */,
 				22480A251B695C4400B63F53 /* video@2x.png in Resources */,
 				22433FE31B47212F00C075FF /* Main.storyboard in Resources */,
+				22480A351B6A03AD00B63F53 /* hillsTransition.png in Resources */,
+				22480A331B6A02F900B63F53 /* hillsGradient.jpg in Resources */,
 				22480A2F1B69A88000B63F53 /* pastel.jpg in Resources */,
 				22E0BD5D1B596C8900292FD4 /* hills.jpg in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,

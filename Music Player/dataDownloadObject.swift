@@ -109,6 +109,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
                 newSong.setValue("\(identifier)", forKey: "identifier")
                 newSong.setValue("\(self.videoData[cellNum!].title)", forKey: "title")
+                newSong.setValue(true, forKey: "isDownloaded")
                 self.context.save(nil)
                 
                 //display checkmark for completion
