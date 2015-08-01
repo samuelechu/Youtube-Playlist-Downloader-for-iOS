@@ -48,13 +48,15 @@ class IDInputvc: UIViewController {
         self.context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
-        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
         if results.count == 0 {
-            var vidQual = NSEntityDescription.insertNewObjectForEntityForName("VidQualitySelection", inManagedObjectContext: context) as! NSManagedObject
+            var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
             
-            vidQual.setValue(0, forKey: "quality")
+            settings.setValue(0, forKey: "quality")
+            settings.setValue(true, forKey: "cache")
             
+            context.save(nil)
         }
         
         downloadTasks = (tableDelegate?.getDLTasks())!
@@ -155,10 +157,10 @@ class IDInputvc: UIViewController {
         }
         
         //get vid quality
-        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
-        var vidQual = results[0] as! NSManagedObject
-        var qual = vidQual.valueForKey("quality") as! Int
+        var settings = results[0] as! NSManagedObject
+        var qual = settings.valueForKey("quality") as! Int
         
         
         

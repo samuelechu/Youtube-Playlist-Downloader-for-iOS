@@ -9,35 +9,61 @@
 import UIKit
 import CoreData
 
-class VidQualityvc: UITableViewController {
+class Settings: UITableViewController {
     
     
     @IBOutlet var overlay: UIView!
-    var selectedRow : NSIndexPath!
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
-    var vidQual : NSManagedObject!
+    var settings : NSManagedObject!
     
-    override func viewDidAppear(animated: Bool) {
-        self.tableView.selectRowAtIndexPath(selectedRow, animated: true, scrollPosition: UITableViewScrollPosition.None)
+    
+    func selectRow(path : NSIndexPath){
+        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.None)
+        tableView.cellForRowAtIndexPath(path)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+    }
+    
+    func deselectRow(path : NSIndexPath){
+        tableView.deselectRowAtIndexPath(path, animated: false)
+        tableView.cellForRowAtIndexPath(path)?.accessoryType = UITableViewCellAccessoryType.None
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 44
+        
         self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         self.context = appDel!.managedObjectContext
         
-        var request = NSFetchRequest(entityName: "VidQualitySelection")
+        var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        settings = results[0] as! NSManagedObject
+        println(settings.valueForKey("quality") as! Int)
+        println(settings.valueForKey("cache") as! Bool)
+
+        var qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
         
-        vidQual = results[0] as! NSManagedObject
-        selectedRow = NSIndexPath(forRow: vidQual.valueForKey("quality") as! Int, inSection: 0)
+        deselectRow(qualRow)
+        selectRow(qualRow)
         
-        self.tableView.selectRowAtIndexPath(selectedRow, animated: true, scrollPosition: UITableViewScrollPosition.None)
-        self.tableView.cellForRowAtIndexPath(selectedRow)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+        
+        var cacheRow = NSIndexPath(forRow: 0, inSection: 1)
+        deselectRow(cacheRow)
+        
+        if settings.valueForKey("cache") as! Bool {
+            selectRow(cacheRow)
+        }
+        
+        
+        
+        
+        
+        
+        
+        
         
         self.tableView.backgroundColor = UIColor.clearColor()
-        var imgView = UIImageView(image: UIImage(named: "hillsTransition.png"))
+        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = self.tableView.frame
         self.tableView.backgroundView = imgView
     }
@@ -48,19 +74,18 @@ class VidQualityvc: UITableViewController {
     
     
     /*
-- (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-for ( NSIndexPath* selectedIndexPath in tableView.indexPathsForSelectedRows ) {
-if ( selectedIndexPath.section == indexPath.section )
-[tableView deselectRowAtIndexPath:selectedIndexPath animated:NO] ;
-}
-return indexPath ;
-}*/
+    - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath {
+    for ( NSIndexPath* selectedIndexPath in tableView.indexPathsForSelectedRows ) {
+    if ( selectedIndexPath.section == indexPath.section )
+    [tableView deselectRowAtIndexPath:selectedIndexPath animated:NO] ;
+    }
+    return indexPath ;
+    }*/
     
     override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         if var selectedRows = tableView.indexPathsForSelectedRows() as? [NSIndexPath]{
             for selectedIndexPath : NSIndexPath in selectedRows{
                 if selectedIndexPath.section == indexPath.section{
-                    println("hi")
                     tableView.deselectRowAtIndexPath(selectedIndexPath, animated: false)
                     tableView.cellForRowAtIndexPath(selectedIndexPath)?.accessoryType = UITableViewCellAccessoryType.None
                 }
@@ -73,12 +98,25 @@ return indexPath ;
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
         
-        if indexPath.section == 0{
-            vidQual.setValue(indexPath.row, forKey: "quality")
+        switch indexPath.section {
+        case 0: //Video Quality
+            settings.setValue(indexPath.row, forKey: "quality")
+        case 1://cache Video
+            settings.setValue(true, forKey: "cache")
+        default:
+            break
         }
+        
+        context.save(nil)
     }
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
+        
+        if indexPath.section == 1 {
+            settings.setValue(false, forKey: "cache")
+        }
+        
+        context.save(nil)
     }
     
     

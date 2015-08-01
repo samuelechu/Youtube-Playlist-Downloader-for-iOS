@@ -19,6 +19,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     var songs : NSArray!
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+    var streamURLs = [String : NSURL]()
     
     var x : [Int] = []
     var playerQueue = AVQueuePlayer()
@@ -36,8 +37,44 @@ class Playlist: UITableViewController, PlaylistDelegate {
         var request = NSFetchRequest(entityName: "Songs")
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
+        
+        
+        
+        
+        
+        
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+            for song in self.songs{
+                
+                var isDownloaded = song.valueForKey("isDownloaded") as! Bool
+                if !isDownloaded {
+                    var identifier = song.valueForKey("identifier") as! String
+                    
+                    if self.streamURLs[identifier] == nil {
+                        XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
+                            if error == nil {
+                                var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                                
+                                
+                                
+                                var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                                
+                                self.streamURLs[video.identifier] = url
+                                
+                            }
+                        })
+                        
+                    }
+                }
+                
+            }
+            
+        }
+        
+        
+        
         self.tableView.reloadData()
-        println(songs.count)
         resetX()
     }
     func resetX(){
@@ -51,6 +88,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.appDel = UIApplication.sharedApplication().delegate as! AppDelegate
         self.context = appDel!.managedObjectContext
         
@@ -69,6 +107,10 @@ class Playlist: UITableViewController, PlaylistDelegate {
         imgView.frame = self.tableView.frame
         self.tableView.backgroundView = imgView
         navigationController?.hidesBarsOnSwipe = true
+        
+        
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -118,7 +160,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             var identifier = (entity as! NSManagedObject).valueForKey("identifier") as! String
             var dict = ["identifier" : identifier]
             NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
-            }
+        }
         
         deleteSongs(songsToDelete)
         songs = context.executeFetchRequest(request, error: nil)
@@ -191,13 +233,55 @@ class Playlist: UITableViewController, PlaylistDelegate {
         }
         
         var ndx = x[index]
-        var file = songs[ndx].valueForKey("identifier") as! String
-        file = file.stringByAppendingString(".mp4")
-        var filePath = documentsDir.stringByAppendingPathComponent(file)
         
-        let url = NSURL(fileURLWithPath: filePath)
-        var playerItem = AVPlayerItem(URL: url)
-        playerQueue.insertItem(playerItem, afterItem: nil)
+        var isDownloaded = songs[ndx].valueForKey("isDownloaded") as! Bool
+        
+        var identifier = songs[ndx].valueForKey("identifier") as! String
+        if isDownloaded {
+            
+            var file = identifier.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
+            
+            
+            
+            
+            let url = NSURL(fileURLWithPath: filePath)
+            
+            
+            var playerItem = AVPlayerItem(URL: url)
+            playerQueue.insertItem(playerItem, afterItem: nil)
+        }
+            
+        else{
+            println(streamURLs[identifier])
+            
+            
+            if streamURLs[identifier] == nil {
+                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
+                    if error == nil {
+                        var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                        
+                        
+                        var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                        
+                        
+                        self.streamURLs[video.identifier] = url
+                        
+                        var playerItem = AVPlayerItem(URL: url)
+                        self.playerQueue.insertItem(playerItem, afterItem: nil)
+                        
+                    }
+                })
+                
+            }
+                
+            else {
+                var url = streamURLs[identifier]
+                var playerItem = AVPlayerItem(URL: url)
+                playerQueue.insertItem(playerItem, afterItem: nil)
+            }
+            
+        }
         
     }
     
