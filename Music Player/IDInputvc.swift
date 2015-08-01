@@ -44,8 +44,8 @@ class IDInputvc: UIViewController {
         var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
-        self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
-        self.context = appDel!.managedObjectContext
+        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
         var request = NSFetchRequest(entityName: "Settings")
@@ -76,13 +76,13 @@ class IDInputvc: UIViewController {
     
     //hide download button and show download intializing buttons
     func manageButtons(dlButtonHidden : Bool){
-        self.downloadButton.hidden = dlButtonHidden
-        self.initializingLabel.hidden = !dlButtonHidden
+        downloadButton.hidden = dlButtonHidden
+        initializingLabel.hidden = !dlButtonHidden
         if dlButtonHidden {
-            self.indicator.startAnimating()
+            indicator.startAnimating()
         }
         else{
-            self.indicator.stopAnimating()
+            indicator.stopAnimating()
         }
         
         
@@ -182,7 +182,7 @@ class IDInputvc: UIViewController {
         }
         
         
-        self.navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewControllerAnimated(true)
     }
     
     func stringFromTimeInterval(interval: NSTimeInterval) -> String {
@@ -276,7 +276,7 @@ class IDInputvc: UIViewController {
         }
         
         else{
-            self.tableDelegate?.setDLButton(false)
+            tableDelegate?.setDLButton(false)
         }
         
     }

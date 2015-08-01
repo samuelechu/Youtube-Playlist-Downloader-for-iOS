@@ -27,14 +27,49 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideTabBar")
+        view.addGestureRecognizer(tap)
+        
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
         
-        self.tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clearColor()
         var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
-        imgView.frame = self.tableView.frame
-        self.tableView.backgroundView = imgView
-        navigationController?.hidesBarsOnSwipe = true
+        imgView.frame = tableView.frame
+        tableView.backgroundView = imgView
     }
+    
+    func hideTabBar(){
+        setTabBarVisible(!(tabBarIsVisible()), animated: true)
+        var visible = (navigationController?.navigationBarHidden)!
+        navigationController?.setNavigationBarHidden(!visible, animated: true)
+    }
+    
+    func setTabBarVisible(visible:Bool, animated:Bool) {
+        if (tabBarIsVisible() == visible) { return }
+        
+        // get a frame calculation ready for tabBar
+        let frame = self.tabBarController?.tabBar.frame
+        let height = (frame?.size.height)!
+        let offsetY = (visible ? -height : height)
+        
+        // zero duration means no animation
+        let duration:NSTimeInterval = (animated ? 0.2 : 0.0)
+        
+        //  animate the tabBar
+        if frame != nil {
+            
+            UIView.animateWithDuration(duration) {
+                self.tabBarController?.tabBar.frame = CGRectOffset(frame!, 0, offsetY)
+                return
+            }
+        }
+    }
+    
+    func tabBarIsVisible() ->Bool {
+        return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
+    }
+    
     
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
@@ -66,7 +101,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
             images.removeAtIndex(row)
 
             
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }*/
     func resetDownloadTasks(notification: NSNotification){
@@ -94,12 +129,12 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         return dlButton
     }
     
-    func reloadCells(){ self.tableView.reloadData() }
+    func reloadCells(){ tableView.reloadData() }
     
     func reloadCellAtNdx(cellNum : Int){
         if cellNum < count{
             var indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         }
     }
     

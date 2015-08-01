@@ -18,10 +18,6 @@ protocol PlaylistDelegate{
 
 class Player: AVPlayerViewController {
     
-    @IBOutlet var overlay: UIView!
-    @IBOutlet var button: UIButton!
-    
-    
     var playlistDelegate : PlaylistDelegate? = nil
     
     override func canBecomeFirstResponder() -> Bool {
@@ -30,7 +26,7 @@ class Player: AVPlayerViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.becomeFirstResponder()
+        becomeFirstResponder()
         UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
     }
     
@@ -39,11 +35,11 @@ class Player: AVPlayerViewController {
         
         var swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
-        self.view.addGestureRecognizer(swipeRight)
+        view.addGestureRecognizer(swipeRight)
         
         var swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
         swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
-        self.view.addGestureRecognizer(swipeLeft)
+        view.addGestureRecognizer(swipeLeft)
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {

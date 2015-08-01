@@ -34,8 +34,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         var randomString = randomStringWithLength(30)
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
-        self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
-        self.context = appDel!.managedObjectContext
+        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
         
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
@@ -75,7 +75,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
             
-            var cellNum = find(self.taskIDs, downloadTask.taskIdentifier)
+            var cellNum = find(taskIDs, downloadTask.taskIdentifier)
             
             if cellNum != nil{
                 var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
@@ -96,27 +96,27 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
             var loc = location
-            var cellNum  = find(self.taskIDs, downloadTask.taskIdentifier)
+            var cellNum  = find(taskIDs, downloadTask.taskIdentifier)
             if cellNum != nil{
                 
                 //move file from temporary folder to documents folder
                 var fileData : NSData? = NSData(contentsOfURL: loc)
-                var identifier = self.videoData[cellNum!].identifier
-                var filePath = self.grabFilePath("\(identifier).mp4")
+                var identifier = videoData[cellNum!].identifier
+                var filePath = grabFilePath("\(identifier).mp4")
                 NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath, error: nil)
                 
                 //save to CoreData
-                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
+                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
                 newSong.setValue("\(identifier)", forKey: "identifier")
-                newSong.setValue("\(self.videoData[cellNum!].title)", forKey: "title")
+                newSong.setValue("\(videoData[cellNum!].title)", forKey: "title")
                 newSong.setValue(true, forKey: "isDownloaded")
-                self.context.save(nil)
+                context.save(nil)
                 
                 //display checkmark for completion
                 var dict = ["ndx" : cellNum!, "value" : "1.0" ]
                 
-                self.tableDelegate.setProgressValue(dict)
-                self.tableDelegate.reloadCellAtNdx(cellNum!)
+                tableDelegate.setProgressValue(dict)
+                tableDelegate.reloadCellAtNdx(cellNum!)
                 NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
     }

@@ -51,12 +51,16 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Playlist" image="video.png" id="Zv2-5Q-Bvi"/>
-                    <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
-                        <barButtonItem key="leftBarButtonItem" title="Delete All" id="hni-sx-vGP">
+                    <toolbarItems>
+                        <barButtonItem title="Select All" id="7AO-dm-2p1"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="A4X-3z-6bp"/>
+                        <barButtonItem title="Delete" id="4Nw-kz-pPb">
                             <connections>
-                                <action selector="deleteAll" destination="Mzs-fZ-jAu" id="45l-FG-jge"/>
+                                <action selector="deleteAll" destination="Mzs-fZ-jAu" id="0FB-jt-fkf"/>
                             </connections>
                         </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
                         <barButtonItem key="rightBarButtonItem" title="Shuffle" id="afX-v4-wak">
                             <connections>
                                 <action selector="shufflePlaylist" destination="Mzs-fZ-jAu" id="GvR-tj-fZU"/>
@@ -309,13 +313,13 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAW-3B-MvP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2477" y="-971"/>
+            <point key="canvasLocation" x="2243" y="-929"/>
         </scene>
         <!--Downloads-->
         <scene sceneID="a3i-cY-CRc">
             <objects>
                 <tableViewController id="Q5m-0J-m7K" customClass="downloadTableViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" allowsSelectionDuringEditing="YES" rowHeight="82" sectionHeaderHeight="10" sectionFooterHeight="10" id="qAB-vY-kLg">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="82" sectionHeaderHeight="10" sectionFooterHeight="10" id="qAB-vY-kLg">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
@@ -389,6 +393,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="dqf-jq-HxC">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="Mzs-fZ-jAu" kind="relationship" relationship="rootViewController" id="fkn-bp-M2p"/>
                     </connections>
@@ -433,7 +440,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PDJ-PD-g3N" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1665" y="-971"/>
+            <point key="canvasLocation" x="1526" y="-1123"/>
         </scene>
     </scenes>
     <resources>

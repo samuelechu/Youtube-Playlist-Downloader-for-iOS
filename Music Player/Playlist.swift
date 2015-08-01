@@ -74,7 +74,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         
         
-        self.tableView.reloadData()
+        tableView.reloadData()
         resetX()
     }
     func resetX(){
@@ -89,8 +89,8 @@ class Playlist: UITableViewController, PlaylistDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.appDel = UIApplication.sharedApplication().delegate as! AppDelegate
-        self.context = appDel!.managedObjectContext
+        appDel = UIApplication.sharedApplication().delegate as! AppDelegate
+        context = appDel!.managedObjectContext
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredBackground:", name: "enteredBackgroundID", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
@@ -102,15 +102,33 @@ class Playlist: UITableViewController, PlaylistDelegate {
         audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
         audio.setActive(true, error: nil)
         
-        self.tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clearColor()
         var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
-        imgView.frame = self.tableView.frame
-        self.tableView.backgroundView = imgView
-        navigationController?.hidesBarsOnSwipe = true
+        imgView.frame = tableView.frame
+        tableView.backgroundView = imgView
+        
+        editButtonItem().title = "Select"
+        navigationItem.leftBarButtonItem = editButtonItem()
+    }
+
+    
+    override func setEditing(editing: Bool, animated: Bool) {
+        
+        super.setEditing(editing, animated: animated)
+        
+        tableView.setEditing(editing, animated: true)
         
         
-        
-        
+        if editing {
+            editButtonItem().title = "Cancel"
+            navigationController?.toolbarHidden = false
+            navigationController?.hidesBarsOnSwipe = true
+        }
+            
+        else {
+            navigationController?.hidesBarsOnSwipe = false
+            navigationController?.toolbarHidden = true
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -138,7 +156,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     @IBAction func shufflePlaylist() {
         if songs.count > 0 {
             shuffle(&x)
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }
     
@@ -165,7 +183,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         deleteSongs(songsToDelete)
         songs = context.executeFetchRequest(request, error: nil)
         resetX()
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -193,7 +211,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             var request = NSFetchRequest(entityName: "Songs")
             request.sortDescriptors = [songSortDescriptor]
             songs = context.executeFetchRequest(request, error: nil)
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }
     
@@ -211,9 +229,19 @@ class Playlist: UITableViewController, PlaylistDelegate {
         context.save(nil)
     }
     
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+        if !tableView.editing {
+            return true
+        }
+        
+        return false
+    }
+    
+    
     //avplayer related functions
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showPlayer" {
+        if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
             
             curNdx = (tableView.indexPathForSelectedRow()?.row)!

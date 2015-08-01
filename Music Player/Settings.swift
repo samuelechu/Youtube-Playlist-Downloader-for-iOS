@@ -32,8 +32,8 @@ class Settings: UITableViewController {
         super.viewDidLoad()
         tableView.rowHeight = 44
         
-        self.appDel = UIApplication.sharedApplication().delegate as? AppDelegate
-        self.context = appDel!.managedObjectContext
+        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
         
         var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
@@ -54,18 +54,14 @@ class Settings: UITableViewController {
             selectRow(cacheRow)
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
-        self.tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clearColor()
         var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
-        imgView.frame = self.tableView.frame
-        self.tableView.backgroundView = imgView
+        imgView.frame = tableView.frame
+        tableView.backgroundView = imgView
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+
     }
     
     override func didReceiveMemoryWarning() {
