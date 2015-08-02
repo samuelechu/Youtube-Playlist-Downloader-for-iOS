@@ -1,5 +1,5 @@
-# Music-Player
-a music player for iOS
+# Youtube Playlist Downloader
+a youtube video downloader for iOS
 
 Enter youtube playlist ID and the app will download all songs on that playlist
 
