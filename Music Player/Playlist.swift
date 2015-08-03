@@ -13,6 +13,10 @@ import AVKit
 
 class Playlist: UITableViewController, PlaylistDelegate {
     
+    
+    @IBOutlet var selectButton: UIBarButtonItem!
+    @IBOutlet var deleteButton: UIBarButtonItem!
+    
     var appDel : AppDelegate!
     var context : NSManagedObjectContext!
     var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
@@ -29,9 +33,13 @@ class Playlist: UITableViewController, PlaylistDelegate {
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
         refreshPlaylist()
+        retrieveStreams()
+        resetX()
     }
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
+        retrieveStreams()
+        resetX()
     }
     func refreshPlaylist(){
         var request = NSFetchRequest(entityName: "Songs")
@@ -40,9 +48,28 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         
         
-        
-        
-        
+        tableView.reloadData()
+    }
+    
+    
+    
+    
+    
+    
+    func resetX(){
+        x = []
+        if songs.count > 0 {
+            for var index = 0; index < songs.count; ++index {
+                x += [index]
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    func retrieveStreams() {
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
         dispatch_async(dispatch_get_global_queue(priority, 0)) {
             for song in self.songs{
@@ -71,19 +98,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
             }
             
         }
-        
-        
-        
-        tableView.reloadData()
-        resetX()
-    }
-    func resetX(){
-        x = []
-        if songs.count > 0 {
-            for var index = 0; index < songs.count; ++index {
-                x += [index]
-            }
-        }
     }
     
     override func viewDidLoad() {
@@ -109,8 +123,10 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         editButtonItem().title = "Select"
         navigationItem.leftBarButtonItem = editButtonItem()
+        
+        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
     }
-
+    
     
     override func setEditing(editing: Bool, animated: Bool) {
         
@@ -120,6 +136,8 @@ class Playlist: UITableViewController, PlaylistDelegate {
         
         
         if editing {
+            deleteButton.enabled = false
+            selectButton.title = "Select All"
             editButtonItem().title = "Cancel"
             navigationController?.toolbarHidden = false
             navigationController?.hidesBarsOnSwipe = true
@@ -141,11 +159,51 @@ class Playlist: UITableViewController, PlaylistDelegate {
         return songs.count
     }
     
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if tableView.editing{
+            deleteButton.enabled = true
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        var selectedRows = tableView.indexPathsForSelectedRows()
+        if selectedRows == nil {
+            deleteButton.enabled = false
+        }
+    }
+    
+    @IBAction func selectPressed() {
+        // var rows = tableView.indexpaths
+        
+        
+        if selectButton.title == "Select All"{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
+            }
+            selectButton.title = "Select None"
+            deleteButton.enabled = true
+        }
+            
+            
+            
+        else{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
+            selectButton.title = "Select All"
+            deleteButton.enabled = false
+        }
+        
+    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
         
         var row = x[indexPath.row]
-        cell.textLabel?.text = songs[row].valueForKey("title") as? String
+        cell.songLabel?.text = songs[row].valueForKey("title") as? String
         
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
@@ -169,23 +227,56 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     
     //delete functions
-    @IBAction func deleteAll() {
-        var fileManager = NSFileManager.defaultManager()
-        var request = NSFetchRequest(entityName: "Songs")
-        var songsToDelete : NSArray = context.executeFetchRequest(request, error: nil)!
+    @IBAction func deletePressed() {
         
-        for entity in songsToDelete {//remove item in downloadTasks
-            var identifier = (entity as! NSManagedObject).valueForKey("identifier") as! String
-            var dict = ["identifier" : identifier]
-            NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
+        if var selectedIndexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
+            
+            
+            
+            var selectedRows : [Int] = []
+            for indexPath : NSIndexPath in selectedIndexPaths {
+                selectedRows += [indexPath.row]
+                
+                
+                var row = x[indexPath.row]
+                
+                var identifier = songs[row].valueForKey("identifier") as! String
+                
+                deleteSong(identifier)
+            }
+            
+            //horribly unreadable, but keeps shuffled songs in order after deletion
+            var temp = x
+            var selectedSongs : [Int] = []
+            
+            for num in selectedRows {
+                selectedSongs += [x[num]]
+            }
+            
+            for var index = 0; index < x.count; ++index {
+                if var found = find(selectedSongs, x[index]) {
+                    x.removeAtIndex(index)
+                    index--
+                }
+            }
+            
+            var temp2 = x
+            for num in temp {
+                if find(x, num) == nil {
+                for var index = 0; index < x.count; ++index {
+                    if x[index] > num {
+                        temp2[index]--
+                    }
+                }
+                }
+            }
+            x = temp2
+            
+            refreshPlaylist()
+            
         }
-        
-        deleteSongs(songsToDelete)
-        songs = context.executeFetchRequest(request, error: nil)
-        resetX()
-        tableView.reloadData()
     }
-    
+
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             var row = x[indexPath.row]
@@ -214,6 +305,33 @@ class Playlist: UITableViewController, PlaylistDelegate {
             tableView.reloadData()
         }
     }
+    
+    
+    
+    func deleteSong(identifier : String){
+        var songRequest = NSFetchRequest(entityName: "Songs")
+        songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+        var fetchedSongs : NSArray = context.executeFetchRequest(songRequest, error: nil)!
+        var selectedSong = fetchedSongs[0] as! NSManagedObject
+        
+        
+        var dict = ["identifier" : identifier]
+        NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
+        
+        var fileManager = NSFileManager.defaultManager()
+        
+        //remove item in both documents directory and persistentData
+        var file = selectedSong.valueForKey("identifier") as! String
+        file = file.stringByAppendingString(".mp4")
+        var filePath = documentsDir.stringByAppendingPathComponent(file)
+        fileManager.removeItemAtPath(filePath, error: nil)
+        context.deleteObject(selectedSong)
+        
+        
+        context.save(nil)
+    }
+    
+    
     
     func deleteSongs(songsToDelete : NSArray){
         var fileManager = NSFileManager.defaultManager()

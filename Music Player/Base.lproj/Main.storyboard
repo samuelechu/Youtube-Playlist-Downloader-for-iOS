@@ -30,17 +30,33 @@
         <scene sceneID="9Pk-jp-AAT">
             <objects>
                 <tableViewController id="Mzs-fZ-jAu" customClass="Playlist" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelection="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SongCell" id="XSV-bR-vo6">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SongCell" id="XSV-bR-vo6" customClass="SongCell" customModule="Music_Player" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XSV-bR-vo6" id="Fam-nA-RUr">
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sVS-yn-wmt">
+                                            <rect key="frame" x="14" y="11" width="553" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="leading" secondItem="Fam-nA-RUr" secondAttribute="leadingMargin" constant="-1" id="Ec1-3h-7J2"/>
+                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="top" secondItem="Fam-nA-RUr" secondAttribute="topMargin" constant="3" id="X65-sG-LLO"/>
+                                        <constraint firstAttribute="trailing" secondItem="sVS-yn-wmt" secondAttribute="trailing" id="hIm-ob-vKl"/>
+                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="centerY" secondItem="Fam-nA-RUr" secondAttribute="centerY" id="nEd-Ih-rQm"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
+                                    <outlet property="songLabel" destination="sVS-yn-wmt" id="AO2-3N-nzz"/>
                                     <segue destination="0Af-T0-k7Q" kind="presentation" identifier="showPlayer" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="yQN-Jm-H2T"/>
                                 </connections>
                             </tableViewCell>
@@ -52,11 +68,15 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Playlist" image="video.png" id="Zv2-5Q-Bvi"/>
                     <toolbarItems>
-                        <barButtonItem title="Select All" id="7AO-dm-2p1"/>
+                        <barButtonItem title="Select All" id="7AO-dm-2p1">
+                            <connections>
+                                <action selector="selectPressed" destination="Mzs-fZ-jAu" id="ngJ-Yl-TBk"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="A4X-3z-6bp"/>
                         <barButtonItem title="Delete" id="4Nw-kz-pPb">
                             <connections>
-                                <action selector="deleteAll" destination="Mzs-fZ-jAu" id="0FB-jt-fkf"/>
+                                <action selector="deletePressed" destination="Mzs-fZ-jAu" id="sIa-La-AFK"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -67,6 +87,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="deleteButton" destination="4Nw-kz-pPb" id="3fT-HW-AgB"/>
+                        <outlet property="selectButton" destination="7AO-dm-2p1" id="LpT-qt-aYJ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jhi-MA-fNU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -356,6 +380,7 @@
                                         </progressView>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="downloadLabel" destination="tRX-qw-41Q" id="akq-7r-SOe"/>
                                     <outlet property="durationLabel" destination="eV3-0C-JGk" id="M1f-5A-DaX"/>
