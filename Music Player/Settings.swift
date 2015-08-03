@@ -11,7 +11,7 @@ import CoreData
 
 class Settings: UITableViewController {
     
-    
+     
     @IBOutlet var overlay: UIView!
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!

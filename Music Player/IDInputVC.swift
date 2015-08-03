@@ -12,7 +12,7 @@ import CoreData
 protocol inputVCTableDelegate{
     func addCell(dict : NSDictionary)
     func reloadCells()
-    
+     
     //necessary because IDInputvc view is reset when it is popped
     func setDLObject(session : dataDownloadObject)
     func getDLObject() -> dataDownloadObject?

@@ -11,7 +11,7 @@ import AVKit
 import AVFoundation
 
 
-protocol PlaylistDelegate{
+protocol PlaylistDelegate{ 
     func advance()
     func retreat()
 }
