@@ -38,7 +38,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
     }
-    
+     
     func hideTabBar(){
         setTabBarVisible(!(tabBarIsVisible()), animated: true)
         var visible = (navigationController?.navigationBarHidden)!
