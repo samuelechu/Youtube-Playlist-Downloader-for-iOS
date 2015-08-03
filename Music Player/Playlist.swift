@@ -92,6 +92,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = 44
         
         appDel = UIApplication.sharedApplication().delegate as! AppDelegate
         context = appDel!.managedObjectContext

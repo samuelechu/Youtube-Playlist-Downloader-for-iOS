@@ -122,7 +122,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3l-iB-VeN">
                                 <rect key="frame" x="239" y="207" width="122" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="122" id="Nt6-So-w7e"/>
+                                    <constraint firstAttribute="width" constant="122" id="mLG-iN-yHd"/>
                                 </constraints>
                                 <state key="normal" title="Add to Playlist">
                                     <color key="titleColor" red="0.97647064924240112" green="0.77647066116333008" blue="0.039215687662363052" alpha="1" colorSpace="deviceRGB"/>
@@ -132,22 +132,13 @@
                                     <action selector="startDownloadTask" destination="cw8-fW-WoJ" eventType="touchUpInside" id="Hla-U9-LP8"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding to Playlist..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MZp-zP-PWr">
-                                <rect key="frame" x="221" y="196" width="181" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="181" id="J8Q-zX-JHw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" red="0.99215692280000001" green="0.67058825489999996" blue="0.02745098248" alpha="1" colorSpace="deviceRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-PH-7f2">
-                                <rect key="frame" x="358" y="196" width="20" height="20"/>
+                                <rect key="frame" x="369" y="196" width="20" height="20"/>
                             </activityIndicatorView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xx7-RR-xRJ">
                                 <rect key="frame" x="204" y="148" width="193" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="193" id="a2G-a7-WMM"/>
+                                    <constraint firstAttribute="width" constant="193" id="0so-8a-HYS"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -155,22 +146,31 @@
                                     <action selector="finishedEditing" destination="cw8-fW-WoJ" eventType="editingDidEndOnExit" id="IXL-N1-Jxk"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adding to Playlist....." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MZp-zP-PWr">
+                                <rect key="frame" x="210" y="196" width="181" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="181" id="Trf-aF-rAx"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.99215692280000001" green="0.67058825489999996" blue="0.02745098248" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="29" id="1pt-rj-nMV"/>
-                            <constraint firstItem="MZp-zP-PWr" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" constant="221" id="1t1-Px-DbN"/>
-                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="NTP-PH-7f2" secondAttribute="top" id="2PB-UT-V5t"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="7M3-2b-tAj"/>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="9cc-hZ-gy6"/>
-                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="18" id="Gr8-T3-lWf"/>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="xx7-RR-xRJ" secondAttribute="centerX" id="Ibv-ie-iQQ"/>
-                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="NFM-oX-894"/>
-                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="Wwa-dD-yuo"/>
-                            <constraint firstAttribute="trailing" secondItem="xGJ-5N-C4b" secondAttribute="trailing" id="Xdz-xu-1FV"/>
-                            <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="gwR-bU-HXE"/>
-                            <constraint firstAttribute="trailing" secondItem="NTP-PH-7f2" secondAttribute="trailing" constant="222" id="mTA-4n-D05"/>
-                            <constraint firstItem="MZp-zP-PWr" firstAttribute="centerY" secondItem="NTP-PH-7f2" secondAttribute="centerY" id="nna-xo-iQv"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="centerX" secondItem="u3l-iB-VeN" secondAttribute="centerX" id="0n9-op-2yT"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="NTP-PH-7f2" secondAttribute="top" id="1vu-3h-5Ek"/>
+                            <constraint firstItem="u3l-iB-VeN" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="29" id="2dn-Nu-4Jf"/>
+                            <constraint firstAttribute="trailing" secondItem="xGJ-5N-C4b" secondAttribute="trailing" id="CTA-PS-v7B"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="centerY" secondItem="NTP-PH-7f2" secondAttribute="centerY" id="CVZ-8f-Hun"/>
+                            <constraint firstItem="MZp-zP-PWr" firstAttribute="top" secondItem="xx7-RR-xRJ" secondAttribute="bottom" constant="18" id="FJ3-VF-SAz"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="centerX" secondItem="MZp-zP-PWr" secondAttribute="centerX" id="KqD-NV-tbo"/>
+                            <constraint firstItem="xx7-RR-xRJ" firstAttribute="top" secondItem="zCL-q7-0XR" secondAttribute="bottom" constant="84" id="MoE-Xv-EAy"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="centerX" secondItem="MZp-zP-PWr" secondAttribute="centerX" id="ORc-ZC-73x"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="top" secondItem="o9l-Qg-wlM" secondAttribute="top" id="OgI-0L-vUA"/>
+                            <constraint firstItem="xGJ-5N-C4b" firstAttribute="leading" secondItem="o9l-Qg-wlM" secondAttribute="leading" id="ccR-Jw-Je8"/>
+                            <constraint firstItem="NTP-PH-7f2" firstAttribute="leading" secondItem="u3l-iB-VeN" secondAttribute="trailing" constant="8" symbolic="YES" id="idz-tD-HaO"/>
+                            <constraint firstAttribute="bottom" secondItem="xGJ-5N-C4b" secondAttribute="bottom" id="vRR-l0-7Ia"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title=" " id="5Co-qK-ktT">
