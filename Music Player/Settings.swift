@@ -35,8 +35,19 @@ class Settings: UITableViewController {
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
+        //set initial quality to 360P if uninitialized
         var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        if results.count == 0 {
+            var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
+            
+            settings.setValue(0, forKey: "quality")
+            settings.setValue(true, forKey: "cache")
+            
+            context.save(nil)
+            results = context.executeFetchRequest(request, error: nil)!
+        }
+        
         settings = results[0] as! NSManagedObject
         println(settings.valueForKey("quality") as! Int)
         println(settings.valueForKey("cache") as! Bool)
