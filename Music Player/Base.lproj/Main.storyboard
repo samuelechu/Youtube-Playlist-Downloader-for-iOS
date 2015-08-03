@@ -48,10 +48,9 @@
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="leading" secondItem="Fam-nA-RUr" secondAttribute="leadingMargin" constant="-1" id="Ec1-3h-7J2"/>
-                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="top" secondItem="Fam-nA-RUr" secondAttribute="topMargin" constant="3" id="X65-sG-LLO"/>
-                                        <constraint firstAttribute="trailing" secondItem="sVS-yn-wmt" secondAttribute="trailing" id="hIm-ob-vKl"/>
-                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="centerY" secondItem="Fam-nA-RUr" secondAttribute="centerY" id="nEd-Ih-rQm"/>
+                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="centerY" secondItem="Fam-nA-RUr" secondAttribute="centerY" id="7Lp-w6-Rye"/>
+                                        <constraint firstItem="sVS-yn-wmt" firstAttribute="leading" secondItem="Fam-nA-RUr" secondAttribute="leadingMargin" constant="-1" id="Wr3-at-3JK"/>
+                                        <constraint firstAttribute="trailing" secondItem="sVS-yn-wmt" secondAttribute="trailing" id="ecv-YE-2di"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -90,6 +89,7 @@
                     <connections>
                         <outlet property="deleteButton" destination="4Nw-kz-pPb" id="3fT-HW-AgB"/>
                         <outlet property="selectButton" destination="7AO-dm-2p1" id="LpT-qt-aYJ"/>
+                        <outlet property="shuffleButton" destination="afX-v4-wak" id="fG3-o8-Lux"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jhi-MA-fNU" userLabel="First Responder" sceneMemberID="firstResponder"/>

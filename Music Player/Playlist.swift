@@ -15,6 +15,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     
     @IBOutlet var selectButton: UIBarButtonItem!
+    @IBOutlet var shuffleButton: UIBarButtonItem!
     @IBOutlet var deleteButton: UIBarButtonItem!
     
     var appDel : AppDelegate!
@@ -25,7 +26,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     var streamURLs = [String : NSURL]()
     
-    var x : [Int] = []
+    var x : [Int] = [] //for shuffling
     var playerQueue = AVQueuePlayer()
     var curNdx = 0
     var videoTracks : [AVPlayerItemTrack]!
@@ -35,26 +36,22 @@ class Playlist: UITableViewController, PlaylistDelegate {
         refreshPlaylist()
         retrieveStreams()
         resetX()
+        
+        setEditing(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
         retrieveStreams()
         resetX()
     }
+    
     func refreshPlaylist(){
         var request = NSFetchRequest(entityName: "Songs")
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
-        
-        
-        
         tableView.reloadData()
     }
-    
-    
-    
-    
-    
     
     func resetX(){
         x = []
@@ -64,10 +61,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
             }
         }
     }
-    
-    
-    
-    
     
     func retrieveStreams() {
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
@@ -83,12 +76,9 @@ class Playlist: UITableViewController, PlaylistDelegate {
                             if error == nil {
                                 var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
                                 
-                                
-                                
                                 var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                                 
                                 self.streamURLs[video.identifier] = url
-                                
                             }
                         })
                         
@@ -121,32 +111,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
         
-        editButtonItem().title = "Select"
         navigationItem.leftBarButtonItem = editButtonItem()
-        
+        editButtonItem().title = "Select"
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
-    }
-    
-    
-    override func setEditing(editing: Bool, animated: Bool) {
         
-        super.setEditing(editing, animated: animated)
-        
-        tableView.setEditing(editing, animated: true)
-        
-        
-        if editing {
-            deleteButton.enabled = false
-            selectButton.title = "Select All"
-            editButtonItem().title = "Cancel"
-            navigationController?.toolbarHidden = false
-            navigationController?.hidesBarsOnSwipe = true
-        }
-            
-        else {
-            navigationController?.hidesBarsOnSwipe = false
-            navigationController?.toolbarHidden = true
-        }
+        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
     }
     
     override func didReceiveMemoryWarning() {
@@ -159,7 +128,53 @@ class Playlist: UITableViewController, PlaylistDelegate {
         return songs.count
     }
     
+    //called when select pressed
+    override func setEditing(editing: Bool, animated: Bool) {
+        
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: true)
+        
+        if editing {
+            shuffleButton.enabled = false
+            deleteButton.enabled = false
+            selectButton.title = "Select All"
+            editButtonItem().title = "Cancel"
+            navigationController?.toolbarHidden = false
+            navigationController?.hidesBarsOnSwipe = true
+        }
+            
+        else {
+            editButtonItem().title = "Select"
+            shuffleButton.enabled = true
+            navigationController?.hidesBarsOnSwipe = false
+            navigationController?.toolbarHidden = true
+        }
+    }
     
+    //set up editing mode
+    @IBAction func selectPressed() {
+        
+        if selectButton.title == "Select All"{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
+            }
+            selectButton.title = "Select None"
+            deleteButton.enabled = true
+        }
+            
+        else{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
+            selectButton.title = "Select All"
+            deleteButton.enabled = false
+        }
+        
+    }
+    
+    //two functions to detect when no items selected and when at least one item selected
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if tableView.editing{
             deleteButton.enabled = true
@@ -174,37 +189,10 @@ class Playlist: UITableViewController, PlaylistDelegate {
         }
     }
     
-    @IBAction func selectPressed() {
-        // var rows = tableView.indexpaths
-        
-        
-        if selectButton.title == "Select All"{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
-                var indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
-            }
-            selectButton.title = "Select None"
-            deleteButton.enabled = true
-        }
-            
-            
-            
-        else{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
-                var indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
-            }
-            selectButton.title = "Select All"
-            deleteButton.enabled = false
-        }
-        
-    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
-        
         var row = x[indexPath.row]
         cell.songLabel?.text = songs[row].valueForKey("title") as? String
-        
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
         return cell
@@ -227,19 +215,14 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     
     //delete functions
-    @IBAction func deletePressed() {
+    @IBAction func deletePressed() {//delete selected songs
         
         if var selectedIndexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
-            
-            
-            
             var selectedRows : [Int] = []
+            
             for indexPath : NSIndexPath in selectedIndexPaths {
                 selectedRows += [indexPath.row]
-                
-                
                 var row = x[indexPath.row]
-                
                 var identifier = songs[row].valueForKey("identifier") as! String
                 
                 deleteSong(identifier)
@@ -263,23 +246,38 @@ class Playlist: UITableViewController, PlaylistDelegate {
             var temp2 = x
             for num in temp {
                 if find(x, num) == nil {
-                for var index = 0; index < x.count; ++index {
-                    if x[index] > num {
-                        temp2[index]--
+                    for var index = 0; index < x.count; ++index {
+                        if x[index] > num {
+                            temp2[index]--
+                        }
                     }
-                }
                 }
             }
             x = temp2
             
             refreshPlaylist()
-            
         }
+        
+        setEditing(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
-
+    
+    override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
+        self.editButtonItem().enabled = false
+    }
+    
+    override func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
+        self.editButtonItem().enabled = true
+    }
+    
+    //swipe to delete
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             var row = x[indexPath.row]
+            
+            var identifier = songs[row].valueForKey("identifier") as! String
+            deleteSong(identifier)
+            
             x.removeAtIndex(indexPath.row)
             
             for var index = 0; index < x.count; ++index {
@@ -288,25 +286,10 @@ class Playlist: UITableViewController, PlaylistDelegate {
                 }
             }
             
-            //fetch song
-            var identifier = songs[row].valueForKey("identifier") as! String
-            var songRequest = NSFetchRequest(entityName: "Songs")
-            songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-            var selectedSong : NSArray = context.executeFetchRequest(songRequest, error: nil)!
-            
-            var dict = ["identifier" : identifier]
-            NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
-            
-            deleteSongs(selectedSong)
-            
-            var request = NSFetchRequest(entityName: "Songs")
-            request.sortDescriptors = [songSortDescriptor]
-            songs = context.executeFetchRequest(request, error: nil)
-            tableView.reloadData()
+            refreshPlaylist()
+            self.editButtonItem().enabled = true
         }
     }
-    
-    
     
     func deleteSong(identifier : String){
         var songRequest = NSFetchRequest(entityName: "Songs")
@@ -331,23 +314,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         context.save(nil)
     }
     
-    
-    
-    func deleteSongs(songsToDelete : NSArray){
-        var fileManager = NSFileManager.defaultManager()
-        
-        for entity in songsToDelete {//remove item in both documents directory and persistentData
-            var file = (entity as! NSManagedObject).valueForKey("identifier") as! String
-            file = file.stringByAppendingString(".mp4")
-            var filePath = documentsDir.stringByAppendingPathComponent(file)
-            fileManager.removeItemAtPath(filePath, error: nil)
-            context.deleteObject(entity as! NSManagedObject)
-        }
-        
-        context.save(nil)
-    }
-    
-    
+    //don't segue to AVPlayer if editing
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
         if !tableView.editing {
             return true
@@ -379,46 +346,31 @@ class Playlist: UITableViewController, PlaylistDelegate {
         }
         
         var ndx = x[index]
-        
         var isDownloaded = songs[ndx].valueForKey("isDownloaded") as! Bool
-        
         var identifier = songs[ndx].valueForKey("identifier") as! String
+
         if isDownloaded {
             
             var file = identifier.stringByAppendingString(".mp4")
             var filePath = documentsDir.stringByAppendingPathComponent(file)
-            
-            
-            
-            
             let url = NSURL(fileURLWithPath: filePath)
-            
             
             var playerItem = AVPlayerItem(URL: url)
             playerQueue.insertItem(playerItem, afterItem: nil)
         }
             
         else{
-            println(streamURLs[identifier])
-            
-            
             if streamURLs[identifier] == nil {
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {
                         var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-                        
-                        
                         var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
-                        
-                        
+
                         self.streamURLs[video.identifier] = url
-                        
                         var playerItem = AVPlayerItem(URL: url)
                         self.playerQueue.insertItem(playerItem, afterItem: nil)
-                        
                     }
                 })
-                
             }
                 
             else {
@@ -426,9 +378,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
                 var playerItem = AVPlayerItem(URL: url)
                 playerQueue.insertItem(playerItem, afterItem: nil)
             }
-            
         }
-        
     }
     
     func advance(){

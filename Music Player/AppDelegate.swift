@@ -46,16 +46,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //remove excess documents and data
         var cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] as! String
         
-        //var cacheDir1 = cacheFolder.stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
+        var cacheDir1 = cacheFolder.stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
         var cacheDir2 = cacheFolder.stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
         
-        /*if fileMgr.fileExistsAtPath(cacheDir1){
-        var dir1Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir1, error: nil) as! [String]
-        
-        for file : String in dir1Contents {
-        fileMgr.removeItemAtPath(cacheDir1.stringByAppendingPathComponent(file), error: nil)
+        if fileMgr.fileExistsAtPath(cacheDir1){
+            var dir1Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir1, error: nil) as! [String]
+            
+            for file : String in dir1Contents {
+                fileMgr.removeItemAtPath(cacheDir1.stringByAppendingPathComponent(file), error: nil)
+            }
         }
-        }*/
         
         if fileMgr.fileExistsAtPath(cacheDir2){
             var dir2Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir2, error: nil) as! [String]
