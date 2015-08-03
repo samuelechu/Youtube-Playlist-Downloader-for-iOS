@@ -60,8 +60,6 @@ class Settings: UITableViewController {
         tableView.backgroundView = imgView
         
         navigationController?.setNavigationBarHidden(true, animated: false)
-        
-
     }
     
     override func didReceiveMemoryWarning() {

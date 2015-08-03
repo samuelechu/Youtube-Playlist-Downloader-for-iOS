@@ -51,7 +51,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
         tableView.reloadData()
-    }
+    } 
     
     func resetX(){
         x = []
@@ -61,7 +61,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             }
         }
     }
-    
+     
     func retrieveStreams() {
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
         dispatch_async(dispatch_get_global_queue(priority, 0)) {

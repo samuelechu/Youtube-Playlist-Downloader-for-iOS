@@ -15,7 +15,6 @@ protocol downloadObjectTableDelegate{
     func reloadCellAtNdx(cellNum : Int)
 }
 
-
 class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var appDel : AppDelegate?

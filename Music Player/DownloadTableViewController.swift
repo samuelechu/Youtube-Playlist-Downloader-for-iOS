@@ -15,7 +15,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     var vidDurations : [String] = []
     var images : [UIImage] = []
     var count = 0
-    
+     
     var dlObject : dataDownloadObject!
     var downloadTasks : [String] = []
     var dlButton = false

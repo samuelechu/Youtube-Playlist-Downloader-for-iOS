@@ -19,7 +19,7 @@ protocol PlaylistDelegate{
 class Player: AVPlayerViewController {
     
     var playlistDelegate : PlaylistDelegate? = nil
-    
+     
     override func canBecomeFirstResponder() -> Bool {
         return true
     }

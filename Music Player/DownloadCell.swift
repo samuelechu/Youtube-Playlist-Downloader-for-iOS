@@ -14,7 +14,7 @@ class downloadCell: UITableViewCell {
     @IBOutlet var downloadLabel: UILabel!
     @IBOutlet var imageLabel: UIImageView!
     @IBOutlet var progressBar: UIProgressView!
-    
+     
     
     override func awakeFromNib() {
         super.awakeFromNib()

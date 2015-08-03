@@ -21,7 +21,7 @@ protocol inputVCTableDelegate{
     func setDLButton(value : Bool)
     func dlButtonHidden() -> Bool
 }
-
+ 
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
