@@ -34,7 +34,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
         refreshPlaylist()
-        //retrieveStreams()
         resetX()
         
         setEditing(false, animated: true)
@@ -42,7 +41,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
-        //retrieveStreams()
         resetX()
     }
     
@@ -51,7 +49,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         request.sortDescriptors = [songSortDescriptor]
         songs = context.executeFetchRequest(request, error: nil)
         tableView.reloadData()
-    } 
+    }
     
     func resetX(){
         x = []
@@ -59,34 +57,6 @@ class Playlist: UITableViewController, PlaylistDelegate {
             for var index = 0; index < songs.count; ++index {
                 x += [index]
             }
-        }
-    }
-     
-    func retrieveStreams() {
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            for song in self.songs{
-                
-                var isDownloaded = song.valueForKey("isDownloaded") as! Bool
-                if !isDownloaded {
-                    var identifier = song.valueForKey("identifier") as! String
-                    
-                    if self.streamURLs[identifier] == nil {
-                        XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
-                            if error == nil {
-                                var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-                                
-                                var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
-                                
-                                self.streamURLs[video.identifier] = url
-                            }
-                        })
-                        
-                    }
-                }
-                
-            }
-            
         }
     }
     
@@ -305,10 +275,15 @@ class Playlist: UITableViewController, PlaylistDelegate {
         var fileManager = NSFileManager.defaultManager()
         
         //remove item in both documents directory and persistentData
-        var file = selectedSong.valueForKey("identifier") as! String
-        file = file.stringByAppendingString(".mp4")
-        var filePath = documentsDir.stringByAppendingPathComponent(file)
-        fileManager.removeItemAtPath(filePath, error: nil)
+        var isDownloaded = selectedSong.valueForKey("isDownloaded") as! Bool
+        
+        
+        if isDownloaded {
+            var file = selectedSong.valueForKey("identifier") as! String
+            file = file.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
+            fileManager.removeItemAtPath(filePath, error: nil)
+        }
         context.deleteObject(selectedSong)
         
         
@@ -349,7 +324,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
         var ndx = x[index]
         var isDownloaded = songs[ndx].valueForKey("isDownloaded") as! Bool
         var identifier = songs[ndx].valueForKey("identifier") as! String
-
+        
         if isDownloaded {
             
             var file = identifier.stringByAppendingString(".mp4")
@@ -362,16 +337,28 @@ class Playlist: UITableViewController, PlaylistDelegate {
             
         else{
             
+            var songRequest = NSFetchRequest(entityName: "Songs")
+            songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+            var fetchedSongs : NSArray = context.executeFetchRequest(songRequest, error: nil)!
+            var selectedSong = fetchedSongs[0] as! NSManagedObject
             
-            
+            var currentDate = NSDate()
             var expireDate = songs[ndx].valueForKey("expireDate") as! NSDate
-            if streamURLs[identifier] == nil {
+            
+            if currentDate.compare(expireDate) == NSComparisonResult.OrderedDescending { //update streamURL
+                
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {
                         var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
-                        var url = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
-
-                        self.streamURLs[video.identifier] = url
+                        var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                        
+                        selectedSong.setValue(video.expirationDate, forKey: "expireDate")
+                        selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
+                        
+                        self.context.save(nil)
+                        
+                        var url = NSURL(string: selectedSong.valueForKey("streamURL") as! String)!
+                        println(url)
                         var playerItem = AVPlayerItem(URL: url)
                         self.playerQueue.insertItem(playerItem, afterItem: nil)
                     }
@@ -379,7 +366,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             }
                 
             else {
-                var url = streamURLs[identifier]
+                var url = NSURL(string: selectedSong.valueForKey("streamURL") as! String)!
                 var playerItem = AVPlayerItem(URL: url)
                 playerQueue.insertItem(playerItem, afterItem: nil)
             }

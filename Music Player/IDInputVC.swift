@@ -18,6 +18,10 @@ protocol inputVCTableDelegate{
     func getDLObject() -> dataDownloadObject?
     func addDLTask(tasks : [String])
     func getDLTasks() -> [String]
+    
+    func addUncachedVid(tasks : [String])
+    func getUncachedVids() -> [String]
+    
     func setDLButton(value : Bool)
     func dlButtonHidden() -> Bool
 }
@@ -36,6 +40,7 @@ class IDInputvc: UIViewController {
     var dlObject : dataDownloadObject!
     
     var downloadTasks : [String] = []//array of video identifiers
+    var uncachedVideos : [String] = []//array of video identifiers for uncached videos
     var numDownloads = 0
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
@@ -59,6 +64,8 @@ class IDInputvc: UIViewController {
             context.save(nil)
         }
         
+        //get identifiers lost from popping of view
+        uncachedVideos = (tableDelegate?.getUncachedVids())!
         downloadTasks = (tableDelegate?.getDLTasks())!
         dlObject = tableDelegate?.getDLObject()
         
@@ -109,6 +116,10 @@ class IDInputvc: UIViewController {
         }
             
         else if((find(downloadTasks, identifier)) != nil){
+            return true
+        }
+            
+        else if((find(uncachedVideos, identifier)) != nil){
             return true
         }
         
@@ -273,10 +284,15 @@ class IDInputvc: UIViewController {
                             var isStored = self.vidStored(identifier)
                             
                             if (!isStored){
-                                if(find(self.downloadTasks, identifier) == nil){
-                                    self.saveVideoInfo(identifier)
-                                }
+                                
+                                self.uncachedVideos += [identifier]
+                                self.tableDelegate?.addUncachedVid([identifier])
+                                self.saveVideoInfo(identifier)
+                                
                             }
+                        }
+                        if nextPageToken == nil {
+                            self.manageButtons(false)
                         }
                         
                     }
@@ -311,7 +327,7 @@ class IDInputvc: UIViewController {
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video.title, forKey: "title")
                 newSong.setValue(video.expirationDate, forKey: "expireDate")
-                newSong.setValue(true, forKey: "isDownloaded")
+                newSong.setValue(false, forKey: "isDownloaded")
                 
                 var streamURLs = video.streamURLs
                 var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL

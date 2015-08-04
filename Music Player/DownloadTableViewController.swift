@@ -18,6 +18,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
      
     var dlObject : dataDownloadObject!
     var downloadTasks : [String] = []
+    var uncachedVideos : [String] = []
     var dlButton = false
     
     
@@ -78,7 +79,8 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     func getDLObject() -> dataDownloadObject? { return dlObject }
     func addDLTask(tasks : [String]){ downloadTasks += tasks }
     func getDLTasks() -> [String] { return downloadTasks }
-    
+    func addUncachedVid(identifier: [String]) { uncachedVideos += identifier}
+    func getUncachedVids() -> [String] { return uncachedVideos }
     
     /*override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {

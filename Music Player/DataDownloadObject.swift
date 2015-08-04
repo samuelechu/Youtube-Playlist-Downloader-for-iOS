@@ -126,21 +126,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
-                
-                
                 context.save(nil)
-                
-                /*var songRequest = NSFetchRequest(entityName: "Songs")
-                songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-                var fetchedSongs : NSArray = context.executeFetchRequest(songRequest, error: nil)!
-                var selectedSong = fetchedSongs[0] as! NSManagedObject
-                
-                
-                var x = selectedSong.valueForKey("expireDate") as! NSDate
-                println(x)
-                
-                var date = NSDate()
-                println(date)*/
                 
                 
                 //display checkmark for completion
