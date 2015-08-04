@@ -106,10 +106,42 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 
                 //save to CoreData
                 var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
-                newSong.setValue("\(identifier)", forKey: "identifier")
-                newSong.setValue("\(videoData[cellNum!].title)", forKey: "title")
+                newSong.setValue(identifier, forKey: "identifier")
+                newSong.setValue(videoData[cellNum!].title, forKey: "title")
+                
+                var expireDate = videoData[cellNum!].expirationDate
+                expireDate = expireDate.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
+                
+                newSong.setValue(expireDate, forKey: "expireDate")
                 newSong.setValue(true, forKey: "isDownloaded")
+                
+                var streamURLs = videoData[cellNum!].streamURLs
+                var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                newSong.setValue("\(desiredURL)", forKey: "streamURL")
+                
+                var large = videoData[cellNum!].largeThumbnailURL
+                var medium = videoData[cellNum!].mediumThumbnailURL
+                var small = videoData[cellNum!].smallThumbnailURL
+                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small)))
+            
+                newSong.setValue(imgData, forKey: "thumbnail")
+                
+                
+                
                 context.save(nil)
+                
+                /*var songRequest = NSFetchRequest(entityName: "Songs")
+                songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
+                var fetchedSongs : NSArray = context.executeFetchRequest(songRequest, error: nil)!
+                var selectedSong = fetchedSongs[0] as! NSManagedObject
+                
+                
+                var x = selectedSong.valueForKey("expireDate") as! NSDate
+                println(x)
+                
+                var date = NSDate()
+                println(date)*/
+                
                 
                 //display checkmark for completion
                 var dict = ["ndx" : cellNum!, "value" : "1.0" ]

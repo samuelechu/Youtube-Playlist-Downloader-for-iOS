@@ -34,7 +34,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
         refreshPlaylist()
-        retrieveStreams()
+        //retrieveStreams()
         resetX()
         
         setEditing(false, animated: true)
@@ -42,7 +42,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
-        retrieveStreams()
+        //retrieveStreams()
         resetX()
     }
     
@@ -361,6 +361,10 @@ class Playlist: UITableViewController, PlaylistDelegate {
         }
             
         else{
+            
+            
+            
+            var expireDate = songs[ndx].valueForKey("expireDate") as! NSDate
             if streamURLs[identifier] == nil {
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {

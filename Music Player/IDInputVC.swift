@@ -12,7 +12,7 @@ import CoreData
 protocol inputVCTableDelegate{
     func addCell(dict : NSDictionary)
     func reloadCells()
-     
+    
     //necessary because IDInputvc view is reset when it is popped
     func setDLObject(session : dataDownloadObject)
     func getDLObject() -> dataDownloadObject?
@@ -21,7 +21,7 @@ protocol inputVCTableDelegate{
     func setDLButton(value : Bool)
     func dlButtonHidden() -> Bool
 }
- 
+
 class IDInputvc: UIViewController {
     
     @IBOutlet var vidID: UITextField!
@@ -243,19 +243,45 @@ class IDInputvc: UIViewController {
                         videoIDs += [vidID]
                     }
                     
-                    for identifier : String in videoIDs {
-                        
-                        var isStored = self.vidStored(identifier)
-                        
-                        if (!isStored){
-                            self.startDownloadTaskHelper(identifier, qual: qual)
-                            self.downloadTasks += [identifier]
-                            self.tableDelegate?.addDLTask([identifier])
+                    
+                    var request = NSFetchRequest(entityName: "Settings")
+                    var results : NSArray = self.context.executeFetchRequest(request, error: nil)!
+                    
+                    var settings = results[0] as! NSManagedObject
+                    
+                    
+                    var downloadVid = settings.valueForKey("cache") as! Bool
+                    
+                    
+                    //download videos if cache option selected, otherwise save song object to persistent memory
+                    if downloadVid {
+                        for identifier : String in videoIDs {
+                            
+                            var isStored = self.vidStored(identifier)
+                            
+                            if (!isStored){
+                                self.startDownloadTaskHelper(identifier, qual: qual)
+                                self.downloadTasks += [identifier]
+                                self.tableDelegate?.addDLTask([identifier])
+                            }
                         }
                     }
+                        
+                    else {
+                        for identifier : String in videoIDs {
+                            
+                            var isStored = self.vidStored(identifier)
+                            
+                            if (!isStored){
+                                if(find(self.downloadTasks, identifier) == nil){
+                                    self.saveVideoInfo(identifier)
+                                }
+                            }
+                        }
+                        
+                    }
+                    
                     self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
-                    
-                    
                 }
                     
                 else {
@@ -264,9 +290,6 @@ class IDInputvc: UIViewController {
                     self.tableDelegate?.setDLButton(false)
                     
                 }
-                
-                
-                
             })
             
             
@@ -274,13 +297,36 @@ class IDInputvc: UIViewController {
             
             
         }
-        
+            
         else{
             tableDelegate?.setDLButton(false)
         }
         
     }
     
-    
+    func saveVideoInfo(identifier : String) {
+        XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
+            if error == nil {
+                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
+                newSong.setValue(identifier, forKey: "identifier")
+                newSong.setValue(video.title, forKey: "title")
+                newSong.setValue(video.expirationDate, forKey: "expireDate")
+                newSong.setValue(true, forKey: "isDownloaded")
+                
+                var streamURLs = video.streamURLs
+                var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                newSong.setValue("\(desiredURL)", forKey: "streamURL")
+                
+                var large = video.largeThumbnailURL
+                var medium = video.mediumThumbnailURL
+                var small = video.smallThumbnailURL
+                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small)))
+                
+                newSong.setValue(imgData, forKey: "thumbnail")
+                
+                self.context.save(nil)
+            }
+        })
+    }
     
 }
