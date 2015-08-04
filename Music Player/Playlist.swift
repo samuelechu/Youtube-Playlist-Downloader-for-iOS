@@ -31,8 +31,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
     var curNdx = 0
     var videoTracks : [AVPlayerItemTrack]!
     
+    var isConnected = false
     //sort + reload data
     override func viewWillAppear(animated: Bool) {
+        
+        isConnected = IJReachability.isConnectedToNetwork()
         refreshPlaylist()
         resetX()
         
@@ -47,8 +50,13 @@ class Playlist: UITableViewController, PlaylistDelegate {
     func refreshPlaylist(){
         var request = NSFetchRequest(entityName: "Songs")
         request.sortDescriptors = [songSortDescriptor]
+        
+        if !isConnected {//removes nonDownloaded songs from list if no connection detected
+            request.predicate = NSPredicate(format: "isDownloaded = %@", true)
+        }
         songs = context.executeFetchRequest(request, error: nil)
         tableView.reloadData()
+        
     }
     
     func resetX(){

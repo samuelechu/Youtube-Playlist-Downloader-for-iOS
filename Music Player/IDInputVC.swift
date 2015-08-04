@@ -64,7 +64,7 @@ class IDInputvc: UIViewController {
             context.save(nil)
         }
         
-        //get identifiers lost from popping of view
+        //get identifiers lost from popping off view
         uncachedVideos = (tableDelegate?.getUncachedVids())!
         downloadTasks = (tableDelegate?.getDLTasks())!
         dlObject = tableDelegate?.getDLObject()
@@ -341,6 +341,7 @@ class IDInputvc: UIViewController {
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
                 self.context.save(nil)
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
         })
     }
