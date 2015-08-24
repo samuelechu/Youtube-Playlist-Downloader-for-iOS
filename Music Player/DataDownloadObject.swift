@@ -98,12 +98,23 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             var cellNum  = find(taskIDs, downloadTask.taskIdentifier)
             if cellNum != nil{
                 
+                var request = NSFetchRequest(entityName: "Settings")
+                var results : NSArray = self.context.executeFetchRequest(request, error: nil)!
+                
+                var settings = results[0] as! NSManagedObject
+                
+                var downloadLocation = settings.valueForKey("cache") as! Int
+                
                 //move file from temporary folder to documents folder
                 var fileData : NSData? = NSData(contentsOfURL: loc)
                 var identifier = videoData[cellNum!].identifier
                 var filePath = grabFilePath("\(identifier).mp4")
                 NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath, error: nil)
                 
+                if (downloadLocation == 1) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil)
+                }
+               
                 //save to CoreData
                 var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
                 newSong.setValue(identifier, forKey: "identifier")

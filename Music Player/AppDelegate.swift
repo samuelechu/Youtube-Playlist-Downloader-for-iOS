@@ -13,7 +13,7 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         return true
@@ -32,6 +32,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //renable video tracks
         NSNotificationCenter.defaultCenter().postNotificationName("enteredForegroundID", object: nil)
+        
+        /*
+        
+        var request = NSFetchRequest(entityName: "Songs")
+        
+        var songs = managedObjectContext!.executeFetchRequest(request, error: nil)
+        
+        for song in songs as! [NSManagedObject]{
+            
+            var file = song.valueForKey("identifier") as! String
+            file = file.stringByAppendingString(".mp4")
+            var filePath = documentsDir.stringByAppendingPathComponent(file)
+            
+            if !NSFileManager.defaultManager().fileExistsAtPath(filePath) {
+                managedObjectContext!.deleteObject(song)
+                managedObjectContext!.save(nil)
+            }
+        }*/
+        
         
     }
     

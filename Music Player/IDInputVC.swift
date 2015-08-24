@@ -55,14 +55,19 @@ class IDInputvc: UIViewController {
         //set initial quality to 360P if uninitialized
         var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        
         if results.count == 0 {
             var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
             
             settings.setValue(0, forKey: "quality")
-            settings.setValue(true, forKey: "cache")
+            settings.setValue(0, forKey: "cache")
+            //settings.setValue(true, forKey: "cache")  //cache was originally a bool
             
             context.save(nil)
+            results = context.executeFetchRequest(request, error: nil)!
         }
+        
+        
         
         //get identifiers lost from popping off view
         uncachedVideos = (tableDelegate?.getUncachedVids())!
@@ -260,12 +265,11 @@ class IDInputvc: UIViewController {
                     
                     var settings = results[0] as! NSManagedObject
                     
-                    
-                    var downloadVid = settings.valueForKey("cache") as! Bool
-                    
+                    var downloadVid = settings.valueForKey("cache") as! Int
+                    //var downloadVid = settings.valueForKey("cache") as! Bool
                     
                     //download videos if cache option selected, otherwise save song object to persistent memory
-                    if downloadVid {
+                    if downloadVid != 2 {
                         for identifier : String in videoIDs {
                             
                             var isStored = self.vidStored(identifier)

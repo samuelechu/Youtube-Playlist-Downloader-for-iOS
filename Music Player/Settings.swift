@@ -42,7 +42,8 @@ class Settings: UITableViewController {
             var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
             
             settings.setValue(0, forKey: "quality")
-            settings.setValue(true, forKey: "cache")
+            settings.setValue(0, forKey: "cache")
+            //settings.setValue(true, forKey: "cache")  //cache was originally a bool
             
             context.save(nil)
             results = context.executeFetchRequest(request, error: nil)!
@@ -50,20 +51,22 @@ class Settings: UITableViewController {
         
         settings = results[0] as! NSManagedObject
         println(settings.valueForKey("quality") as! Int)
-        println(settings.valueForKey("cache") as! Bool)
-
+        println(settings.valueForKey("cache") as! Int)
+        //println(settings.valueForKey("cache") as! Bool)
+        
         var qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
         
         deselectRow(qualRow)
         selectRow(qualRow)
         
         
-        var cacheRow = NSIndexPath(forRow: 0, inSection: 1)
+        var cacheRow = NSIndexPath(forRow: settings.valueForKey("cache") as! Int, inSection: 1)
         deselectRow(cacheRow)
+        selectRow(cacheRow)
         
-        if settings.valueForKey("cache") as! Bool {
+        /*if settings.valueForKey("cache") as! Bool {
             selectRow(cacheRow)
-        }
+        }*/
         
         tableView.backgroundColor = UIColor.clearColor()
         var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
@@ -87,6 +90,7 @@ class Settings: UITableViewController {
     return indexPath ;
     }*/
     
+    //deselect previously selected rows that are in same section
     override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         if var selectedRows = tableView.indexPathsForSelectedRows() as? [NSIndexPath]{
             for selectedIndexPath : NSIndexPath in selectedRows{
@@ -106,8 +110,9 @@ class Settings: UITableViewController {
         switch indexPath.section {
         case 0: //Video Quality
             settings.setValue(indexPath.row, forKey: "quality")
-        case 1://cache Video
-            settings.setValue(true, forKey: "cache")
+        case 1://Video Caching
+            settings.setValue(indexPath.row, forKey: "cache")
+            //settings.setValue(true, forKey: "cache")
         default:
             break
         }
@@ -117,19 +122,19 @@ class Settings: UITableViewController {
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
         
-        if indexPath.section == 1 {
+        /*if indexPath.section == 1 {
             settings.setValue(false, forKey: "cache")
         }
         
-        context.save(nil)
+        context.save(nil)*/
     }
     
     
-    override func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+   override func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         
-        if indexPath.section == 1{
+        /*if indexPath.section == 1{
             return indexPath
-        }
+        }*/
         return nil
     }
 }
