@@ -11,7 +11,7 @@ import CoreData
 import AVFoundation
 import AVKit
 
-class Playlist: UITableViewController, PlaylistDelegate {
+class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
     @IBOutlet var selectButton: UIBarButtonItem!
@@ -24,8 +24,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     var songs : NSArray!
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-    var streamURLs = [String : NSURL]()
+    var identifiers : [String] = []
     
+    //search control
+    var filteredSongs : NSArray!
+    var resultSearchController = UISearchController(searchResultsController: nil)
     var x : [Int] = [] //for shuffling
     var playerQueue = AVQueuePlayer()
     var curNdx = 0
@@ -39,8 +42,12 @@ class Playlist: UITableViewController, PlaylistDelegate {
         refreshPlaylist()
         resetX()
         
+        //reset tableView
         setEditing(false, animated: true)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        definesPresentationContext = false
+        resultSearchController.active = false
+        definesPresentationContext = true
     }
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
@@ -55,6 +62,13 @@ class Playlist: UITableViewController, PlaylistDelegate {
             request.predicate = NSPredicate(format: "isDownloaded = %@", true)
         }
         songs = context.executeFetchRequest(request, error: nil)
+        identifiers = []
+        
+        for song in songs{
+            var identifier = song.valueForKey("identifier") as! String
+            identifiers += [identifier]
+        }
+        
         tableView.reloadData()
         
     }
@@ -95,6 +109,23 @@ class Playlist: UITableViewController, PlaylistDelegate {
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
         
         shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
+        
+        isConnected = IJReachability.isConnectedToNetwork()
+        refreshPlaylist()
+        resetX()
+        
+        setEditing(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        
+        
+        resultSearchController.searchResultsUpdater = self
+        resultSearchController.dimsBackgroundDuringPresentation = false
+        resultSearchController.searchBar.sizeToFit()
+        definesPresentationContext = true
+        tableView.tableHeaderView = resultSearchController.searchBar
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -104,7 +135,12 @@ class Playlist: UITableViewController, PlaylistDelegate {
         return 1
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return songs.count
+        if resultSearchController.active && resultSearchController.searchBar.text != ""{
+            return filteredSongs.count
+        }
+        else{
+            return songs.count
+        }
     }
     
     //called when select pressed
@@ -170,12 +206,38 @@ class Playlist: UITableViewController, PlaylistDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
-        var row = x[indexPath.row]
-        cell.songLabel?.text = songs[row].valueForKey("title") as? String
+        
+        
+        
+        if resultSearchController.active && resultSearchController.searchBar.text != "" {
+            cell.songLabel?.text = filteredSongs[indexPath.row].valueForKey("title") as? String
+        }
+            
+        else{
+            var row = x[indexPath.row]
+            cell.songLabel?.text = songs[row].valueForKey("title") as? String
+        }
+        
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
         return cell
     }
+    
+    
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+        
+        
+        var request = NSFetchRequest(entityName: "Songs")
+        request.sortDescriptors = [songSortDescriptor]
+        request.predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
+        filteredSongs = context.executeFetchRequest(request, error: nil)
+        tableView.reloadData()
+        
+        
+    }
+    
     
     //shuffle functions
     @IBAction func shufflePlaylist() {
@@ -242,11 +304,11 @@ class Playlist: UITableViewController, PlaylistDelegate {
     }
     
     override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
-        self.editButtonItem().enabled = false
+        editButtonItem().enabled = false
     }
     
     override func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
-        self.editButtonItem().enabled = true
+        editButtonItem().enabled = true
     }
     
     //swipe to delete
@@ -266,7 +328,7 @@ class Playlist: UITableViewController, PlaylistDelegate {
             }
             
             refreshPlaylist()
-            self.editButtonItem().enabled = true
+            editButtonItem().enabled = true
         }
     }
     
@@ -313,14 +375,37 @@ class Playlist: UITableViewController, PlaylistDelegate {
         if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
             
+            
+            if resultSearchController.active && resultSearchController.searchBar.text != ""{
+                var selectedRow = (tableView.indexPathForSelectedRow()?.row)!
+                var identifier = filteredSongs[selectedRow].valueForKey("identifier") as! String
+                var ndxIdentifiers = find(identifiers, identifier)!
+                curNdx = find(x,ndxIdentifiers)!
+                
+                resultSearchController.active = false
+                var path = NSIndexPath(forRow: curNdx, inSection: 0)
+                tableView.selectRowAtIndexPath(path, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
+
+                
+            }
+            
+            
+            else{
+            
             curNdx = (tableView.indexPathForSelectedRow()?.row)!
+            }
             addSongToQueue(curNdx)
+            
+            
+            
             
             //if download finished, initialize avplayer\
             let player : Player = segue.destinationViewController as! Player
             player.playlistDelegate = self
             player.player = playerQueue
         }
+        
+        
     }
     
     func addSongToQueue(index : Int) {
