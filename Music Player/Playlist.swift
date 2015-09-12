@@ -371,17 +371,18 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             if resultSearchController.active && resultSearchController.searchBar.text != ""{
                 var selectedRow = indexPath.row
-                row = findNdxInFullList(selectedRow)
+                row = x[findNdxInFullList(selectedRow)]
+                x.removeAtIndex(row)
             }
 
             else{
                 row = x[indexPath.row]
+                x.removeAtIndex(indexPath.row)
             }
             
             var identifier = songs[row].valueForKey("identifier") as! String
             deleteSong(identifier)
             
-            x.removeAtIndex(indexPath.row)
             
             for var index = 0; index < x.count; ++index {
                 if x[index] > row {
