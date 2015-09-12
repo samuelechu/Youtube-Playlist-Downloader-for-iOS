@@ -175,7 +175,6 @@
                     </view>
                     <navigationItem key="navigationItem" title=" " id="5Co-qK-ktT">
                         <barButtonItem key="backBarButtonItem" title=" " id="EOn-GP-LQW"/>
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="j7V-n6-BKZ"/>
                     </navigationItem>
                     <connections>
                         <outlet property="downloadButton" destination="u3l-iB-VeN" id="tcv-3v-8h2"/>

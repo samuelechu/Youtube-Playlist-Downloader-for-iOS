@@ -121,6 +121,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         resultSearchController.searchResultsUpdater = self
         resultSearchController.dimsBackgroundDuringPresentation = false
+        resultSearchController.hidesNavigationBarDuringPresentation = false
         resultSearchController.searchBar.sizeToFit()
         definesPresentationContext = true
         tableView.tableHeaderView = resultSearchController.searchBar
@@ -225,9 +226,19 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     
     
+    func findNdxInFullList(ndxInSearchList : Int) -> Int{
+        var identifier = filteredSongs[ndxInSearchList].valueForKey("identifier") as! String
+        var ndxIdentifiers = find(identifiers, identifier)!
+        var ndxInFullList = find(x,ndxIdentifiers)!
+        return ndxInFullList
+    }
+    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         
-        
+        //in editing mode
+        if !shuffleButton.enabled {
+            setEditing(false, animated: true)
+        }
         
         var request = NSFetchRequest(entityName: "Songs")
         request.sortDescriptors = [songSortDescriptor]
@@ -239,7 +250,15 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     
+    
+    
+    ////////////////
+    //////////////////
+    //////////////////
+    ////
     //shuffle functions
+    
+    
     @IBAction func shufflePlaylist() {
         if songs.count > 0 {
             shuffle(&x)
@@ -255,18 +274,50 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
+    
+    
+    
+    ////////////////
+    //////////////////
+    //////////////////
+    ////
     //delete functions
+    
+    
+    
     @IBAction func deletePressed() {//delete selected songs
         
         if var selectedIndexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
             var selectedRows : [Int] = []
             
-            for indexPath : NSIndexPath in selectedIndexPaths {
-                selectedRows += [indexPath.row]
-                var row = x[indexPath.row]
-                var identifier = songs[row].valueForKey("identifier") as! String
+            //if search active, find indexes of selected rows in the full shuffled playlist
+            if resultSearchController.active && resultSearchController.searchBar.text != "" {
                 
-                deleteSong(identifier)
+                for indexPath : NSIndexPath in selectedIndexPaths {
+                    
+                    var selectedRow = indexPath.row
+                    var id = filteredSongs[selectedRow].valueForKey("identifier") as! String
+                    var ndxIdentifiers = find(identifiers, id)!
+                    selectedRow = find(x,ndxIdentifiers)!
+                    
+                    
+                    selectedRows += [selectedRow]
+                    var identifier = songs[ndxIdentifiers].valueForKey("identifier") as! String
+                    
+                    deleteSong(identifier)
+                }
+                
+                
+            }
+                
+            else{
+                for indexPath : NSIndexPath in selectedIndexPaths {
+                    selectedRows += [indexPath.row]
+                    var row = x[indexPath.row]
+                    var identifier = songs[row].valueForKey("identifier") as! String
+                    
+                    deleteSong(identifier)
+                }
             }
             
             //horribly unreadable, but keeps shuffled songs in order after deletion
@@ -301,6 +352,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         setEditing(false, animated: true)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        updateSearchResultsForSearchController(resultSearchController)
     }
     
     override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
@@ -314,7 +366,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     //swipe to delete
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            var row = x[indexPath.row]
+            
+            var row : Int!
+            
+            if resultSearchController.active && resultSearchController.searchBar.text != ""{
+                var selectedRow = indexPath.row
+                row = findNdxInFullList(selectedRow)
+            }
+
+            else{
+                row = x[indexPath.row]
+            }
             
             var identifier = songs[row].valueForKey("identifier") as! String
             deleteSong(identifier)
@@ -329,6 +391,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             refreshPlaylist()
             editButtonItem().enabled = true
+            updateSearchResultsForSearchController(resultSearchController)
+            
         }
     }
     
@@ -360,6 +424,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         context.save(nil)
     }
     
+    
+    
+    
+    ////////////////
+    //////////////////
+    //////////////////
+    ////
+    //avplayer related functions
+    
+    
+    
     //don't segue to AVPlayer if editing
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
         if !tableView.editing {
@@ -370,7 +445,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     
-    //avplayer related functions
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
@@ -385,14 +460,14 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 resultSearchController.active = false
                 var path = NSIndexPath(forRow: curNdx, inSection: 0)
                 tableView.selectRowAtIndexPath(path, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
-
+                
                 
             }
-            
-            
+                
+                
             else{
-            
-            curNdx = (tableView.indexPathForSelectedRow()?.row)!
+                
+                curNdx = (tableView.indexPathForSelectedRow()?.row)!
             }
             addSongToQueue(curNdx)
             
