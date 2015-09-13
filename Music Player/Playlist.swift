@@ -39,8 +39,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func viewWillAppear(animated: Bool) {
         
         isConnected = IJReachability.isConnectedToNetwork()
-        refreshPlaylist()
-        resetX()
+        
         
         //reset tableView
         setEditing(false, animated: true)
@@ -52,6 +51,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     func reloadPlaylist(notification: NSNotification){
         refreshPlaylist()
         resetX()
+        shuffleButton.tintColor = UIColor.grayColor()
     }
     
     func refreshPlaylist(){
@@ -109,6 +109,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
         
         shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
+        shuffleButton.tintColor = UIColor.grayColor()
         
         isConnected = IJReachability.isConnectedToNetwork()
         refreshPlaylist()
@@ -208,17 +209,19 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
         
-        
+        var songname : String!
         
         if resultSearchController.active && resultSearchController.searchBar.text != "" {
-            cell.songLabel?.text = filteredSongs[indexPath.row].valueForKey("title") as? String
+            songname = filteredSongs[indexPath.row].valueForKey("title") as? String
         }
             
         else{
             var row = x[indexPath.row]
-            cell.songLabel?.text = songs[row].valueForKey("title") as? String
+            songname = songs[row].valueForKey("title") as? String
         }
         
+        
+        cell.songLabel?.text = "\(indexPath.row + 1).  \(songname)"
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
         return cell
@@ -260,17 +263,25 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     
     @IBAction func shufflePlaylist() {
-        if songs.count > 0 {
+        
+        if shuffleButton.tintColor != nil{
             shuffle(&x)
-            tableView.reloadData()
+            shuffleButton.tintColor = nil
         }
+        else{
+            resetX()
+            shuffleButton.tintColor = UIColor.grayColor()
+        }
+        tableView.reloadData()
     }
     
     func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
-        let c = count(list)
-        for i in 0..<(c - 1) {
-            let j = Int(arc4random_uniform(UInt32(c - i))) + i
-            swap(&list[i], &list[j])
+        if songs.count > 0 {
+            let c = count(list)
+            for i in 0..<(c - 1) {
+                let j = Int(arc4random_uniform(UInt32(c - i))) + i
+                swap(&list[i], &list[j])
+            }
         }
     }
     
@@ -357,10 +368,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
         editButtonItem().enabled = false
+        shuffleButton.enabled = false
     }
     
     override func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
         editButtonItem().enabled = true
+        shuffleButton.enabled = true
     }
     
     //swipe to delete
@@ -374,7 +387,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 row = x[findNdxInFullList(selectedRow)]
                 x.removeAtIndex(row)
             }
-
+                
             else{
                 row = x[indexPath.row]
                 x.removeAtIndex(indexPath.row)

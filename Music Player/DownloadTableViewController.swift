@@ -140,7 +140,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }
     
-    //update taskProgress of specific cell
+    //update taskProgress of sp	ecific cell
     func setProgressValue(dict : NSDictionary){
         var cellNum : Int = dict.valueForKey("ndx")!.integerValue
         

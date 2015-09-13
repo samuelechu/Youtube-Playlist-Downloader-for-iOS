@@ -106,7 +106,6 @@ class Settings: UITableViewController {
     //0 is videoQual, 1 is cache Video
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
-        
         switch indexPath.section {
         case 0: //Video Quality
             settings.setValue(indexPath.row, forKey: "quality")

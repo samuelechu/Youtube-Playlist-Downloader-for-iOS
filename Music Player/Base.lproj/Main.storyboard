@@ -47,6 +47,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstItem="sVS-yn-wmt" firstAttribute="centerY" secondItem="Fam-nA-RUr" secondAttribute="centerY" id="7Lp-w6-Rye"/>
                                         <constraint firstItem="sVS-yn-wmt" firstAttribute="leading" secondItem="Fam-nA-RUr" secondAttribute="leadingMargin" constant="-1" id="Wr3-at-3JK"/>
@@ -80,7 +81,7 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Playlist" id="PNg-YJ-a3o">
-                        <barButtonItem key="rightBarButtonItem" title="Shuffle" id="afX-v4-wak">
+                        <barButtonItem key="rightBarButtonItem" image="shuffle.png" id="afX-v4-wak">
                             <connections>
                                 <action selector="shufflePlaylist" destination="Mzs-fZ-jAu" id="GvR-tj-fZU"/>
                             </connections>
@@ -504,6 +505,7 @@
     <resources>
         <image name="gear2.png" width="30" height="30"/>
         <image name="hills.jpg" width="900" height="1600"/>
+        <image name="shuffle.png" width="25" height="25"/>
         <image name="video.png" width="30" height="30"/>
     </resources>
 </document>

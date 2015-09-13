@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		222ABEF51BA4FEB7003B05A1 /* shuffle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 222ABEF41BA4FEB7003B05A1 /* shuffle@2x.png */; };
 		22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDA1B47212F00C075FF /* AppDelegate.swift */; };
 		22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 22433FDC1B47212F00C075FF /* Music_Player.xcdatamodeld */; };
 		22433FE31B47212F00C075FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE11B47212F00C075FF /* Main.storyboard */; };
@@ -27,7 +28,7 @@
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */; };
 		22AD6B321B47BB7D00428602 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* Settings.swift */; };
-		22C762381B6C5D3D008D639E /* gear2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C762351B6C5D3D008D639E /* gear2@2x.png */; };
+		22C762381B6C5D3D008D639E /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C762351B6C5D3D008D639E /* gear@2x.png */; };
 		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
 		22E0BD581B596A7700292FD4 /* droplets.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22E0BD571B596A7700292FD4 /* droplets.jpg */; };
 		22E0BD5D1B596C8900292FD4 /* hills.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22E0BD5A1B596C8900292FD4 /* hills.jpg */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		222ABEF41BA4FEB7003B05A1 /* shuffle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shuffle@2x.png"; sourceTree = "<group>"; };
 		22433FD51B47212F00C075FF /* Music Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Music Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22433FD91B47212F00C075FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22433FDA1B47212F00C075FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,7 +75,7 @@
 		227B696C556F69040FDCBAB7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
 		22AD6B311B47BB7D00428602 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		22C762351B6C5D3D008D639E /* gear2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear2@2x.png"; sourceTree = "<group>"; };
+		22C762351B6C5D3D008D639E /* gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear@2x.png"; sourceTree = "<group>"; };
 		22CB59E31B4EE65B001BD2AA /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		22E0BD571B596A7700292FD4 /* droplets.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = droplets.jpg; sourceTree = "<group>"; };
 		22E0BD5A1B596C8900292FD4 /* hills.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hills.jpg; sourceTree = "<group>"; };
@@ -161,7 +163,8 @@
 			isa = PBXGroup;
 			children = (
 				22480A2E1B69A88000B63F53 /* pastel.jpg */,
-				22C762351B6C5D3D008D639E /* gear2@2x.png */,
+				222ABEF41BA4FEB7003B05A1 /* shuffle@2x.png */,
+				22C762351B6C5D3D008D639E /* gear@2x.png */,
 				22480A241B695C4400B63F53 /* video@2x.png */,
 				22433FD91B47212F00C075FF /* Info.plist */,
 				22E0BD5A1B596C8900292FD4 /* hills.jpg */,
@@ -285,8 +288,9 @@
 				22480A251B695C4400B63F53 /* video@2x.png in Resources */,
 				22433FE31B47212F00C075FF /* Main.storyboard in Resources */,
 				22480A351B6A03AD00B63F53 /* hillsTransition.png in Resources */,
+				222ABEF51BA4FEB7003B05A1 /* shuffle@2x.png in Resources */,
 				22480A331B6A02F900B63F53 /* hillsGradient.jpg in Resources */,
-				22C762381B6C5D3D008D639E /* gear2@2x.png in Resources */,
+				22C762381B6C5D3D008D639E /* gear@2x.png in Resources */,
 				22480A2F1B69A88000B63F53 /* pastel.jpg in Resources */,
 				22E0BD5D1B596C8900292FD4 /* hills.jpg in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,
