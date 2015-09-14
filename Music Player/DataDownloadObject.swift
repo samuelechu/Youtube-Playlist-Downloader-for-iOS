@@ -122,9 +122,13 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 
                 var expireDate = videoData[cellNum!].expirationDate
                 expireDate = expireDate.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
-                
                 newSong.setValue(expireDate, forKey: "expireDate")
                 newSong.setValue(true, forKey: "isDownloaded")
+                
+                var duration = videoData[cellNum!].duration
+                var durationStr = MiscFuncs.stringFromTimeInterval(duration)
+                newSong.setValue(duration, forKey: "duration")
+                newSong.setValue(durationStr, forKey: "durationStr")
                 
                 var streamURLs = videoData[cellNum!].streamURLs
                 var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
@@ -134,7 +138,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 var medium = videoData[cellNum!].mediumThumbnailURL
                 var small = videoData[cellNum!].smallThumbnailURL
                 var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small)))
-            
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
                 context.save(nil)

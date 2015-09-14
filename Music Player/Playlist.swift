@@ -43,7 +43,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         //reset tableView
         setEditing(false, animated: true)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController!.setNavigationBarHidden(false, animated: true)
         definesPresentationContext = false
         resultSearchController.active = false
         definesPresentationContext = true
@@ -63,11 +63,15 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         songs = context.executeFetchRequest(request, error: nil)
         identifiers = []
-        
+        var playlistDuration = 0.0
         for song in songs{
             var identifier = song.valueForKey("identifier") as! String
+            var duration = song.valueForKey("duration") as! Double
             identifiers += [identifier]
+            playlistDuration += duration
         }
+        
+        navigationItem.title = "Duration - \(MiscFuncs.hrsAndMinutes(playlistDuration))"
         
         tableView.reloadData()
         
@@ -84,7 +88,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 44
         
         appDel = UIApplication.sharedApplication().delegate as! AppDelegate
         context = appDel!.managedObjectContext
@@ -116,7 +119,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         resetX()
         
         setEditing(false, animated: true)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController!.setNavigationBarHidden(false, animated: true)
         
         
         
@@ -156,16 +159,19 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             deleteButton.enabled = false
             selectButton.title = "Select All"
             editButtonItem().title = "Cancel"
-            navigationController?.toolbarHidden = false
-            navigationController?.hidesBarsOnSwipe = true
+            navigationController!.toolbarHidden = false
+            if !resultSearchController.active {
+                navigationController!.hidesBarsOnSwipe = true
+            }
         }
             
         else {
             editButtonItem().title = "Select"
             shuffleButton.enabled = true
-            navigationController?.hidesBarsOnSwipe = false
-            navigationController?.toolbarHidden = true
+            navigationController!.hidesBarsOnSwipe = false
+            navigationController!.toolbarHidden = true
         }
+        
     }
     
     //set up editing mode
@@ -209,19 +215,27 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
         
-        var songname : String!
+        var songName : String!
+        var duration : String!
+        var imageData : NSData!
         
         if resultSearchController.active && resultSearchController.searchBar.text != "" {
-            songname = filteredSongs[indexPath.row].valueForKey("title") as? String
+            songName = filteredSongs[indexPath.row].valueForKey("title") as! String
+            duration = filteredSongs[indexPath.row].valueForKey("durationStr") as! String
+            imageData = filteredSongs[indexPath.row].valueForKey("thumbnail") as! NSData
         }
             
         else{
             var row = x[indexPath.row]
-            songname = songs[row].valueForKey("title") as? String
+            songName = songs[row].valueForKey("title") as! String
+            duration = songs[row].valueForKey("durationStr") as! String
+            imageData = songs[row].valueForKey("thumbnail") as! NSData
         }
         
-        
-        cell.songLabel?.text = "\(indexPath.row + 1).  \(songname)"
+        cell.songLabel.text = songName
+        cell.durationLabel.text = duration
+        cell.imageLabel.image = UIImage(data: imageData)
+        cell.positionLabel.text = "\(indexPath.row + 1)"
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
         return cell
@@ -362,7 +376,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         
         setEditing(false, animated: true)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController!.setNavigationBarHidden(false, animated: true)
         updateSearchResultsForSearchController(resultSearchController)
     }
     
@@ -561,6 +575,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         enableVidTracks()
         addSongToQueue(curNdx)
+        
+        var path = NSIndexPath(forRow: curNdx, inSection: 0)
+        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
     }
     
     func retreat(){
@@ -572,6 +589,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             enableVidTracks()
             addSongToQueue(curNdx)
         }
+        
+        var path = NSIndexPath(forRow: curNdx, inSection: 0)
+        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
     }
     
     func playerItemDidReachEnd(notification : NSNotification){

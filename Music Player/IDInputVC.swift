@@ -147,7 +147,7 @@ class IDInputvc: UIViewController {
                         desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                     }
                     
-                    var duration = self.stringFromTimeInterval(video.duration)
+                    var duration = MiscFuncs.stringFromTimeInterval(video.duration)
                     
                     //get thumbnail
                     var thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
@@ -201,13 +201,7 @@ class IDInputvc: UIViewController {
         navigationController?.popViewControllerAnimated(true)
     }
     
-    func stringFromTimeInterval(interval: NSTimeInterval) -> String {
-        let interval = Int(interval)
-        let seconds = interval % 60
-        let minutes = (interval / 60) % 60
-        let hours = (interval / 3600)
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
+     
     
     func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: targetURL)

@@ -7,14 +7,21 @@
 //
 
 import UIKit
+import QuartzCore
 
 class SongCell: UITableViewCell {
 
+    @IBOutlet var bgLabel: UIImageView!
     @IBOutlet var songLabel: UILabel!
+    @IBOutlet var durationLabel: UILabel!
+    @IBOutlet var imageLabel: UIImageView!
+    @IBOutlet var positionLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        imageLabel.contentMode = .ScaleAspectFit
+        imageLabel.clipsToBounds = true
     }
  
     override func setSelected(selected: Bool, animated: Bool) {
