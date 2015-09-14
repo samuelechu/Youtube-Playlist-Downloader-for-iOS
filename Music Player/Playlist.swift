@@ -487,9 +487,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 
                 resultSearchController.active = false
                 var path = NSIndexPath(forRow: curNdx, inSection: 0)
-                tableView.selectRowAtIndexPath(path, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
-                
-                
+                tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
             }
                 
                 
