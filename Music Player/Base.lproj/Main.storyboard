@@ -621,11 +621,11 @@
             </objects>
             <point key="canvasLocation" x="1665" y="552"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Playlist-->
         <scene sceneID="zSr-RI-K1K">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ab2-ns-uI0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" id="2p4-8c-j5E"/>
+                    <tabBarItem key="tabBarItem" title="Playlist" image="video.png" id="2p4-8c-j5E"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="iAh-ZT-Yw8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

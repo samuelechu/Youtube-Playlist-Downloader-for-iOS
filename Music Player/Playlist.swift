@@ -14,6 +14,15 @@ import AVKit
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   Initialization
+    
+    
     @IBOutlet var selectButton: UIBarButtonItem!
     @IBOutlet var shuffleButton: UIBarButtonItem!
     @IBOutlet var deleteButton: UIBarButtonItem!
@@ -29,26 +38,76 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     //search control
     var filteredSongs : NSArray!
     var resultSearchController = UISearchController(searchResultsController: nil)
+    
     var x : [Int] = [] //for shuffling
     var playerQueue = AVQueuePlayer()
     var curNdx = 0
     var videoTracks : [AVPlayerItemTrack]!
     
     var isConnected = false
-    //sort + reload data
+    
+    //reset tableView
     override func viewWillAppear(animated: Bool) {
         
         isConnected = IJReachability.isConnectedToNetwork()
         
-        
-        //reset tableView
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
         definesPresentationContext = false
         resultSearchController.active = false
         definesPresentationContext = true
     }
-    func reloadPlaylist(notification: NSNotification){
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        appDel = UIApplication.sharedApplication().delegate as! AppDelegate
+        context = appDel!.managedObjectContext
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredBackground:", name: "enteredBackgroundID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatePlaylist:", name: "reloadPlaylistID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
+        
+        //set audio to play in bg
+        var audio : AVAudioSession = AVAudioSession()
+        audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
+        audio.setActive(true, error: nil)
+        
+        //set background image
+        tableView.backgroundColor = UIColor.clearColor()
+        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
+        imgView.frame = tableView.frame
+        tableView.backgroundView = imgView
+        
+        //initialize shuffle, select, and delete buttons
+        navigationItem.leftBarButtonItem = editButtonItem()
+        editButtonItem().title = "Select"
+        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
+        
+        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
+        shuffleButton.tintColor = UIColor.grayColor()
+        
+        setEditing(false, animated: true)
+        navigationController!.setNavigationBarHidden(false, animated: true)
+        
+        //initialize search bar
+        resultSearchController.searchResultsUpdater = self
+        resultSearchController.dimsBackgroundDuringPresentation = false
+        resultSearchController.hidesNavigationBarDuringPresentation = false
+        resultSearchController.searchBar.sizeToFit()
+        definesPresentationContext = true
+        tableView.tableHeaderView = resultSearchController.searchBar
+        
+        //initialize playlist
+        isConnected = IJReachability.isConnectedToNetwork()
+        refreshPlaylist()
+        resetX()
+    }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func updatePlaylist(notification: NSNotification){
         refreshPlaylist()
         resetX()
         shuffleButton.tintColor = UIColor.grayColor()
@@ -76,7 +135,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.reloadData()
         
     }
-    
     func resetX(){
         x = []
         if songs.count > 0 {
@@ -86,132 +144,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        appDel = UIApplication.sharedApplication().delegate as! AppDelegate
-        context = appDel!.managedObjectContext
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredBackground:", name: "enteredBackgroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reloadPlaylist:", name: "reloadPlaylistID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
-        
-        //set audio to play in bg
-        var audio : AVAudioSession = AVAudioSession()
-        audio.setCategory(AVAudioSessionCategoryPlayback , error: nil)
-        audio.setActive(true, error: nil)
-        
-        tableView.backgroundColor = UIColor.clearColor()
-        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
-        imgView.frame = tableView.frame
-        tableView.backgroundView = imgView
-        
-        navigationItem.leftBarButtonItem = editButtonItem()
-        editButtonItem().title = "Select"
-        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
-        
-        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
-        shuffleButton.tintColor = UIColor.grayColor()
-        
-        isConnected = IJReachability.isConnectedToNetwork()
-        refreshPlaylist()
-        resetX()
-        
-        setEditing(false, animated: true)
-        navigationController!.setNavigationBarHidden(false, animated: true)
-        
-        
-        
-        resultSearchController.searchResultsUpdater = self
-        resultSearchController.dimsBackgroundDuringPresentation = false
-        resultSearchController.hidesNavigationBarDuringPresentation = false
-        resultSearchController.searchBar.sizeToFit()
-        definesPresentationContext = true
-        tableView.tableHeaderView = resultSearchController.searchBar
-        
-        
-    }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if resultSearchController.active && resultSearchController.searchBar.text != ""{
-            return filteredSongs.count
-        }
-        else{
-            return songs.count
-        }
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   TableView / Editing Functions
     
-    //called when select pressed
-    override func setEditing(editing: Bool, animated: Bool) {
-        
-        super.setEditing(editing, animated: animated)
-        tableView.setEditing(editing, animated: true)
-        
-        if editing {
-            shuffleButton.enabled = false
-            deleteButton.enabled = false
-            selectButton.title = "Select All"
-            editButtonItem().title = "Cancel"
-            navigationController!.toolbarHidden = false
-            if !resultSearchController.active {
-                navigationController!.hidesBarsOnSwipe = true
-            }
-        }
-            
-        else {
-            editButtonItem().title = "Select"
-            shuffleButton.enabled = true
-            navigationController!.hidesBarsOnSwipe = false
-            navigationController!.toolbarHidden = true
-        }
-        
-    }
     
-    //set up editing mode
-    @IBAction func selectPressed() {
-        
-        if selectButton.title == "Select All"{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
-                var indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
-            }
-            selectButton.title = "Select None"
-            deleteButton.enabled = true
-        }
-            
-        else{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
-                var indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
-            }
-            selectButton.title = "Select All"
-            deleteButton.enabled = false
-        }
-        
-    }
-    
-    //two functions to detect when no items selected and when at least one item selected
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if tableView.editing{
-            deleteButton.enabled = true
-        }
-    }
-    
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        var selectedRows = tableView.indexPathsForSelectedRows()
-        if selectedRows == nil {
-            deleteButton.enabled = false
-        }
-    }
-    
+    //populate tableView
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
         
@@ -240,7 +183,95 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         cell.backgroundColor = UIColor.clearColor()
         return cell
     }
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if songs != nil{
+            if resultSearchController.active && resultSearchController.searchBar.text != ""{
+                return filteredSongs.count
+            }
+            else{
+                return songs.count
+            }
+        }
+            
+        else{
+            return 0
+        }
+    }
     
+    //called when EditButtonItem() ("Select" button) pressed, disables/enables buttons and toolbars based on editing state
+    override func setEditing(editing: Bool, animated: Bool) {
+        
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: true)
+        
+        if editing {
+            shuffleButton.enabled = false
+            deleteButton.enabled = false
+            selectButton.title = "Select All"
+            editButtonItem().title = "Cancel"
+            navigationController!.toolbarHidden = false
+            if !resultSearchController.active {
+                navigationController!.hidesBarsOnSwipe = true
+            }
+        }
+            
+        else {
+            editButtonItem().title = "Select"
+            shuffleButton.enabled = true
+            navigationController!.hidesBarsOnSwipe = false
+            navigationController!.toolbarHidden = true
+        }
+        
+    }
+    
+    //called when selectButton on toolbar pressed, edits titles and state of buttons based on number of selected playlist items
+    @IBAction func selectPressed() {
+        
+        if selectButton.title == "Select All"{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
+            }
+            selectButton.title = "Select None"
+            deleteButton.enabled = true
+        }
+            
+        else{
+            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+                var indexPath = NSIndexPath(forRow: row, inSection: 0)
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
+            selectButton.title = "Select All"
+            deleteButton.enabled = false
+        }
+        
+    }
+    
+    //disable delete button when less than one item selected
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if tableView.editing{
+            deleteButton.enabled = true
+        }
+    }
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        var selectedRows = tableView.indexPathsForSelectedRows()
+        if selectedRows == nil {
+            deleteButton.enabled = false
+        }
+    }
+    
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   Searchbar Functions
     
     
     func findNdxInFullList(ndxInSearchList : Int) -> Int{
@@ -249,7 +280,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         var ndxInFullList = find(x,ndxIdentifiers)!
         return ndxInFullList
     }
-    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         
         //in editing mode
@@ -267,21 +297,23 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     
-    
-    
-    ////////////////
-    //////////////////
-    //////////////////
-    ////
-    //shuffle functions
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   Shuffle Functions
     
     
     @IBAction func shufflePlaylist() {
         
         if shuffleButton.tintColor != nil{
-            shuffle(&x)
+            MiscFuncs.shuffle(&x)
             shuffleButton.tintColor = nil
+            
         }
+            
         else{
             resetX()
             shuffleButton.tintColor = UIColor.grayColor()
@@ -289,28 +321,18 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.reloadData()
     }
     
-    func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
-        if songs.count > 0 {
-            let c = count(list)
-            for i in 0..<(c - 1) {
-                let j = Int(arc4random_uniform(UInt32(c - i))) + i
-                swap(&list[i], &list[j])
-            }
-        }
-    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   Delete Functions
     
     
-    
-    
-    ////////////////
-    //////////////////
-    //////////////////
-    ////
-    //delete functions
-    
-    
-    
-    @IBAction func deletePressed() {//delete selected songs
+    //delete selected songs
+    @IBAction func deletePressed() {
         
         if var selectedIndexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
             var selectedRows : [Int] = []
@@ -324,7 +346,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     var id = filteredSongs[selectedRow].valueForKey("identifier") as! String
                     var ndxIdentifiers = find(identifiers, id)!
                     selectedRow = find(x,ndxIdentifiers)!
-                    
                     
                     selectedRows += [selectedRow]
                     var identifier = songs[ndxIdentifiers].valueForKey("identifier") as! String
@@ -380,11 +401,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         updateSearchResultsForSearchController(resultSearchController)
     }
     
+    //disable shuffle and editbutton when swiping to delete
     override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
         editButtonItem().enabled = false
         shuffleButton.enabled = false
     }
-    
     override func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
         editButtonItem().enabled = true
         shuffleButton.enabled = true
@@ -453,14 +474,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     
-    
-    
-    ////////////////
-    //////////////////
-    //////////////////
-    ////
-    //avplayer related functions
-    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    ////////
+    //////////
+    ////////////
+    //////////////
+    ////////////////   AVPlayer Functions
     
     
     //don't segue to AVPlayer if editing
@@ -472,8 +492,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         return false
     }
     
-    
-    
+    //if playlist item selected, segue to avplayer
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
@@ -481,9 +500,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             if resultSearchController.active && resultSearchController.searchBar.text != ""{
                 var selectedRow = (tableView.indexPathForSelectedRow()?.row)!
-                var identifier = filteredSongs[selectedRow].valueForKey("identifier") as! String
-                var ndxIdentifiers = find(identifiers, identifier)!
-                curNdx = find(x,ndxIdentifiers)!
+                curNdx = findNdxInFullList(selectedRow)
                 
                 resultSearchController.active = false
                 var path = NSIndexPath(forRow: curNdx, inSection: 0)
@@ -577,7 +594,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         var path = NSIndexPath(forRow: curNdx, inSection: 0)
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
     }
-    
     func retreat(){
         if curNdx == 0 { curNdx = songs.count - 1 }
         else { curNdx-- }
@@ -597,19 +613,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         advance()
     }
     
-    func enableVidTracks(){
-        videoTracks = playerQueue.currentItem.tracks as! [AVPlayerItemTrack]
-        for track : AVPlayerItemTrack in videoTracks{
-            track.enabled = true; // enable the track
-        }
-    }
-    
+    //enable vidTracks
     func enteredForeground(notification: NSNotification){
         if playerQueue.currentItem != nil{
             enableVidTracks()
         }
     }
-    
     //disable vidTracks
     func enteredBackground(notification: NSNotification){
         
@@ -622,6 +631,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     track.enabled = false; // disable the track
                 }
             }
+        }
+    }
+    func enableVidTracks(){
+        videoTracks = playerQueue.currentItem.tracks as! [AVPlayerItemTrack]
+        for track : AVPlayerItemTrack in videoTracks{
+            track.enabled = true; // enable the track
         }
     }
 }
