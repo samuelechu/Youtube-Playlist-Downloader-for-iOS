@@ -30,7 +30,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     required init(coder aDecoder: NSCoder){
         super.init()
-        var randomString = randomStringWithLength(30)
+        var randomString = MiscFuncs.randomStringWithLength(30)
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
@@ -39,20 +39,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
     }
     
-    func randomStringWithLength (len : Int) -> NSString {
-        
-        let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        
-        var randomString : NSMutableString = NSMutableString(capacity: len)
-        
-        for (var i=0; i < len; i++){
-            var length = UInt32 (letters.length)
-            var rand = arc4random_uniform(length)
-            randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
-        }
-        
-        return randomString
-    }
     func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
     
     func addVidInfo(vid : XCDYouTubeVideo){
@@ -157,18 +143,5 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         let writePath = documents.stringByAppendingPathComponent("\(fileName)")
         
         return writePath
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    } 
 }

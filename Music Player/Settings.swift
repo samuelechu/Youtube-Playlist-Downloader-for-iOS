@@ -10,13 +10,9 @@ import UIKit
 import CoreData
 
 class Settings: UITableViewController {
-    
-     
-    @IBOutlet var overlay: UIView!
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     var settings : NSManagedObject!
-    
     
     func selectRow(path : NSIndexPath){
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.None)
@@ -38,36 +34,30 @@ class Settings: UITableViewController {
         //set initial quality to 360P if uninitialized
         var request = NSFetchRequest(entityName: "Settings")
         var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        
+        //default settings : quality = 360P, cache videos within app
         if results.count == 0 {
             var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
             
             settings.setValue(0, forKey: "quality")
             settings.setValue(0, forKey: "cache")
-            //settings.setValue(true, forKey: "cache")  //cache was originally a bool
             
             context.save(nil)
             results = context.executeFetchRequest(request, error: nil)!
         }
         
+        //retrieve settings if Settings Entity exists
         settings = results[0] as! NSManagedObject
-        println(settings.valueForKey("quality") as! Int)
-        println(settings.valueForKey("cache") as! Int)
-        //println(settings.valueForKey("cache") as! Bool)
         
         var qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
-        
         deselectRow(qualRow)
         selectRow(qualRow)
-        
         
         var cacheRow = NSIndexPath(forRow: settings.valueForKey("cache") as! Int, inSection: 1)
         deselectRow(cacheRow)
         selectRow(cacheRow)
         
-        /*if settings.valueForKey("cache") as! Bool {
-            selectRow(cacheRow)
-        }*/
-        
+        //set background
         tableView.backgroundColor = UIColor.clearColor()
         var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
@@ -79,16 +69,6 @@ class Settings: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
-    /*
-    - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    for ( NSIndexPath* selectedIndexPath in tableView.indexPathsForSelectedRows ) {
-    if ( selectedIndexPath.section == indexPath.section )
-    [tableView deselectRowAtIndexPath:selectedIndexPath animated:NO] ;
-    }
-    return indexPath ;
-    }*/
     
     //deselect previously selected rows that are in same section
     override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
@@ -111,29 +91,15 @@ class Settings: UITableViewController {
             settings.setValue(indexPath.row, forKey: "quality")
         case 1://Video Caching
             settings.setValue(indexPath.row, forKey: "cache")
-            //settings.setValue(true, forKey: "cache")
         default:
             break
         }
         
         context.save(nil)
     }
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.None
-        
-        /*if indexPath.section == 1 {
-            settings.setValue(false, forKey: "cache")
-        }
-        
-        context.save(nil)*/
-    }
     
-    
+   //user cannot deselect cells manually
    override func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        
-        /*if indexPath.section == 1{
-            return indexPath
-        }*/
         return nil
     }
 }

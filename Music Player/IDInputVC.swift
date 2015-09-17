@@ -61,13 +61,10 @@ class IDInputvc: UIViewController {
             
             settings.setValue(0, forKey: "quality")
             settings.setValue(0, forKey: "cache")
-            //settings.setValue(true, forKey: "cache")  //cache was originally a bool
             
             context.save(nil)
             results = context.executeFetchRequest(request, error: nil)!
         }
-        
-        
         
         //get identifiers lost from popping off view
         uncachedVideos = (tableDelegate?.getUncachedVids())!
@@ -96,8 +93,6 @@ class IDInputvc: UIViewController {
         else{
             indicator.stopAnimating()
         }
-        
-        
     }
     
     func DismissKeyboard(){
@@ -110,7 +105,7 @@ class IDInputvc: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    //check if video in stored memory
+    //check if video in stored memory or currently downloading videos
     func vidStored (identifier : String) -> Bool {
         var request = NSFetchRequest(entityName: "Songs")
         request.predicate = NSPredicate(format: "identifier = %@", identifier.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
@@ -238,8 +233,7 @@ class IDInputvc: UIViewController {
                 if HTTPStatusCode == 200 && error == nil {
                     
                     // Convert the JSON data into a dictionary.
-                    let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary//Dictionary<NSObject, AnyObject>
-                    
+                    let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary
                     // Get all playlist items ("items" array).
                     var nextPageToken = resultsDict["nextPageToken"] as! String?
                     let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
@@ -260,7 +254,6 @@ class IDInputvc: UIViewController {
                     var settings = results[0] as! NSManagedObject
                     
                     var downloadVid = settings.valueForKey("cache") as! Int
-                    //var downloadVid = settings.valueForKey("cache") as! Bool
                     
                     //download videos if cache option selected, otherwise save song object to persistent memory
                     if downloadVid != 2 {
@@ -305,11 +298,6 @@ class IDInputvc: UIViewController {
                     
                 }
             })
-            
-            
-            
-            
-            
         }
             
         else{

@@ -71,8 +71,6 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
     }
     
-    
-    
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
     func setDLObject(session : dataDownloadObject){ dlObject = session }
@@ -122,7 +120,6 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }
     
-    
     func setDLButton(value : Bool){
         dlButton = value
     }
@@ -140,7 +137,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }
     
-    //update taskProgress of sp	ecific cell
+    //update taskProgress of specific cell
     func setProgressValue(dict : NSDictionary){
         var cellNum : Int = dict.valueForKey("ndx")!.integerValue
         
@@ -163,8 +160,6 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
         return 1
     }
     
@@ -197,10 +192,3 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }
 }
-
-
-
-
-
-
-

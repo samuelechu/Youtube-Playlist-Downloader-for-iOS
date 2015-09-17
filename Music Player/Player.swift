@@ -42,6 +42,16 @@ class Player: AVPlayerViewController {
         view.addGestureRecognizer(swipeLeft)
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
+    
+    //swipe left : go to next song, swipe right : go to previous song
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
@@ -57,7 +67,7 @@ class Player: AVPlayerViewController {
         }
     }
     
-    
+    //recieve input from earphone button clicks
     override func remoteControlReceivedWithEvent(event: UIEvent) {
         let rc = event.subtype
         
@@ -70,33 +80,4 @@ class Player: AVPlayerViewController {
         }
         
     }
-    
-    @IBAction func buttonPressed() {
-        println("hi")
-    }
-    func bringButtonToFront(){
-        //button.hidden = false
-        println("hih")
-        // view.bringSubviewToFront(overlay)
-    }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        //overlay.frame = view.bounds
-    }
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
-    
 }

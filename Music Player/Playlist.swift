@@ -451,7 +451,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         var fetchedSongs : NSArray = context.executeFetchRequest(songRequest, error: nil)!
         var selectedSong = fetchedSongs[0] as! NSManagedObject
         
-        
+        //allows for redownload of deleted song
         var dict = ["identifier" : identifier]
         NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
         
