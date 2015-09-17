@@ -9,14 +9,15 @@ ex. for the playlist https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJ
 
 
 Features:
+    -background downloading
+    -background audio play
+    -360 or 720P downloading
+    -save to camera roll
 
     -swipe left/right for prev/next tracks
     -shuffle button
     -playlist search bar
     -highlight of current song
-    
     -easy deletion of songs : select multiple songs or swipe to delete
-    -360 or 720P downloading
-    -save to camera roll
 
  
