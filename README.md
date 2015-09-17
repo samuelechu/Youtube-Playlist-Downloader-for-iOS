@@ -21,4 +21,16 @@ Features:
     -highlight of current song
     -easy deletion of songs : select multiple songs or swipe to delete
 
+
+
+Screenshots:
+
+![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3898.PNG)
  
+![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3896.PNG)
+
+![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3907.PNG)
+
+![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3897.PNG)
+
+![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3899.PNG)
