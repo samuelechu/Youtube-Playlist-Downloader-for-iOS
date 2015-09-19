@@ -14,6 +14,7 @@ import AVFoundation
 protocol PlaylistDelegate{ 
     func advance()
     func retreat()
+    func updateNowPlayingInfo()
 }
 
 class Player: AVPlayerViewController {
@@ -76,7 +77,11 @@ class Player: AVPlayerViewController {
             playlistDelegate?.advance()
         case .RemoteControlPreviousTrack:
             playlistDelegate?.retreat()
-        default:break
+        default:
+            MiscFuncs.delay(1.2){
+                playlistDelegate?.updateNowPlayingInfo()
+            }
+            
         }
         
     }

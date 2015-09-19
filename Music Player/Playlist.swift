@@ -43,6 +43,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var playerQueue = AVQueuePlayer()
     var curNdx = 0
     var videoTracks : [AVPlayerItemTrack]!
+    var curSong : NSObject! //current song in queue
     
     var isConnected = false
     
@@ -533,6 +534,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         
         var ndx = x[index]
+        curSong = songs[ndx] as! NSObject
         var isDownloaded = songs[ndx].valueForKey("isDownloaded") as! Bool
         var identifier = songs[ndx].valueForKey("identifier") as! String
         
@@ -584,6 +586,22 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
+    func updateNowPlayingInfo(){
+        
+        var curItem = playerQueue.currentItem
+        var title = curSong.valueForKey("title") as! String
+        
+        
+        var mpic = MPNowPlayingInfoCenter.defaultCenter()
+        mpic.nowPlayingInfo = [
+            MPMediaItemPropertyTitle:title,
+            MPMediaItemPropertyArtist:"",
+            MPMediaItemPropertyPlaybackDuration:NSTimeInterval(CMTimeGetSeconds(curItem.duration)),
+            MPNowPlayingInfoPropertyElapsedPlaybackTime:CMTimeGetSeconds(curItem.currentTime())
+        ]
+        
+    }
+    
     func advance(){
         if curNdx == songs.count - 1 { curNdx = 0 }
         else{ curNdx++ }
@@ -593,6 +611,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         var path = NSIndexPath(forRow: curNdx, inSection: 0)
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+        
+        //set lock screen info
+        
+        MiscFuncs.delay(1.2){
+            self.updateNowPlayingInfo()
+        }
+        
     }
     func retreat(){
         if curNdx == 0 { curNdx = songs.count - 1 }
@@ -602,6 +627,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         else{
             enableVidTracks()
             addSongToQueue(curNdx)
+            
+            MiscFuncs.delay(1.2){
+                self.updateNowPlayingInfo()
+            }
         }
         
         var path = NSIndexPath(forRow: curNdx, inSection: 0)
@@ -632,6 +661,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 }
             }
         }
+        if curSong != nil {
+            MiscFuncs.delay(1.5){
+                self.updateNowPlayingInfo()
+            }
+        }
+        
     }
     func enableVidTracks(){
         videoTracks = playerQueue.currentItem.tracks as! [AVPlayerItemTrack]

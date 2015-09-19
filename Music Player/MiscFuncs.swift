@@ -37,6 +37,16 @@ public class MiscFuncs{
         
     }
     
+    //delay execution, taken from : http://stackoverflow.com/questions/24034544/dispatch-after-gcd-in-swift
+    public class func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
+    }
+    
     public class func randomStringWithLength (len : Int) -> NSString {
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
