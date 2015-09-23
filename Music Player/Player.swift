@@ -68,6 +68,21 @@ class Player: AVPlayerViewController {
         }
     }
     
+    var loopCount = 0
+    var updater : NSTimer!
+    func delegateUpdateNowPlayingInfo(){
+        loopCount++
+        playlistDelegate?.updateNowPlayingInfo()
+        
+        if(loopCount > 12){
+            if(updater != nil){
+                updater.invalidate()
+            }
+            updater = nil
+            loopCount = 0
+        }
+    }
+    
     //recieve input from earphone button clicks
     override func remoteControlReceivedWithEvent(event: UIEvent) {
         let rc = event.subtype
@@ -78,10 +93,7 @@ class Player: AVPlayerViewController {
         case .RemoteControlPreviousTrack:
             playlistDelegate?.retreat()
         default:
-            MiscFuncs.delay(1.2){
-                playlistDelegate?.updateNowPlayingInfo()
-            }
-            
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "delegateUpdateNowPlayingInfo", userInfo: nil, repeats: true)
         }
         
     }

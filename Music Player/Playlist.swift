@@ -586,20 +586,33 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
+    var loopCount = 0
+    var updater : NSTimer!
     func updateNowPlayingInfo(){
         
+        loopCount++
         var curItem = playerQueue.currentItem
         var title = curSong.valueForKey("title") as! String
-        
+        var imageData = curSong.valueForKey("thumbnail") as! NSData
+        var artworkImage = UIImage(data: imageData)
+        var artwork = MPMediaItemArtwork(image: artworkImage)
         
         var mpic = MPNowPlayingInfoCenter.defaultCenter()
         mpic.nowPlayingInfo = [
             MPMediaItemPropertyTitle:title,
             MPMediaItemPropertyArtist:"",
+            MPMediaItemPropertyArtwork:artwork,
             MPMediaItemPropertyPlaybackDuration:NSTimeInterval(CMTimeGetSeconds(curItem.duration)),
             MPNowPlayingInfoPropertyElapsedPlaybackTime:CMTimeGetSeconds(curItem.currentTime())
         ]
         
+        if(loopCount > 12){
+            if (updater != nil){
+                updater.invalidate()
+            }
+            updater = nil
+            loopCount = 0
+        }
     }
     
     func advance(){
@@ -609,14 +622,15 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         enableVidTracks()
         addSongToQueue(curNdx)
         
+        //set lock screen info
+        loopCount = 0
+        updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+        
         var path = NSIndexPath(forRow: curNdx, inSection: 0)
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
         
-        //set lock screen info
         
-        MiscFuncs.delay(1.2){
-            self.updateNowPlayingInfo()
-        }
+        
         
     }
     func retreat(){
@@ -628,9 +642,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             enableVidTracks()
             addSongToQueue(curNdx)
             
-            MiscFuncs.delay(1.2){
-                self.updateNowPlayingInfo()
-            }
+            loopCount = 0
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
         }
         
         var path = NSIndexPath(forRow: curNdx, inSection: 0)
@@ -662,9 +675,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
         }
         if curSong != nil {
-            MiscFuncs.delay(1.5){
-                self.updateNowPlayingInfo()
-            }
+            loopCount = 0
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
         }
         
     }
