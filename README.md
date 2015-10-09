@@ -7,6 +7,7 @@ ex. for the playlist https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJ
   
     paste "PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha" into Input tab and press Download
 
+Also downloads single videos, paste the 11 character id of video into Input tab (ex. "L8eRzOYhLuw")
 
 Features:
 
