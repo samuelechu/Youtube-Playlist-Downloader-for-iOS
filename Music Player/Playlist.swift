@@ -562,10 +562,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {
-                        var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                        var streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
                         var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                         
-                        selectedSong.setValue(video.expirationDate, forKey: "expireDate")
+                        selectedSong.setValue(video!.expirationDate, forKey: "expireDate")
                         selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
                         
                         self.context.save(nil)

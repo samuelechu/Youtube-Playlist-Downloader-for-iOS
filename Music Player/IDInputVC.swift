@@ -131,7 +131,8 @@ class IDInputvc: UIViewController {
         if(find(downloadTasks, ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
-                    var streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                    
+                    var streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
                     var desiredURL : NSURL!
                     
                     if (qual == 0){ //360P
@@ -142,19 +143,19 @@ class IDInputvc: UIViewController {
                         desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                     }
                     
-                    var duration = MiscFuncs.stringFromTimeInterval(video.duration)
+                    var duration = MiscFuncs.stringFromTimeInterval(video!.duration)
                     
                     //get thumbnail
-                    var thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+                    var thumbnailURL = (video!.mediumThumbnailURL != nil ? video!.mediumThumbnailURL : video!.smallThumbnailURL)
                     let data = NSData(contentsOfURL: thumbnailURL!)
                     var image = UIImage(data: data!)
                     
-                    var dict = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
+                    var dict = ["name" : video!.title, "duration" : duration, "thumbnail" : image!]
                     
                     self.tableDelegate!.addCell(dict)
                     self.tableDelegate!.reloadCells()
                     
-                    self.dlObject.addVidInfo(video)
+                    self.dlObject.addVidInfo(video!)
                     self.dlObject.startNewTask(desiredURL)
                 }
             })
@@ -311,18 +312,18 @@ class IDInputvc: UIViewController {
             if error == nil {
                 var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
                 newSong.setValue(identifier, forKey: "identifier")
-                newSong.setValue(video.title, forKey: "title")
-                newSong.setValue(video.expirationDate, forKey: "expireDate")
+                newSong.setValue(video!.title, forKey: "title")
+                newSong.setValue(video!.expirationDate, forKey: "expireDate")
                 newSong.setValue(false, forKey: "isDownloaded")
                 
-                var streamURLs = video.streamURLs
+                var streamURLs = video!.streamURLs
                 var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
-                var large = video.largeThumbnailURL
-                var medium = video.mediumThumbnailURL
-                var small = video.smallThumbnailURL
-                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small)))
+                var large = video!.largeThumbnailURL
+                var medium = video!.mediumThumbnailURL
+                var small = video!.smallThumbnailURL
+                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
