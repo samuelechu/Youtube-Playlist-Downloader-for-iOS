@@ -32,34 +32,37 @@ class Settings: UITableViewController {
         context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
-        var request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        let request = NSFetchRequest(entityName: "Settings")
+        var results : NSArray = try! context.executeFetchRequest(request)
         
         //default settings : quality = 360P, cache videos within app
         if results.count == 0 {
-            var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
+            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) 
             
             settings.setValue(0, forKey: "quality")
             settings.setValue(0, forKey: "cache")
             
-            context.save(nil)
-            results = context.executeFetchRequest(request, error: nil)!
+            do {
+                try context.save()
+            } catch _ {
+            }
+            results = try! context.executeFetchRequest(request)
         }
         
         //retrieve settings if Settings Entity exists
         settings = results[0] as! NSManagedObject
         
-        var qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
+        let qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
         deselectRow(qualRow)
         selectRow(qualRow)
         
-        var cacheRow = NSIndexPath(forRow: settings.valueForKey("cache") as! Int, inSection: 1)
+        let cacheRow = NSIndexPath(forRow: settings.valueForKey("cache") as! Int, inSection: 1)
         deselectRow(cacheRow)
         selectRow(cacheRow)
         
         //set background
         tableView.backgroundColor = UIColor.clearColor()
-        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
+        let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
         
@@ -72,7 +75,7 @@ class Settings: UITableViewController {
     
     //deselect previously selected rows that are in same section
     override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        if var selectedRows = tableView.indexPathsForSelectedRows() as? [NSIndexPath]{
+        if let selectedRows = tableView.indexPathsForSelectedRows as [NSIndexPath]?{
             for selectedIndexPath : NSIndexPath in selectedRows{
                 if selectedIndexPath.section == indexPath.section{
                     tableView.deselectRowAtIndexPath(selectedIndexPath, animated: false)
@@ -95,7 +98,10 @@ class Settings: UITableViewController {
             break
         }
         
-        context.save(nil)
+        do {
+            try context.save()
+        } catch _ {
+        }
     }
     
    //user cannot deselect cells manually

@@ -28,21 +28,21 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideTabBar")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideTabBar")
         view.addGestureRecognizer(tap)
         
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "resetDownloadTasks:", name: "resetDownloadTasksID", object: nil)
         
         tableView.backgroundColor = UIColor.clearColor()
-        var imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
+        let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
     }
      
     func hideTabBar(){
         setTabBarVisible(!(tabBarIsVisible()), animated: true)
-        var visible = (navigationController?.navigationBarHidden)!
+        let visible = (navigationController?.navigationBarHidden)!
         navigationController?.setNavigationBarHidden(!visible, animated: true)
     }
     
@@ -105,14 +105,14 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }*/
     func resetDownloadTasks(notification: NSNotification){
-        var dict : NSDictionary? = notification.userInfo
+        let dict : NSDictionary? = notification.userInfo
         if dict == nil {
             downloadTasks = []
         }
         
         else {
-            var identifier = dict!.valueForKey("identifier") as! String
-            var x = find(downloadTasks, identifier)
+            let identifier = dict!.valueForKey("identifier") as! String
+            let x = downloadTasks.indexOf(identifier)
             if x != nil {
                 downloadTasks.removeAtIndex(x!)
             }
@@ -132,25 +132,25 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     
     func reloadCellAtNdx(cellNum : Int){
         if cellNum < count{
-            var indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
+            let indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
         }
     }
     
     //update taskProgress of specific cell
     func setProgressValue(dict : NSDictionary){
-        var cellNum : Int = dict.valueForKey("ndx")!.integerValue
+        let cellNum : Int = dict.valueForKey("ndx")!.integerValue
         
         if cellNum < count {
-            var taskProgress : Float = dict.valueForKey("value")!.floatValue
+            let taskProgress : Float = dict.valueForKey("value")!.floatValue
             progressValues[cellNum] = taskProgress
         }
     }
     
     func addCell(dict : NSDictionary){
-        var cellName : String = dict.valueForKey("name") as! String
-        var vidDur : String = dict.valueForKey("duration") as! String
-        var thumbnail = dict.valueForKey("thumbnail") as! UIImage
+        let cellName : String = dict.valueForKey("name") as! String
+        let vidDur : String = dict.valueForKey("duration") as! String
+        let thumbnail = dict.valueForKey("thumbnail") as! UIImage
         
         count++
         progressValues += [0.0]
@@ -170,7 +170,6 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> downloadCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("downloadCell", forIndexPath: indexPath) as! downloadCell
-        var row = indexPath.row
         
         cell.accessoryType = UITableViewCellAccessoryType.None
         if progressValues[indexPath.row] == 1.0 { cell.accessoryType = UITableViewCellAccessoryType.Checkmark }

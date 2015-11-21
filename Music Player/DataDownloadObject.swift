@@ -30,7 +30,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     required init(coder aDecoder: NSCoder){
         super.init()
-        var randomString = MiscFuncs.randomStringWithLength(30)
+        let randomString = MiscFuncs.randomStringWithLength(30)
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
@@ -60,15 +60,15 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
             
-            var cellNum = find(taskIDs, downloadTask.taskIdentifier)
+            let cellNum = taskIDs.indexOf(downloadTask.taskIdentifier)
             
             if cellNum != nil{
-                var taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
-                var num = taskProgress * 100
+                let taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                let num = taskProgress * 100
                 
                 if ( num % 10 ) < 0.8 && taskProgress != 1.0 {
                     dispatch_async(dispatch_get_main_queue(),{
-                        var dict = ["ndx" : cellNum!, "value" : taskProgress ]
+                        let dict = ["ndx" : cellNum!, "value" : taskProgress ]
                         
                         self.tableDelegate.setProgressValue(dict)
                         self.tableDelegate.reloadCellAtNdx(cellNum!)
@@ -80,29 +80,32 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
-            var loc = location
-            var cellNum  = find(taskIDs, downloadTask.taskIdentifier)
+            let cellNum  = taskIDs.indexOf(downloadTask.taskIdentifier)
             if cellNum != nil{
                 
-                var request = NSFetchRequest(entityName: "Settings")
-                var results : NSArray = self.context.executeFetchRequest(request, error: nil)!
+                let request = NSFetchRequest(entityName: "Settings")
+                let results : NSArray = try! self.context.executeFetchRequest(request)
                 
-                var settings = results[0] as! NSManagedObject
+                let settings = results[0] as! NSManagedObject
                 
-                var downloadLocation = settings.valueForKey("cache") as! Int
+                let downloadLocation = settings.valueForKey("cache") as! Int
                 
                 //move file from temporary folder to documents folder
-                var fileData : NSData? = NSData(contentsOfURL: loc)
-                var identifier = videoData[cellNum!].identifier
-                var filePath = grabFilePath("\(identifier).mp4")
-                NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath, error: nil)
+                //var fileData : NSData? = NSData(contentsOfURL: loc)
+                let identifier = videoData[cellNum!].identifier
+                let filePath = grabFilePath("\(identifier).mp4")
+                
+                do{
+                    try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
+                }catch _ as NSError{}
+                
                 
                 if (downloadLocation == 1) {
                     UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil)
                 }
                
                 //save to CoreData
-                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context) as! NSManagedObject
+                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(videoData[cellNum!].title, forKey: "title")
                 
@@ -111,26 +114,29 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 newSong.setValue(expireDate, forKey: "expireDate")
                 newSong.setValue(true, forKey: "isDownloaded")
                 
-                var duration = videoData[cellNum!].duration
-                var durationStr = MiscFuncs.stringFromTimeInterval(duration)
+                let duration = videoData[cellNum!].duration
+                let durationStr = MiscFuncs.stringFromTimeInterval(duration)
                 newSong.setValue(duration, forKey: "duration")
                 newSong.setValue(durationStr, forKey: "durationStr")
                 
                 var streamURLs = videoData[cellNum!].streamURLs
-                var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
-                var large = videoData[cellNum!].largeThumbnailURL
-                var medium = videoData[cellNum!].mediumThumbnailURL
-                var small = videoData[cellNum!].smallThumbnailURL
-                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
+                let large = videoData[cellNum!].largeThumbnailURL
+                let medium = videoData[cellNum!].mediumThumbnailURL
+                let small = videoData[cellNum!].smallThumbnailURL
+                let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
-                context.save(nil)
+                do {
+                    try context.save()
+                } catch _ {
+                }
                 
                 
                 //display checkmark for completion
-                var dict = ["ndx" : cellNum!, "value" : "1.0" ]
+                let dict = ["ndx" : cellNum!, "value" : "1.0" ]
                 
                 tableDelegate.setProgressValue(dict)
                 tableDelegate.reloadCellAtNdx(cellNum!)
@@ -139,8 +145,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     }
     
     func grabFilePath(fileName : String) -> String {
-        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        let writePath = documents.stringByAppendingPathComponent("\(fileName)")
+        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+        let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
         
         return writePath
     } 

@@ -21,7 +21,6 @@ public class MiscFuncs{
     //convert double to format : xh xm
     public class func hrsAndMinutes(interval: NSTimeInterval) -> String {
         let interval = Int(interval)
-        let seconds = interval % 60
         let minutes = (interval / 60) % 60
         let hours = (interval / 3600)
         return String(format: "%02dh %02dm", hours, minutes)
@@ -29,10 +28,12 @@ public class MiscFuncs{
     
     //shuffle int array
     public class func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
-            let c = count(list)
+            let c = list.count
             for i in 0..<(c - 1) {
                 let j = Int(arc4random_uniform(UInt32(c - i))) + i
-                swap(&list[i], &list[j])
+                if (i != j){
+                    swap(&list[i], &list[j])
+                }
             }
         
     }
@@ -51,11 +52,11 @@ public class MiscFuncs{
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         
-        var randomString : NSMutableString = NSMutableString(capacity: len)
+        let randomString : NSMutableString = NSMutableString(capacity: len)
         
         for (var i=0; i < len; i++){
-            var length = UInt32 (letters.length)
-            var rand = arc4random_uniform(length)
+            let length = UInt32 (letters.length)
+            let rand = arc4random_uniform(length)
             randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
         }
         

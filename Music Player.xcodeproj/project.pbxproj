@@ -20,14 +20,12 @@
 		22433FE31B47212F00C075FF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE11B47212F00C075FF /* Main.storyboard */; };
 		22433FE51B47212F00C075FF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE41B47212F00C075FF /* Images.xcassets */; };
 		22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE61B47212F00C075FF /* LaunchScreen.xib */; };
-		22433FFE1B47214400C075FF /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22433FFD1B47214400C075FF /* Entitlements.plist */; };
 		224340021B47253C00C075FF /* IDInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340011B47253C00C075FF /* IDInputVC.swift */; };
 		224340041B47260500C075FF /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340031B47260500C075FF /* DownloadCell.swift */; };
 		224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340051B47266F00C075FF /* DownloadTableViewController.swift */; };
 		224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* DataDownloadObject.swift */; };
 		2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */; };
 		2256FC331B70B47500FFEB93 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */; };
-		2256FC351B70B4E900FFEB93 /* IJReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2256FC341B70B4E900FFEB93 /* IJReachability.swift */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */; };
 		22AD6B321B47BB7D00428602 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* Settings.swift */; };
@@ -64,7 +62,6 @@
 		22433FED1B47212F00C075FF /* Music PlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Music PlayerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22433FF21B47212F00C075FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22433FF31B47212F00C075FF /* Music_PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music_PlayerTests.swift; sourceTree = "<group>"; };
-		22433FFD1B47214400C075FF /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		224340011B47253C00C075FF /* IDInputVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDInputVC.swift; sourceTree = "<group>"; };
 		224340031B47260500C075FF /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		224340051B47266F00C075FF /* DownloadTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadTableViewController.swift; sourceTree = "<group>"; };
@@ -72,7 +69,6 @@
 		224340091B473C8B00C075FF /* bridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridgingHeader.h; sourceTree = "<group>"; };
 		2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-XCDYouTubeKit.a"; path = "Pods/../build/Debug-iphoneos/libPods-XCDYouTubeKit.a"; sourceTree = "<group>"; };
 		2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		2256FC341B70B4E900FFEB93 /* IJReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IJReachability.swift; sourceTree = "<group>"; };
 		225F06111B613BB6005D0DEA /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		227B696C556F69040FDCBAB7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
@@ -116,7 +112,6 @@
 			isa = PBXGroup;
 			children = (
 				224340091B473C8B00C075FF /* bridgingHeader.h */,
-				22433FFD1B47214400C075FF /* Entitlements.plist */,
 				22433FD71B47212F00C075FF /* Music Player */,
 				22433FF01B47212F00C075FF /* Music PlayerTests */,
 				22433FD61B47212F00C075FF /* Products */,
@@ -142,7 +137,6 @@
 				224340031B47260500C075FF /* DownloadCell.swift */,
 				224340051B47266F00C075FF /* DownloadTableViewController.swift */,
 				224340011B47253C00C075FF /* IDInputVC.swift */,
-				2256FC341B70B4E900FFEB93 /* IJReachability.swift */,
 				222ABEFA1BA6715C003B05A1 /* MiscFuncs.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
@@ -245,11 +239,14 @@
 		22433FCD1B47212F00C075FF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = Sem;
 				TargetAttributes = {
 					22433FD41B47212F00C075FF = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = EJA9W9EPZD;
 					};
 					22433FEC1B47212F00C075FF = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -282,7 +279,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2240BF2E1BAA33B7005053BC /* gear@2x.png in Resources */,
-				22433FFE1B47214400C075FF /* Entitlements.plist in Resources */,
 				22433FE31B47212F00C075FF /* Main.storyboard in Resources */,
 				2240BF311BAA33B7005053BC /* video@2x.png in Resources */,
 				2240BF2D1BAA33B7005053BC /* droplets.jpg in Resources */,
@@ -344,7 +340,6 @@
 			files = (
 				2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */,
 				224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */,
-				2256FC351B70B4E900FFEB93 /* IJReachability.swift in Sources */,
 				22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */,
 				222ABEFB1BA6715C003B05A1 /* MiscFuncs.swift in Sources */,
 				22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */,
@@ -411,12 +406,13 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "-";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -435,8 +431,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos8.3;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Sam/Documents/Projects/Music Player/bridgingHeader.h";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samuelchu/Documents/YoutubePlaylist-Downloader/bridgingHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -459,9 +455,9 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "-";
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -476,8 +472,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos8.3;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Sam/Documents/Projects/Music Player/bridgingHeader.h";
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/samuelchu/Documents/YoutubePlaylist-Downloader/bridgingHeader.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -488,13 +484,17 @@
 			baseConfigurationReference = F5EB519E79CB1AE21C1131B5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Music Player/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -503,13 +503,17 @@
 			baseConfigurationReference = F21E113ABCDB957DFAD2D41E /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Music Player/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -527,6 +531,7 @@
 				);
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";
 			};
@@ -542,6 +547,7 @@
 				);
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";
 			};

@@ -34,11 +34,11 @@ class Player: AVPlayerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(swipeRight)
         
-        var swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
         swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(swipeLeft)
     }
@@ -84,8 +84,8 @@ class Player: AVPlayerViewController {
     }
     
     //recieve input from earphone button clicks
-    override func remoteControlReceivedWithEvent(event: UIEvent) {
-        let rc = event.subtype
+    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+        let rc = event!.subtype
         
         switch rc {
         case .RemoteControlNextTrack:

@@ -13,7 +13,7 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         return true
@@ -63,31 +63,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let fileMgr = NSFileManager.defaultManager()
         
         //remove excess documents and data
-        var cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] as! String
+        let cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] 
         
-        var cacheDir1 = cacheFolder.stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
-        var cacheDir2 = cacheFolder.stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
+        let cacheDir1 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
+        let cacheDir2 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
         
         if fileMgr.fileExistsAtPath(cacheDir1){
-            var dir1Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir1, error: nil) as! [String]
+            let dir1Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir1)) 
             
             for file : String in dir1Contents {
-                fileMgr.removeItemAtPath(cacheDir1.stringByAppendingPathComponent(file), error: nil)
+                do {
+                    try fileMgr.removeItemAtPath((cacheDir1 as NSString).stringByAppendingPathComponent(file))
+                } catch _ {
+                }
             }
         }
         
         if fileMgr.fileExistsAtPath(cacheDir2){
-            var dir2Contents  = fileMgr.contentsOfDirectoryAtPath(cacheDir2, error: nil) as! [String]
+            let dir2Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir2)) 
             
             for file : String in dir2Contents {
-                fileMgr.removeItemAtPath(cacheDir2.stringByAppendingPathComponent(file), error: nil)
+                do {
+                    try fileMgr.removeItemAtPath((cacheDir2 as NSString).stringByAppendingPathComponent(file))
+                } catch _ {
+                }
             }
         }
         
-        var tmpDir : [String] = fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory(), error: nil) as! [String]
+        let tmpDir : [String] = (try! fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory())) 
         
         for file : String in tmpDir {
-            fileMgr.removeItemAtPath(NSTemporaryDirectory().stringByAppendingPathComponent(file), error: nil)
+            do {
+                try fileMgr.removeItemAtPath((NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(file))
+            } catch _ {
+            }
             
         }
         self.saveContext()
@@ -98,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.Music_Player" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as! NSURL
+        return urls[urls.count-1] 
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -114,7 +123,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("Music_Player.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        do {
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch var error1 as NSError {
+            error = error1
             coordinator = nil
             // Report any error we got.
             var dict = [String: AnyObject]()
@@ -126,6 +138,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
+        } catch {
+            fatalError()
         }
         
         return coordinator
@@ -147,11 +161,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func saveContext () {
         if let moc = self.managedObjectContext {
             var error: NSError? = nil
-            if moc.hasChanges && !moc.save(&error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                NSLog("Unresolved error \(error), \(error!.userInfo)")
-                abort()
+            if moc.hasChanges {
+                do {
+                    try moc.save()
+                } catch let error1 as NSError {
+                    error = error1
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    NSLog("Unresolved error \(error), \(error!.userInfo)")
+                    abort()
+                }
             }
         }
     }

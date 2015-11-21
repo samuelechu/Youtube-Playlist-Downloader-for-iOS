@@ -46,24 +46,27 @@ class IDInputvc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
-        var request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        let request = NSFetchRequest(entityName: "Settings")
+        var results : NSArray = try! context.executeFetchRequest(request)
         
         if results.count == 0 {
-            var settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) as! NSManagedObject
+            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) 
             
             settings.setValue(0, forKey: "quality")
             settings.setValue(0, forKey: "cache")
             
-            context.save(nil)
-            results = context.executeFetchRequest(request, error: nil)!
+            do {
+                try context.save()
+            } catch _ {
+            }
+            results = try! context.executeFetchRequest(request)
         }
         
         //get identifiers lost from popping off view
@@ -107,19 +110,19 @@ class IDInputvc: UIViewController {
     
     //check if video in stored memory or currently downloading videos
     func vidStored (identifier : String) -> Bool {
-        var request = NSFetchRequest(entityName: "Songs")
+        let request = NSFetchRequest(entityName: "Songs")
         request.predicate = NSPredicate(format: "identifier = %@", identifier.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
-        var results : NSArray = context.executeFetchRequest(request, error: nil)!
+        let results : NSArray = try! context.executeFetchRequest(request)
         
         if(results.count > 0){
             return true
         }
             
-        else if((find(downloadTasks, identifier)) != nil){
+        else if((downloadTasks.indexOf(identifier)) != nil){
             return true
         }
             
-        else if((find(uncachedVideos, identifier)) != nil){
+        else if((uncachedVideos.indexOf(identifier)) != nil){
             return true
         }
         
@@ -128,11 +131,11 @@ class IDInputvc: UIViewController {
     
     
     func startDownloadTaskHelper(ID : String, qual : Int){
-        if(find(downloadTasks, ID) == nil){
+        if(downloadTasks.indexOf(ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
                     
-                    var streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
+                    let streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
                     var desiredURL : NSURL!
                     
                     if (qual == 0){ //360P
@@ -143,14 +146,14 @@ class IDInputvc: UIViewController {
                         desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                     }
                     
-                    var duration = MiscFuncs.stringFromTimeInterval(video!.duration)
+                    let duration = MiscFuncs.stringFromTimeInterval(video!.duration)
                     
                     //get thumbnail
-                    var thumbnailURL = (video!.mediumThumbnailURL != nil ? video!.mediumThumbnailURL : video!.smallThumbnailURL)
+                    let thumbnailURL = (video!.mediumThumbnailURL != nil ? video!.mediumThumbnailURL : video!.smallThumbnailURL)
                     let data = NSData(contentsOfURL: thumbnailURL!)
-                    var image = UIImage(data: data!)
+                    let image = UIImage(data: data!)
                     
-                    var dict = ["name" : video!.title, "duration" : duration, "thumbnail" : image!]
+                    let dict = ["name" : video!.title, "duration" : duration, "thumbnail" : image!]
                     
                     self.tableDelegate!.addCell(dict)
                     self.tableDelegate!.reloadCells()
@@ -163,21 +166,22 @@ class IDInputvc: UIViewController {
     }
     
     @IBAction func startDownloadTask() {
-        var ID  = vidID.text
-        if let index = find(ID, "=") {
-            ID = ID.substringFromIndex(advance(index, 1))
+        var ID  = vidID.text!
+        if let index = ID.characters.indexOf("=") {
+            ID = ID.substringFromIndex(index.advancedBy(1))
         }
         
         //get vid quality
-        var request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = context.executeFetchRequest(request, error: nil)!
-        var settings = results[0] as! NSManagedObject
-        var qual = settings.valueForKey("quality") as! Int
+        let request = NSFetchRequest(entityName: "Settings")
+        let results : NSArray = try! context.executeFetchRequest(request)
+        let settings = results[0] as! NSManagedObject
+        let qual = settings.valueForKey("quality") as! Int
         
         
         
-        if count(ID) == 11{
-            var isStored =  vidStored(ID)
+        
+        if ID.characters.count == 11{
+            let isStored =  vidStored(ID)
             
             if (!isStored){
                 
@@ -207,7 +211,7 @@ class IDInputvc: UIViewController {
         
         let session = NSURLSession(configuration: sessionConfiguration)
         
-        let task = session.dataTaskWithRequest(request, completionHandler: { (data: NSData!, response: NSURLResponse!, error: NSError!) -> Void in
+        let task = session.dataTaskWithRequest(request, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 completion(data: data, HTTPStatusCode: (response as! NSHTTPURLResponse).statusCode, error: error)
             })
@@ -234,33 +238,33 @@ class IDInputvc: UIViewController {
                 if HTTPStatusCode == 200 && error == nil {
                     
                     // Convert the JSON data into a dictionary.
-                    let resultsDict = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as! NSDictionary
+                    let resultsDict = (try! NSJSONSerialization.JSONObjectWithData(data!, options: [])) as! NSDictionary
                     // Get all playlist items ("items" array).
-                    var nextPageToken = resultsDict["nextPageToken"] as! String?
+                    let nextPageToken = resultsDict["nextPageToken"] as! String?
                     let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
-                    let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
-                    var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
+                    //let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
+                    //var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
                     var videoIDs : [String] = []
                     
                     for item : Dictionary<NSObject, AnyObject> in items {
                         let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
-                        var vidID : String = playlistContentDict["videoId"] as! String
+                        let vidID : String = playlistContentDict["videoId"] as! String
                         videoIDs += [vidID]
                     }
                     
                     
-                    var request = NSFetchRequest(entityName: "Settings")
-                    var results : NSArray = self.context.executeFetchRequest(request, error: nil)!
+                    let request = NSFetchRequest(entityName: "Settings")
+                    let results : NSArray = try! self.context.executeFetchRequest(request)
                     
-                    var settings = results[0] as! NSManagedObject
+                    let settings = results[0] as! NSManagedObject
                     
-                    var downloadVid = settings.valueForKey("cache") as! Int
+                    let downloadVid = settings.valueForKey("cache") as! Int
                     
                     //download videos if cache option selected, otherwise save song object to persistent memory
                     if downloadVid != 2 {
                         for identifier : String in videoIDs {
                             
-                            var isStored = self.vidStored(identifier)
+                            let isStored = self.vidStored(identifier)
                             
                             if (!isStored){
                                 self.startDownloadTaskHelper(identifier, qual: qual)
@@ -273,7 +277,7 @@ class IDInputvc: UIViewController {
                     else {
                         for identifier : String in videoIDs {
                             
-                            var isStored = self.vidStored(identifier)
+                            let isStored = self.vidStored(identifier)
                             
                             if (!isStored){
                                 
@@ -293,8 +297,8 @@ class IDInputvc: UIViewController {
                 }
                     
                 else {
-                    println("HTTP Status Code = \(HTTPStatusCode)")
-                    println("Error while loading channel videos: \(error)")
+                    print("HTTP Status Code = \(HTTPStatusCode)")
+                    print("Error while loading channel videos: \(error)")
                     self.tableDelegate?.setDLButton(false)
                     
                 }
@@ -310,24 +314,28 @@ class IDInputvc: UIViewController {
     func saveVideoInfo(identifier : String) {
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
             if error == nil {
-                var newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context) as! NSManagedObject
+                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video!.title, forKey: "title")
                 newSong.setValue(video!.expirationDate, forKey: "expireDate")
                 newSong.setValue(false, forKey: "isDownloaded")
                 
                 var streamURLs = video!.streamURLs
-                var desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
-                var large = video!.largeThumbnailURL
-                var medium = video!.mediumThumbnailURL
-                var small = video!.smallThumbnailURL
-                var imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
+                let large = video!.largeThumbnailURL
+                let medium = video!.mediumThumbnailURL
+                let small = video!.smallThumbnailURL
+                let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
-                self.context.save(nil)
+                
+                do{
+                    try self.context.save()
+                }catch _ as NSError{}
+                
                 NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
         })
