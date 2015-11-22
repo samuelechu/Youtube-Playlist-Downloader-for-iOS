@@ -11,7 +11,8 @@ import AVKit
 import AVFoundation
 
 
-protocol PlaylistDelegate{ 
+protocol PlaylistDelegate{
+    func togglePlayPause()
     func advance()
     func retreat()
     func updateNowPlayingInfo()
@@ -86,12 +87,20 @@ class Player: AVPlayerViewController {
     //recieve input from earphone button clicks
     override func remoteControlReceivedWithEvent(event: UIEvent?) {
         let rc = event!.subtype
-        
+        print(rc.rawValue)
         switch rc {
         case .RemoteControlNextTrack:
             playlistDelegate?.advance()
         case .RemoteControlPreviousTrack:
             playlistDelegate?.retreat()
+        case .RemoteControlPause:
+            playlistDelegate?.togglePlayPause()
+        case .RemoteControlPlay:
+            playlistDelegate?.togglePlayPause()
+        case .RemoteControlTogglePlayPause :
+            playlistDelegate?.togglePlayPause()
+            
+            
         default:
             updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "delegateUpdateNowPlayingInfo", userInfo: nil, repeats: true)
         }

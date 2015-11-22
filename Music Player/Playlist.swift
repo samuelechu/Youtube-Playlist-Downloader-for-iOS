@@ -524,7 +524,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 
                 curNdx = (tableView.indexPathForSelectedRow?.row)!
             }
-            addSongToQueue(curNdx)  
+            addSongToQueue(curNdx)
             
             
             
@@ -627,6 +627,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             updater = nil
             loopCount = 0
         }
+    }
+    
+    func togglePlayPause(){
+        if (playerQueue.rate == 0){
+            playerQueue.play()
+        }
+        else{
+            playerQueue.pause()
+        }
+        
+        updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
     }
     
     func advance(){
