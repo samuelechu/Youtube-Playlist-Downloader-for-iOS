@@ -600,13 +600,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
-    
-    var poop = 0
     var loopCount = 0
     var updater : NSTimer!
     func updateNowPlayingInfo(){
-        print("poop called \(poop) times!")
-        poop++
         loopCount++
         let curItem = playerQueue.currentItem
         let title = curSong.valueForKey("title") as! String
