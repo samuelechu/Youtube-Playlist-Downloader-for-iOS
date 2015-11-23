@@ -73,6 +73,12 @@ class Settings: UITableViewController {
         super.didReceiveMemoryWarning()
     }
     
+    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let header: UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView //recast your view as a UITableViewHeaderFooterView
+        header.contentView.backgroundColor = UIColor.clearColor()
+        header.backgroundView?.backgroundColor = UIColor.clearColor()
+    }
+    
     //deselect previously selected rows that are in same section
     override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         if let selectedRows = tableView.indexPathsForSelectedRows as [NSIndexPath]?{

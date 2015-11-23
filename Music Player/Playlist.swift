@@ -600,10 +600,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
+    
+    var poop = 0
     var loopCount = 0
     var updater : NSTimer!
     func updateNowPlayingInfo(){
-        
+        print("poop called \(poop) times!")
+        poop++
         loopCount++
         let curItem = playerQueue.currentItem
         let title = curSong.valueForKey("title") as! String
@@ -611,14 +614,23 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         let artworkImage = UIImage(data: imageData)
         let artwork = MPMediaItemArtwork(image: artworkImage!)
         
-        let mpic = MPNowPlayingInfoCenter.defaultCenter()
-        mpic.nowPlayingInfo = [
-            MPMediaItemPropertyTitle:title,
+        let songInfo: Dictionary <NSObject, AnyObject> = [
+            
+            MPMediaItemPropertyTitle: title,
+            
             MPMediaItemPropertyArtist:"",
-            MPMediaItemPropertyArtwork:artwork,
-            MPMediaItemPropertyPlaybackDuration:NSTimeInterval(CMTimeGetSeconds(curItem!.duration)),
-            MPNowPlayingInfoPropertyElapsedPlaybackTime:CMTimeGetSeconds(curItem!.currentTime())
+            
+            MPMediaItemPropertyArtwork: artwork,
+            MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)",
+            
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(curItem!.currentTime()),
+            
+            MPMediaItemPropertyPlaybackDuration: NSTimeInterval(CMTimeGetSeconds(curItem!.duration))
+            
         ]
+        
+        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
+
         
         if(loopCount > 12){
             if (updater != nil){
@@ -629,15 +641,39 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
+    
+    func setPlaybackRate(){
+        let songInfo: Dictionary <NSObject, AnyObject> = [
+            
+            MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)"
+        ]
+        
+        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
+    }
+
+    
     func togglePlayPause(){
         if (playerQueue.rate == 0){
             playerQueue.play()
         }
+            
         else{
             playerQueue.pause()
         }
         
-        updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+        
+        if(updater == nil){
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+        }
+        
+    }
+    
+    func seekForward(){
+        playerQueue.rate = 3.0
+    }
+    
+    func seekBackward(){
+        playerQueue.rate = -3.0
     }
     
     func advance(){
@@ -649,7 +685,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         //set lock screen info
         loopCount = 0
-        updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+        if(updater == nil){
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+        }
+        togglePlayPause()
+        togglePlayPause()
         
         let path = NSIndexPath(forRow: curNdx, inSection: 0)
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
@@ -668,8 +708,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             addSongToQueue(curNdx)
             
             loopCount = 0
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+            if(updater == nil){
+                updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+            }
         }
+        togglePlayPause()
+        togglePlayPause()
         
         let path = NSIndexPath(forRow: curNdx, inSection: 0)
         tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
@@ -677,7 +721,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     func playerItemDidReachEnd(notification : NSNotification){
         enableVidTracks()
-        advance()
+        
+        if(playerQueue.rate > 0){
+            togglePlayPause()
+            togglePlayPause()
+            advance()
+        }
+        else{
+            togglePlayPause()
+            togglePlayPause()
+            retreat()
+        }
     }
     
     //enable vidTracks
@@ -701,14 +755,20 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         if curSong != nil {
             loopCount = 0
+            if(updater == nil){
             updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+            }
         }
         
     }
     func enableVidTracks(){
+        
+        let curItem = playerQueue.currentItem
+        if(curItem != nil){
         videoTracks = playerQueue.currentItem!.tracks
         for track : AVPlayerItemTrack in videoTracks{
             track.enabled = true; // enable the track
+        }
         }
     }
 }
