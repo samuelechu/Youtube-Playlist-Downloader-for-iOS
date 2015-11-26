@@ -1,13 +1,15 @@
-#### Youtube Playlist Downloader
+### Youtube Playlist Downloader
+
+a Youtube video downloader for iOS
 
 ######Installation for iOS 9:
 ```
-    clone repo with xcode 7
-    build and run app onto connected iPhone
+-clone repo with xcode 7
+-build and run app onto connected iPhone
 
 ```
 
-a youtube video downloader for iOS
+######Usage: 
 
 Enter youtube playlist ID and the app will download all songs on that playlist
 
@@ -17,7 +19,9 @@ ex. for the playlist https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJ
 
 Also downloads single videos, paste the 11 character id of video into Input tab (ex. "L8eRzOYhLuw")
 
-Features:
+
+
+######Features:
 
     -background downloading
     -background audio play
@@ -30,9 +34,7 @@ Features:
     -highlight of current song
     -easy deletion of songs : select multiple songs or swipe to delete
 
-
-
-Screenshots:
+######Screenshots:
 
 ![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Screenshots/IMG_3898.PNG)
  
