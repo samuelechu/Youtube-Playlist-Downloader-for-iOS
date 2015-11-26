@@ -637,18 +637,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
-    
-    func setPlaybackRate(){
-        let songInfo: Dictionary <NSObject, AnyObject> = [
-            
-            MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)"
-        ]
-        
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
-    }
-
-    
-    func togglePlayPause(){
+      func togglePlayPause(){
         if (playerQueue.rate == 0){
             playerQueue.play()
         }
