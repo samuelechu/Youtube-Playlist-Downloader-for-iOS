@@ -25,6 +25,7 @@ Also downloads single videos, paste the 11 character id of video into Input tab 
 
     -background downloading
     -background audio play
+    -song info during background play
     -360 or 720P downloading
     -save to camera roll
 
