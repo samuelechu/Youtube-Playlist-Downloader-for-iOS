@@ -1,4 +1,12 @@
 #### Youtube Playlist Downloader
+
+Installation for iOS 9:
+    clone repo with xcode 7
+    build and run app onto connected iPhone
+
+
+
+
 a youtube video downloader for iOS
 
 Enter youtube playlist ID and the app will download all songs on that playlist
