@@ -24,13 +24,20 @@
 		224340041B47260500C075FF /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340031B47260500C075FF /* DownloadCell.swift */; };
 		224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340051B47266F00C075FF /* DownloadTableViewController.swift */; };
 		224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* DataDownloadObject.swift */; };
-		2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */; };
-		2256FC331B70B47500FFEB93 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */; };
 		22AD6B321B47BB7D00428602 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* Settings.swift */; };
 		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
-		A5699A3ACFF0C478FCB5F30C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 227B696C556F69040FDCBAB7 /* libPods.a */; };
+		D2263A9B1C14F04500F07C90 /* libXCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9A1C14F04500F07C90 /* libXCDYouTubeKit.a */; };
+		D2263A9D1C14F04A00F07C90 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9C1C14F04A00F07C90 /* libPods.a */; };
+		D2263A9F1C14F05600F07C90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9E1C14F05600F07C90 /* Foundation.framework */; };
+		D2263AA11C14F06100F07C90 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
+		D2263AA31C14F06900F07C90 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA21C14F06900F07C90 /* MediaPlayer.framework */; };
+		D2263AA41C14F08D00F07C90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9E1C14F05600F07C90 /* Foundation.framework */; };
+		D2263AA51C14F08D00F07C90 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
+		D2263AA61C14F08D00F07C90 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA21C14F06900F07C90 /* MediaPlayer.framework */; };
+		D2263AA91C14F08D00F07C90 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA71C14F08D00F07C90 /* libPods.a */; };
+		D2263AAA1C14F08D00F07C90 /* libXCDYouTubeKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA81C14F08D00F07C90 /* libXCDYouTubeKit.a */; };
 		D2B874541C06E68D0086F06D /* IMG_3896.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B8744E1C06E68D0086F06D /* IMG_3896.PNG */; };
 		D2B874551C06E68D0086F06D /* IMG_3897.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B8744F1C06E68D0086F06D /* IMG_3897.PNG */; };
 		D2B874561C06E68D0086F06D /* IMG_3898.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B874501C06E68D0086F06D /* IMG_3898.PNG */; };
@@ -80,6 +87,13 @@
 		2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
 		22AD6B311B47BB7D00428602 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		22CB59E31B4EE65B001BD2AA /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		D2263A9A1C14F04500F07C90 /* libXCDYouTubeKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXCDYouTubeKit.a; path = "Pods/../build/Debug-iphoneos/libXCDYouTubeKit.a"; sourceTree = "<group>"; };
+		D2263A9C1C14F04A00F07C90 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
+		D2263A9E1C14F05600F07C90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		D2263AA21C14F06900F07C90 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		D2263AA71C14F08D00F07C90 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
+		D2263AA81C14F08D00F07C90 /* libXCDYouTubeKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libXCDYouTubeKit.a; path = "Pods/../build/Debug-iphoneos/libXCDYouTubeKit.a"; sourceTree = "<group>"; };
 		D2B8744E1C06E68D0086F06D /* IMG_3896.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3896.PNG; path = Images/Screenshots/IMG_3896.PNG; sourceTree = "<group>"; };
 		D2B8744F1C06E68D0086F06D /* IMG_3897.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3897.PNG; path = Images/Screenshots/IMG_3897.PNG; sourceTree = "<group>"; };
 		D2B874501C06E68D0086F06D /* IMG_3898.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3898.PNG; path = Images/Screenshots/IMG_3898.PNG; sourceTree = "<group>"; };
@@ -95,9 +109,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2256FC331B70B47500FFEB93 /* SystemConfiguration.framework in Frameworks */,
-				2243400B1B473CE400C075FF /* libPods-XCDYouTubeKit.a in Frameworks */,
-				A5699A3ACFF0C478FCB5F30C /* libPods.a in Frameworks */,
+				D2263AA31C14F06900F07C90 /* MediaPlayer.framework in Frameworks */,
+				D2263AA11C14F06100F07C90 /* JavaScriptCore.framework in Frameworks */,
+				D2263A9F1C14F05600F07C90 /* Foundation.framework in Frameworks */,
+				D2263A9B1C14F04500F07C90 /* libXCDYouTubeKit.a in Frameworks */,
+				D2263A9D1C14F04A00F07C90 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +121,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2263AA61C14F08D00F07C90 /* MediaPlayer.framework in Frameworks */,
+				D2263AA51C14F08D00F07C90 /* JavaScriptCore.framework in Frameworks */,
+				D2263AA41C14F08D00F07C90 /* Foundation.framework in Frameworks */,
+				D2263AAA1C14F08D00F07C90 /* libXCDYouTubeKit.a in Frameworks */,
+				D2263AA91C14F08D00F07C90 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,6 +220,13 @@
 		43023294B39B809D25A34FED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D2263AA71C14F08D00F07C90 /* libPods.a */,
+				D2263AA81C14F08D00F07C90 /* libXCDYouTubeKit.a */,
+				D2263AA21C14F06900F07C90 /* MediaPlayer.framework */,
+				D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */,
+				D2263A9E1C14F05600F07C90 /* Foundation.framework */,
+				D2263A9C1C14F04A00F07C90 /* libPods.a */,
+				D2263A9A1C14F04500F07C90 /* libXCDYouTubeKit.a */,
 				2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */,
 				2243400A1B473CE400C075FF /* libPods-XCDYouTubeKit.a */,
 				227B696C556F69040FDCBAB7 /* libPods.a */,
@@ -231,6 +259,7 @@
 				22433FD21B47212F00C075FF /* Frameworks */,
 				22433FD31B47212F00C075FF /* Resources */,
 				80D1F340AE74996ED86E7AA6 /* Copy Pods Resources */,
+				CD4EDE8EF4D50C21148A32A6 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -346,6 +375,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD4EDE8EF4D50C21148A32A6 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		ED83CA9AF57A2AD96BFFD49B /* Check Pods Manifest.lock */ = {
@@ -563,6 +607,10 @@
 				);
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";
@@ -579,6 +627,10 @@
 				);
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";

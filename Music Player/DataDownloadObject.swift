@@ -120,7 +120,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 newSong.setValue(durationStr, forKey: "durationStr")
                 
                 var streamURLs = videoData[cellNum!].streamURLs
-                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
                 let large = videoData[cellNum!].largeThumbnailURL

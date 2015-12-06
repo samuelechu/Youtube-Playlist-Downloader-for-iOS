@@ -28,7 +28,7 @@ protocol inputVCTableDelegate{
 
 class IDInputvc: UIViewController {
     
-    @IBOutlet var vidID: UITextField!
+    @IBOutlet var vidID: UITextView!
     @IBOutlet var downloadButton: UIButton!
     @IBOutlet var initializingLabel: UILabel!
     @IBOutlet var indicator: UIActivityIndicatorView!
@@ -321,7 +321,7 @@ class IDInputvc: UIViewController {
                 newSong.setValue(false, forKey: "isDownloaded")
                 
                 var streamURLs = video!.streamURLs
-                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
                 let large = video!.largeThumbnailURL
