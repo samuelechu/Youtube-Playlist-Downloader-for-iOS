@@ -39,6 +39,7 @@ class IDInputvc: UIViewController {
     var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
     
+    var downloadedIDs : [String] = [] //array of downloaded video identifiers
     var downloadTasks : [String] = []//array of video identifiers
     var uncachedVideos : [String] = []//array of video identifiers for uncached videos
     var numDownloads = 0
@@ -108,13 +109,59 @@ class IDInputvc: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func startDownloadTask() {
+        
+        let ID = MiscFuncs.parseID(vidID.text!)
+        //get vid quality
+        let request = NSFetchRequest(entityName: "Settings")
+        let results : NSArray = try! context.executeFetchRequest(request)
+        let settings = results[0] as! NSManagedObject
+        let qual = settings.valueForKey("quality") as! Int
+        
+        
+        
+        
+        if ID.characters.count == 11{
+            updateStoredSongs()
+            
+            let isStored =  vidStored(ID)
+            
+            if (!isStored){
+                
+                startDownloadTaskHelper(ID, qual: qual)
+                downloadTasks += [ID]
+                tableDelegate?.addDLTask([ID])
+            }
+        }
+            
+            
+        else {
+            tableDelegate?.setDLButtonHidden(true)
+            downloadVideosForPlayist(ID, pageToken: "", qual: qual)
+        }
+        
+        
+        navigationController?.popViewControllerAnimated(true)
+    }
+    
+    
+    func updateStoredSongs(){
+        let request = NSFetchRequest(entityName: "Songs")
+        request.predicate = NSPredicate(format: "isDownloaded = %@", true)
+        
+        let songs = try? context.executeFetchRequest(request)
+        downloadedIDs = []
+        for song in songs!{
+            let identifier = song.valueForKey("identifier") as! String
+            downloadedIDs += [identifier]
+        }
+
+    }
+    
     //check if video in stored memory or currently downloading videos
     func vidStored (identifier : String) -> Bool {
-        let request = NSFetchRequest(entityName: "Songs")
-        request.predicate = NSPredicate(format: "identifier = %@", identifier.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()))
-        let results : NSArray = try! context.executeFetchRequest(request)
         
-        if(results.count > 0){
+        if(downloadedIDs.indexOf(identifier) != nil){
             return true
         }
             
@@ -165,38 +212,7 @@ class IDInputvc: UIViewController {
         }
     }
     
-    @IBAction func startDownloadTask() {
-        
-        let ID = MiscFuncs.parseID(vidID.text!)
-        //get vid quality
-        let request = NSFetchRequest(entityName: "Settings")
-        let results : NSArray = try! context.executeFetchRequest(request)
-        let settings = results[0] as! NSManagedObject
-        let qual = settings.valueForKey("quality") as! Int
-        
-        
-        
-        
-        if ID.characters.count == 11{
-            let isStored =  vidStored(ID)
-            
-            if (!isStored){
-                
-                startDownloadTaskHelper(ID, qual: qual)
-                downloadTasks += [ID]
-                tableDelegate?.addDLTask([ID])
-            }
-        }
-            
-            
-        else {
-            tableDelegate?.setDLButtonHidden(true)
-            downloadVideosForPlayist(ID, pageToken: "", qual: qual)
-        }
-        
-        
-        navigationController?.popViewControllerAnimated(true)
-    }
+    
     
      
     
@@ -271,6 +287,7 @@ class IDInputvc: UIViewController {
             tableDelegate?.setDLButtonHidden(false)
             if(!videoIDs.isEmpty){
                 
+                updateStoredSongs()
                 let request = NSFetchRequest(entityName: "Settings")
                 let results : NSArray = try! self.context.executeFetchRequest(request)
                 
