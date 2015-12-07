@@ -22,8 +22,8 @@ protocol inputVCTableDelegate{
     func addUncachedVid(tasks : [String])
     func getUncachedVids() -> [String]
     
-    func setDLButton(value : Bool)
-    func dlButtonHidden() -> Bool
+    func setDLButtonHidden(value : Bool)
+    func dlButtonIsHidden() -> Bool
 }
 
 class IDInputvc: UIViewController {
@@ -82,7 +82,7 @@ class IDInputvc: UIViewController {
         }
         
         //hide download button if downloads are being queued
-        manageButtons((tableDelegate?.dlButtonHidden())!)
+        manageButtons((tableDelegate?.dlButtonIsHidden())!)
         
     }
     
@@ -166,11 +166,8 @@ class IDInputvc: UIViewController {
     }
     
     @IBAction func startDownloadTask() {
-        var ID  = vidID.text!
-        if let index = ID.characters.indexOf("=") {
-            ID = ID.substringFromIndex(index.advancedBy(1))
-        }
         
+        let ID = MiscFuncs.parseID(vidID.text!)
         //get vid quality
         let request = NSFetchRequest(entityName: "Settings")
         let results : NSArray = try! context.executeFetchRequest(request)
@@ -193,7 +190,7 @@ class IDInputvc: UIViewController {
             
             
         else {
-            tableDelegate?.setDLButton(true)
+            tableDelegate?.setDLButtonHidden(true)
             downloadVideosForPlayist(ID, pageToken: "", qual: qual)
         }
         
@@ -220,6 +217,7 @@ class IDInputvc: UIViewController {
         task.resume()
     }
     
+    var videoIDs : [String] = []
     func downloadVideosForPlayist(playlistID : String, pageToken : String?, qual : Int) {
         
         if pageToken != nil{
@@ -244,54 +242,18 @@ class IDInputvc: UIViewController {
                     let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
                     //let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
                     //var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
-                    var videoIDs : [String] = []
+                    
                     
                     for item : Dictionary<NSObject, AnyObject> in items {
                         let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
                         let vidID : String = playlistContentDict["videoId"] as! String
-                        videoIDs += [vidID]
+                        self.videoIDs += [vidID]
                     }
                     
                     
-                    let request = NSFetchRequest(entityName: "Settings")
-                    let results : NSArray = try! self.context.executeFetchRequest(request)
                     
-                    let settings = results[0] as! NSManagedObject
                     
-                    let downloadVid = settings.valueForKey("cache") as! Int
                     
-                    //download videos if cache option selected, otherwise save song object to persistent memory
-                    if downloadVid != 2 {
-                        for identifier : String in videoIDs {
-                            
-                            let isStored = self.vidStored(identifier)
-                            
-                            if (!isStored){
-                                self.startDownloadTaskHelper(identifier, qual: qual)
-                                self.downloadTasks += [identifier]
-                                self.tableDelegate?.addDLTask([identifier])
-                            }
-                        }
-                    }
-                        
-                    else {
-                        for identifier : String in videoIDs {
-                            
-                            let isStored = self.vidStored(identifier)
-                            
-                            if (!isStored){
-                                
-                                self.uncachedVideos += [identifier]
-                                self.tableDelegate?.addUncachedVid([identifier])
-                                self.saveVideoInfo(identifier)
-                                
-                            }
-                        }
-                        if nextPageToken == nil {
-                            self.manageButtons(false)
-                        }
-                        
-                    }
                     
                     self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
                 }
@@ -299,14 +261,56 @@ class IDInputvc: UIViewController {
                 else {
                     print("HTTP Status Code = \(HTTPStatusCode)")
                     print("Error while loading channel videos: \(error)")
-                    self.tableDelegate?.setDLButton(false)
+                    self.tableDelegate?.setDLButtonHidden(false)
                     
                 }
             })
         }
             
         else{
-            tableDelegate?.setDLButton(false)
+            tableDelegate?.setDLButtonHidden(false)
+            if(!videoIDs.isEmpty){
+                
+                let request = NSFetchRequest(entityName: "Settings")
+                let results : NSArray = try! self.context.executeFetchRequest(request)
+                
+                let settings = results[0] as! NSManagedObject
+                let downloadVid = settings.valueForKey("cache") as! Int
+                
+                //download videos if cache option selected, otherwise save song object to persistent memory
+                if downloadVid != 2 {
+                    for identifier : String in self.videoIDs {
+                        
+                        let isStored = self.vidStored(identifier)
+                        
+                        if (!isStored){
+                            self.startDownloadTaskHelper(identifier, qual: qual)
+                            self.downloadTasks += [identifier]
+                            self.tableDelegate?.addDLTask([identifier])
+                        }
+                    }
+                }
+                    
+                else {
+                    for identifier : String in self.videoIDs {
+                        
+                        let isStored = self.vidStored(identifier)
+                        
+                        if (!isStored){
+                            
+                            self.uncachedVideos += [identifier]
+                            self.tableDelegate?.addUncachedVid([identifier])
+                            self.saveVideoInfo(identifier)
+                            
+                        }
+                    }
+                    
+                    self.manageButtons(false)
+                    
+                    
+                }
+            }
+            videoIDs = []
         }
         
     }

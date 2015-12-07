@@ -19,7 +19,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     var dlObject : dataDownloadObject!
     var downloadTasks : [String] = []
     var uncachedVideos : [String] = []
-    var dlButton = false
+    var dlButtonHidden = false
     
     
     override func viewWillAppear(animated: Bool) {
@@ -120,12 +120,12 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
         }
     }
     
-    func setDLButton(value : Bool){
-        dlButton = value
+    func setDLButtonHidden(value: Bool) {
+        dlButtonHidden = value
     }
     
-    func dlButtonHidden() -> Bool{
-        return dlButton
+    func dlButtonIsHidden() -> Bool{
+        return dlButtonHidden
     }
     
     func reloadCells(){ tableView.reloadData() }
