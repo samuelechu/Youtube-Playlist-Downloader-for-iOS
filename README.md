@@ -19,6 +19,8 @@ ex. for the playlist https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJ
 
 Also downloads single videos, paste the 11 character id of video into Input tab (ex. "L8eRzOYhLuw")
 
+Many thanks to Cédric Luthi for XCDYoutubeKit, which makes it possible to obtain direct video download links!
+https://github.com/0xced
 
 
 ######Features:
