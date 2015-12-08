@@ -102,7 +102,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 }
                     
                 else{ //else move file from temporary folder to documents folder
-                    
+                     
                     let identifier = videoData[cellNum!].identifier
                     let filePath = grabFilePath("\(identifier).mp4")
                     
