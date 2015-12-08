@@ -54,6 +54,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         
     }
     
+    //update progress when data is received
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
         didWriteData bytesWritten: Int64,
@@ -77,6 +78,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             }
     }
     
+    ///save video when download completed
     func URLSession(session: NSURLSession,
         downloadTask: NSURLSessionDownloadTask,
         didFinishDownloadingToURL location: NSURL){
@@ -90,50 +92,55 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 
                 let downloadLocation = settings.valueForKey("cache") as! Int
                 
-                //move file from temporary folder to documents folder
-                //var fileData : NSData? = NSData(contentsOfURL: loc)
-                let identifier = videoData[cellNum!].identifier
-                let filePath = grabFilePath("\(identifier).mp4")
-                
-                do{
-                    try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
-                }catch _ as NSError{}
-                
-                
+                //if download to photos album selected, save to photos album and delete downloaded file
                 if (downloadLocation == 1) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil)
+                    UISaveVideoAtPathToSavedPhotosAlbum(location.path!, nil, nil, nil)
+                    do {
+                        try NSFileManager.defaultManager().removeItemAtPath(location.path!)
+                    } catch _ {
+                    }
                 }
-               
-                //save to CoreData
-                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
-                newSong.setValue(identifier, forKey: "identifier")
-                newSong.setValue(videoData[cellNum!].title, forKey: "title")
-                
-                var expireDate = videoData[cellNum!].expirationDate
-                expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
-                newSong.setValue(expireDate, forKey: "expireDate")
-                newSong.setValue(true, forKey: "isDownloaded")
-                
-                let duration = videoData[cellNum!].duration
-                let durationStr = MiscFuncs.stringFromTimeInterval(duration)
-                newSong.setValue(duration, forKey: "duration")
-                newSong.setValue(durationStr, forKey: "durationStr")
-                
-                var streamURLs = videoData[cellNum!].streamURLs
-                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-                newSong.setValue("\(desiredURL)", forKey: "streamURL")
-                
-                let large = videoData[cellNum!].largeThumbnailURL
-                let medium = videoData[cellNum!].mediumThumbnailURL
-                let small = videoData[cellNum!].smallThumbnailURL
-                let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
-                newSong.setValue(imgData, forKey: "thumbnail")
-                
-                do {
-                    try context.save()
-                } catch _ {
+                    
+                else{ //else move file from temporary folder to documents folder
+                    
+                    let identifier = videoData[cellNum!].identifier
+                    let filePath = grabFilePath("\(identifier).mp4")
+                    
+                    do{
+                        try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
+                    }catch _ as NSError{}
+                    
+                    //save to CoreData
+                    let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
+                    newSong.setValue(identifier, forKey: "identifier")
+                    newSong.setValue(videoData[cellNum!].title, forKey: "title")
+                    
+                    var expireDate = videoData[cellNum!].expirationDate
+                    expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
+                    newSong.setValue(expireDate, forKey: "expireDate")
+                    newSong.setValue(true, forKey: "isDownloaded")
+                    
+                    let duration = videoData[cellNum!].duration
+                    let durationStr = MiscFuncs.stringFromTimeInterval(duration)
+                    newSong.setValue(duration, forKey: "duration")
+                    newSong.setValue(durationStr, forKey: "durationStr")
+                    
+                    var streamURLs = videoData[cellNum!].streamURLs
+                    let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
+                    newSong.setValue("\(desiredURL)", forKey: "streamURL")
+                    
+                    let large = videoData[cellNum!].largeThumbnailURL
+                    let medium = videoData[cellNum!].mediumThumbnailURL
+                    let small = videoData[cellNum!].smallThumbnailURL
+                    let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
+                    newSong.setValue(imgData, forKey: "thumbnail")
+                    
+                    do {
+                        try context.save()
+                    } catch _ {
+                    }
+                    
                 }
-                
                 
                 //display checkmark for completion
                 let dict = ["ndx" : cellNum!, "value" : "1.0" ]
@@ -145,7 +152,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     }
     
     func grabFilePath(fileName : String) -> String {
-        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
         let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
         
         return writePath
