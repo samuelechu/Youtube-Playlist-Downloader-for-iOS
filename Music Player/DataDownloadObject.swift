@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import CoreData
+import XCDYouTubeKit
 
 protocol downloadObjectTableDelegate{
     func setProgressValue(dict : NSDictionary)

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>ARNTransitionAnimator.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>26C390A0AF9349D826B3EBDA0E13306F</key>
+		<key>483CF110DFD42F8C0A64E6DC9D77947A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5C5C38E2B888F854873A44964C0FB656</key>
+		<key>887A1F399C1C0E18F1B9EEA0FD58F115</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F9F63D676A8E02A7C2D3873EE8823713</key>
 		<dict>
 			<key>primary</key>
 			<true/>

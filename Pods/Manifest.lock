@@ -1,10 +1,13 @@
 PODS:
-  - XCDYouTubeKit (2.4.1)
+  - ARNTransitionAnimator (1.0.0)
+  - XCDYouTubeKit (2.4.3)
 
 DEPENDENCIES:
-  - XCDYouTubeKit (~> 2.4.1)
+  - ARNTransitionAnimator
+  - XCDYouTubeKit (~> 2.4.3)
 
 SPEC CHECKSUMS:
-  XCDYouTubeKit: 5a984314fc2b16418ccb954954afadc77b5e6f06
+  ARNTransitionAnimator: 6cfb309cec88ce7389ce009447225ae8e4e40f46
+  XCDYouTubeKit: a4a1a60faa7bc97744a1184501e82ef10ca15897
 
 COCOAPODS: 0.39.0

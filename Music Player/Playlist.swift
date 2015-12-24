@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import AVFoundation
 import AVKit
+import XCDYouTubeKit
 
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     

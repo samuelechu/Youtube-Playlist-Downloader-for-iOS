@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import XCDYouTubeKit
 
 protocol inputVCTableDelegate{
     func addCell(dict : NSDictionary)
