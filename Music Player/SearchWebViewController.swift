@@ -9,10 +9,20 @@
 import UIKit
 import WebKit
 
-class SearchWebViewController: UIViewController {
+class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     let webView: YouTubeSearchWebView
     
+    let downloader = Downloader()
+    var tableDelegate : inputVCTableDelegate? {
+        get {
+            return downloader.tableDelegate
+        }
+        set {
+            downloader.tableDelegate = newValue
+        }
+    }
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.webView = YouTubeSearchWebView()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -29,10 +39,13 @@ class SearchWebViewController: UIViewController {
         setup()
     }
     private func setup() {
+        webView.delegate = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        downloader.setup()
 
         let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
         let tabBarHeight: CGFloat = tabBarController?.tabBar.frame.size.height ?? 0
@@ -47,5 +60,11 @@ class SearchWebViewController: UIViewController {
         
         let req = NSURLRequest(URL: NSURL(string:"https://www.youtube.com/results?filters=playlist&search_query=playlist&lclk=playlist")!)
         webView.loadRequest(req)
+    }
+    
+    // MARK: YouTubeSearchWebViewDelegate
+    func didTapDownloadButton(url: NSURL) {
+        downloader.startDownloadTask(url.absoluteString)
+        self.navigationController?.popViewControllerAnimated(true)
     }
 }

@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Tab Bar Controller-->
@@ -19,7 +20,6 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="VD7-5s-3Vi" kind="relationship" relationship="viewControllers" id="r9x-iV-k1w"/>
                         <segue destination="Ab2-ns-uI0" kind="relationship" relationship="viewControllers" id="K34-3p-NQl"/>
                         <segue destination="XV7-dE-mCo" kind="relationship" relationship="viewControllers" id="MmT-g2-cVU"/>
                         <segue destination="OWb-EL-Z4a" kind="relationship" relationship="viewControllers" id="oOK-EH-gZc"/>
@@ -510,11 +510,18 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Downloads" id="mlh-H0-P4H">
                         <barButtonItem key="backBarButtonItem" title=" " id="qYP-Bu-n4M"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="QOF-Hr-Iks">
-                            <connections>
-                                <segue destination="cw8-fW-WoJ" kind="show" identifier="showDownloader" id="bh4-5g-bf8"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="QOF-Hr-Iks">
+                                <connections>
+                                    <segue destination="cw8-fW-WoJ" kind="show" identifier="showDownloader" id="bh4-5g-bf8"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="search" id="eM2-FW-gZ5">
+                                <connections>
+                                    <segue destination="VD7-5s-3Vi" kind="show" identifier="showSearchWebView" id="Nci-2f-LSs"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hqh-SL-JqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -579,7 +586,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74t-KO-6PU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1573" y="-1730"/>
+            <point key="canvasLocation" x="3135" y="590"/>
         </scene>
         <!--Settings-->
         <scene sceneID="G98-oN-0Qr">

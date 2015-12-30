@@ -10,9 +10,15 @@ import UIKit
 import WebKit
 import SnapKit
 
+protocol YouTubeSearchWebViewDelegate {
+    func didTapDownloadButton(url: NSURL)
+}
+
 class YouTubeSearchWebView: WKWebView {
 
     private let downloadButton = UIButton()
+    
+    var delegate: YouTubeSearchWebViewDelegate?
     
     init() {
         let conf = WKWebViewConfiguration()
@@ -30,54 +36,24 @@ class YouTubeSearchWebView: WKWebView {
         removeObserver(self, forKeyPath: "URL")
     }
     
+    func didTapDownloadButton() {
+        if let url = self.URL {
+            delegate?.didTapDownloadButton(url)
+        }
+    }
     
-    // MARK: Main lifecycle
     
-    private func willLoadPlaylistPage(url: NSURL) {
-        print("TODO: Dowonload playlist \(url)")
-        enableButton()
-    }
-    private func willLoadVideoPage(url: NSURL) {
-        print("TODO: Dowonload video \(url)")
-    }
-    private func willLoadOtherPage(url: NSURL) {
-        disableButton()
-    }
+    // MARK: Check URL
     
     private func didChangeURL(url: NSURL) {
-        print("didChangeURL \(url)")
-        if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
-            if let queryItems = comp.queryItems {
-                queryItems.forEach { item in
-                    if item.name == "list" {
-                        willLoadPlaylistPage(url)
-                    }
-                    else if item.name == "v" {
-                        willLoadVideoPage(url)
-                    }
-                    else {
-                        willLoadOtherPage(url)
-                    }
-                }
-            }
+        if isPlaylistURL(url) {
+            enableButton()
+        }
+        else {
+            disableButton()
         }
     }
     
-    
-    // MARK: KVO
-
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        if let keyPath = keyPath {
-            switch keyPath {
-            case "URL":
-                if let url = change![NSKeyValueChangeNewKey] as? NSURL {
-                    didChangeURL(url)
-                }
-            default: return
-            }
-        }
-    }
-
     
     // MARK: Download Button
     
@@ -97,6 +73,8 @@ class YouTubeSearchWebView: WKWebView {
             make.right.equalTo(self).offset(-margin)
             make.bottom.equalTo(self).offset(-margin)
         }
+
+        downloadButton.addTarget(self, action: "didTapDownloadButton", forControlEvents: .TouchUpInside)
     }
     
     private func disableButton() {
@@ -111,4 +89,38 @@ class YouTubeSearchWebView: WKWebView {
         UIView.animateWithDuration(0.2) { self.downloadButton.alpha = 1 }
     }
     
+}
+
+
+
+// util
+extension YouTubeSearchWebView {
+    
+    private func isPlaylistURL(url: NSURL) -> Bool {
+        if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
+            if let queryItems = comp.queryItems {
+                var isPlaylist = false
+                queryItems.forEach { item in
+                    if item.name == "list" {
+                        isPlaylist = true
+                    }
+                }
+                return isPlaylist
+            }
+            return false
+        }
+        return false
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if let keyPath = keyPath {
+            switch keyPath {
+            case "URL":
+                if let url = change![NSKeyValueChangeNewKey] as? NSURL {
+                    didChangeURL(url)
+                }
+            default: return
+            }
+        }
+    }
 }
