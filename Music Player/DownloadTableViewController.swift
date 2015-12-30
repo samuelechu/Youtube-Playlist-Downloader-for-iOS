@@ -189,5 +189,9 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
             let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
             downloader.tableDelegate = self
         }
+        if segue.identifier == "showSearchWebView" {
+            let downloader = segue.destinationViewController as! SearchWebViewController
+            downloader.tableDelegate = self
+        }
     }
 }

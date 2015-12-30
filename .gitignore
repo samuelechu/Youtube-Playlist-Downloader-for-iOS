@@ -22,4 +22,4 @@ profile
 *.xcuserstate
 
 #CocoaPod
-Pods/*
+Pods
