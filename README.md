@@ -49,16 +49,16 @@ https://github.com/entotsu
 
 ######Screenshots:
 
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3896.PNG" width="300">
 
- 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3896.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3907.PNG" width="533">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3907.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4164.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4164.jpg)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4214.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3898.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3898.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3897.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3897.PNG" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3899.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3899.PNG" width="300">
