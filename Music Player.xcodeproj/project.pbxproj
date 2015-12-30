@@ -30,6 +30,7 @@
 		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
 		B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */; };
 		B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */; };
+		B093A2A61C34429D00AC86C0 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A51C34429D00AC86C0 /* Downloader.swift */; };
 		D2B048EA1C2BAA8300E45E96 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9E1C14F05600F07C90 /* Foundation.framework */; };
 		D2B048EB1C2BAA8300E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
 		D2B048EC1C2BAA8400E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048CC1C2BA74200E45E96 /* JavaScriptCore.framework */; };
@@ -93,6 +94,7 @@
 		22CB59E31B4EE65B001BD2AA /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchWebViewController.swift; sourceTree = "<group>"; };
 		B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeSearchWebView.swift; sourceTree = "<group>"; };
+		B093A2A51C34429D00AC86C0 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		CC4DEA411428B95B5F3B017C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2263A9E1C14F05600F07C90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -189,6 +191,7 @@
 				224340031B47260500C075FF /* DownloadCell.swift */,
 				224340051B47266F00C075FF /* DownloadTableViewController.swift */,
 				224340011B47253C00C075FF /* IDInputVC.swift */,
+				B093A2A51C34429D00AC86C0 /* Downloader.swift */,
 				222ABEFA1BA6715C003B05A1 /* MiscFuncs.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
@@ -450,6 +453,7 @@
 				B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */,
 				22AD6B321B47BB7D00428602 /* Settings.swift in Sources */,
 				224340041B47260500C075FF /* DownloadCell.swift in Sources */,
+				B093A2A61C34429D00AC86C0 /* Downloader.swift in Sources */,
 				B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */,
 				224340021B47253C00C075FF /* IDInputVC.swift in Sources */,
 				22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */,
