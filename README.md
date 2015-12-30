@@ -9,16 +9,18 @@ a Youtube video downloader for iOS
 
 ```
 
-######Usage: 
-Go to the Downloads tab
+######Usage:
+    Go to the Downloads tab
 
-Tap the 'plus' button on the top right corner
+    Tap the magnifying glass button on the top right corner
 
-Paste the url of a Youtube playlist into the text box and the app will download all songs on that playlist!
+    (Optional) Sign in to Youtube
 
-Also downloads single videos, just provide the url of the video.
+    When viewing a playlist, the arrow icon on the bottom right should turn red.
 
-example URLs:
+    Tap the red arrow to download all the songs on that playlist!
+
+Tapping the 'plus' button instead of the magnifying glass will bring up a text box. Download playlists or videos by pasting URLs into the text box. Example URLs:
   
     Playlist: https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha
     Video: https://www.youtube.com/watch?v=DuAhRozlD3s , https://youtu.be/mHzf-cy_ydk
@@ -26,9 +28,13 @@ example URLs:
 Huge thanks to Cédric Luthi for creating XCDYoutubeKit, which makes it possible to obtain direct video links!
 https://github.com/0xced
 
+Many thanks to Takuya Okamoto as well for implementing the Youtube Search UI!
+https://github.com/entotsu
+
 
 ######Features:
 
+    -Youtube integration
     -background downloading
     -background audio play
     -song info during background play
