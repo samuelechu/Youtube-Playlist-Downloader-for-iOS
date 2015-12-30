@@ -21,7 +21,6 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     var uncachedVideos : [String] = []
     var dlButtonHidden = false
     
-    
     override func viewWillAppear(animated: Bool) {
         reloadCells()
     }
