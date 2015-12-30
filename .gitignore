@@ -1,0 +1,25 @@
+.DS_Store
+Podfile.lock
+Pods/
+pudding-ios.xcodeproj/xcuserdata/
+pudding-ios.xcworkspace/
+
+# Xcode
+build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+*.xcuserstate
+
+#CocoaPod
+Pods/*
