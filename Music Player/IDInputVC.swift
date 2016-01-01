@@ -21,11 +21,8 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     // Please Call
     func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
         downloader = Downloader(tableDelegate: tableDelegate)
-        downloader.setup()
         
         downloader.delegate = self
-        //hide download button if downloads are being queued
-        manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
@@ -33,6 +30,8 @@ class IDInputvc: UIViewController, DownloaderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //hide download button if downloads are being queued
+        manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
     }
     
     //hide download button and show download intializing buttons

@@ -36,26 +36,23 @@ protocol DownloaderDelegate: class {
 
 class Downloader {
     
-    var context : NSManagedObjectContext!
-    var appDel : AppDelegate?
-
-    var downloadTasks : [String] = []//array of video identifiers
-    var downloadedIDs : [String] = [] //array of downloaded video identifiers
-    var uncachedVideos : [String] = []//array of video identifiers for uncached videos
-    var numDownloads = 0
-    var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
+    weak var delegate: DownloaderDelegate?
 
     let tableDelegate : inputVCTableDelegate
-    var dlObject : dataDownloadObject!
-
-    weak var delegate: DownloaderDelegate?
     
+    private var context : NSManagedObjectContext!
+    private var appDel : AppDelegate?
+
+    private var downloadTasks : [String] = []//array of video identifiers
+    private var downloadedIDs : [String] = [] //array of downloaded video identifiers
+    private var uncachedVideos : [String] = []//array of video identifiers for uncached videos
+    private var numDownloads = 0
+    private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
+
+    private var dlObject : dataDownloadObject!
+
     init(tableDelegate : inputVCTableDelegate) {
         self.tableDelegate = tableDelegate
-    }
-    
-    // called in viewDidLoad @ IDInputvc
-    func setup() {
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
@@ -92,10 +89,11 @@ class Downloader {
     
     
     
-    func startDownloadTask(url: String) {
-        
-        let ID = MiscFuncs.parseID(url)
-        //get vid quality
+    func startDownloadTask(playlistOrVideoUrl: String) {
+
+        let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
+
+        //get video quality setting
         let request = NSFetchRequest(entityName: "Settings")
         let results : NSArray = try! context.executeFetchRequest(request)
         let settings = results[0] as! NSManagedObject
@@ -104,30 +102,30 @@ class Downloader {
         
         
         
-        if ID.characters.count == 11{
+        if let videoId = videoId {
             updateStoredSongs()
             
-            let isStored =  vidStored(ID)
+            let isStored =  isVideoStored(videoId)
             
             if (!isStored){
                 
-                startDownloadTaskHelper(ID, qual: qual)
-                downloadTasks += [ID]
-                tableDelegate.addDLTask([ID])
+                startDownloadTaskHelper(videoId, qual: qual)
+                downloadTasks += [videoId]
+                tableDelegate.addDLTask([videoId])
             }
         }
             
             
-        else {
+        else if let playlistId = playlistId {
             tableDelegate.setDLButtonHidden(true)
-            downloadVideosForPlayist(ID, pageToken: "", qual: qual)
+            downloadVideosForPlayist(playlistId, pageToken: "", qual: qual)
         }
         
         
     }
     
     
-    func updateStoredSongs(){
+    private func updateStoredSongs(){
         let request = NSFetchRequest(entityName: "Songs")
         request.predicate = NSPredicate(format: "isDownloaded = %@", true)
         
@@ -141,17 +139,17 @@ class Downloader {
     }
     
     //check if video in stored memory or currently downloading videos
-    func vidStored (identifier : String) -> Bool {
+    private func isVideoStored (videoId : String) -> Bool {
         
-        if(downloadedIDs.indexOf(identifier) != nil){
+        if(downloadedIDs.indexOf(videoId) != nil){
             return true
         }
             
-        else if((downloadTasks.indexOf(identifier)) != nil){
+        else if((downloadTasks.indexOf(videoId)) != nil){
             return true
         }
             
-        else if((uncachedVideos.indexOf(identifier)) != nil){
+        else if((uncachedVideos.indexOf(videoId)) != nil){
             return true
         }
         
@@ -159,7 +157,7 @@ class Downloader {
     }
     
     
-    func startDownloadTaskHelper(ID : String, qual : Int){
+    private func startDownloadTaskHelper(ID : String, qual : Int){
         if(downloadTasks.indexOf(ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
@@ -198,7 +196,7 @@ class Downloader {
     
     
     
-    func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
+    private func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: targetURL)
         request.HTTPMethod = "GET"
         
@@ -215,8 +213,8 @@ class Downloader {
         task.resume()
     }
     
-    var videoIDs : [String] = []
-    func downloadVideosForPlayist(playlistID : String, pageToken : String?, qual : Int) {
+    private var videoIDs : [String] = []
+    private func downloadVideosForPlayist(playlistID : String, pageToken : String?, qual : Int) {
         
         if pageToken != nil{
             
@@ -280,7 +278,7 @@ class Downloader {
                 if downloadVid != 2 {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.vidStored(identifier)
+                        let isStored = self.isVideoStored(identifier)
                         
                         if (!isStored){
                             self.startDownloadTaskHelper(identifier, qual: qual)
@@ -293,7 +291,7 @@ class Downloader {
                 else {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.vidStored(identifier)
+                        let isStored = self.isVideoStored(identifier)
                         
                         if (!isStored){
                             
@@ -313,7 +311,7 @@ class Downloader {
         
     }
     
-    func saveVideoInfo(identifier : String) {
+    private func saveVideoInfo(identifier : String) {
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
             if error == nil {
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context)
