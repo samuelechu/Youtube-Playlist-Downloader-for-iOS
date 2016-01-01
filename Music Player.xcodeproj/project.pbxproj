@@ -44,12 +44,7 @@
 		D2B048F91C2BAA9C00E45E96 /* ARNTransitionAnimator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F61C2BAA9C00E45E96 /* ARNTransitionAnimator.framework */; };
 		D2B048FA1C2BAA9C00E45E96 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F71C2BAA9C00E45E96 /* Pods.framework */; };
 		D2B048FB1C2BAA9C00E45E96 /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F81C2BAA9C00E45E96 /* XCDYouTubeKit.framework */; };
-		D2B874541C06E68D0086F06D /* IMG_3896.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B8744E1C06E68D0086F06D /* IMG_3896.PNG */; };
-		D2B874551C06E68D0086F06D /* IMG_3897.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B8744F1C06E68D0086F06D /* IMG_3897.PNG */; };
-		D2B874561C06E68D0086F06D /* IMG_3898.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B874501C06E68D0086F06D /* IMG_3898.PNG */; };
-		D2B874571C06E68D0086F06D /* IMG_3899.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B874511C06E68D0086F06D /* IMG_3899.PNG */; };
-		D2B874581C06E68D0086F06D /* IMG_3907.PNG in Resources */ = {isa = PBXBuildFile; fileRef = D2B874521C06E68D0086F06D /* IMG_3907.PNG */; };
-		D2B874591C06E68D0086F06D /* IMG_4164.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2B874531C06E68D0086F06D /* IMG_4164.jpg */; };
+		D2B7DA5A1C349BDB0018106A /* Screenshots in Resources */ = {isa = PBXBuildFile; fileRef = D2B7DA591C349BDB0018106A /* Screenshots */; };
 		EFC267E450DB689C9374BF3D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC4DEA411428B95B5F3B017C /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -111,12 +106,7 @@
 		D2B048F61C2BAA9C00E45E96 /* ARNTransitionAnimator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARNTransitionAnimator.framework; path = "Pods/../build/Debug-iphoneos/ARNTransitionAnimator.framework"; sourceTree = "<group>"; };
 		D2B048F71C2BAA9C00E45E96 /* Pods.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods.framework; path = "Pods/../build/Debug-iphoneos/Pods.framework"; sourceTree = "<group>"; };
 		D2B048F81C2BAA9C00E45E96 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = "Pods/../build/Debug-iphoneos/XCDYouTubeKit.framework"; sourceTree = "<group>"; };
-		D2B8744E1C06E68D0086F06D /* IMG_3896.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3896.PNG; path = Images/Screenshots/IMG_3896.PNG; sourceTree = "<group>"; };
-		D2B8744F1C06E68D0086F06D /* IMG_3897.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3897.PNG; path = Images/Screenshots/IMG_3897.PNG; sourceTree = "<group>"; };
-		D2B874501C06E68D0086F06D /* IMG_3898.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3898.PNG; path = Images/Screenshots/IMG_3898.PNG; sourceTree = "<group>"; };
-		D2B874511C06E68D0086F06D /* IMG_3899.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3899.PNG; path = Images/Screenshots/IMG_3899.PNG; sourceTree = "<group>"; };
-		D2B874521C06E68D0086F06D /* IMG_3907.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IMG_3907.PNG; path = Images/Screenshots/IMG_3907.PNG; sourceTree = "<group>"; };
-		D2B874531C06E68D0086F06D /* IMG_4164.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_4164.jpg; path = Images/Screenshots/IMG_4164.jpg; sourceTree = "<group>"; };
+		D2B7DA591C349BDB0018106A /* Screenshots */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Screenshots; path = Images/Screenshots; sourceTree = "<group>"; };
 		F21E113ABCDB957DFAD2D41E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F5EB519E79CB1AE21C1131B5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -211,7 +201,7 @@
 		22433FD81B47212F00C075FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D2B8744D1C06E66C0086F06D /* Screenshots */,
+				D2B7DA591C349BDB0018106A /* Screenshots */,
 				2240BF241BAA33A7005053BC /* pastel.jpg */,
 				2240BF261BAA33B7005053BC /* black.png */,
 				2240BF271BAA33B7005053BC /* droplets.jpg */,
@@ -263,19 +253,6 @@
 				CC4DEA411428B95B5F3B017C /* Pods.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D2B8744D1C06E66C0086F06D /* Screenshots */ = {
-			isa = PBXGroup;
-			children = (
-				D2B8744E1C06E68D0086F06D /* IMG_3896.PNG */,
-				D2B8744F1C06E68D0086F06D /* IMG_3897.PNG */,
-				D2B874501C06E68D0086F06D /* IMG_3898.PNG */,
-				D2B874511C06E68D0086F06D /* IMG_3899.PNG */,
-				D2B874521C06E68D0086F06D /* IMG_3907.PNG */,
-				D2B874531C06E68D0086F06D /* IMG_4164.jpg */,
-			);
-			name = Screenshots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -369,15 +346,10 @@
 				2240BF311BAA33B7005053BC /* video@2x.png in Resources */,
 				2240BF2D1BAA33B7005053BC /* droplets.jpg in Resources */,
 				2240BF2F1BAA33B7005053BC /* hills.jpg in Resources */,
-				D2B874561C06E68D0086F06D /* IMG_3898.PNG in Resources */,
-				D2B874591C06E68D0086F06D /* IMG_4164.jpg in Resources */,
-				D2B874571C06E68D0086F06D /* IMG_3899.PNG in Resources */,
+				D2B7DA5A1C349BDB0018106A /* Screenshots in Resources */,
 				22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */,
-				D2B874551C06E68D0086F06D /* IMG_3897.PNG in Resources */,
-				D2B874541C06E68D0086F06D /* IMG_3896.PNG in Resources */,
 				2240BF301BAA33B7005053BC /* shuffle@2x.png in Resources */,
 				2240BF251BAA33A7005053BC /* pastel.jpg in Resources */,
-				D2B874581C06E68D0086F06D /* IMG_3907.PNG in Resources */,
 				22433FE51B47212F00C075FF /* Images.xcassets in Resources */,
 				2240BF2C1BAA33B7005053BC /* black.png in Resources */,
 			);

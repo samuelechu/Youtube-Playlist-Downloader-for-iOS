@@ -9,16 +9,18 @@ a Youtube video downloader for iOS
 
 ```
 
-######Usage: 
-Go to the Downloads tab
+######Usage:
+    Go to the Downloads tab
 
-Tap the 'plus' button on the top right corner
+    Tap the magnifying glass button on the top right corner
 
-Paste the url of a Youtube playlist into the text box and the app will download all songs on that playlist!
+    (Optional) Sign in to Youtube
 
-Also downloads single videos, just provide the url of the video.
+    When viewing a playlist, the arrow icon on the bottom right should turn red.
 
-example URLs:
+    Tap the red arrow to download all the songs on that playlist!
+
+Tapping the 'plus' button instead of the magnifying glass will bring up a text box. Download playlists or videos by pasting URLs into the text box. Example URLs:
   
     Playlist: https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha
     Video: https://www.youtube.com/watch?v=DuAhRozlD3s , https://youtu.be/mHzf-cy_ydk
@@ -26,9 +28,13 @@ example URLs:
 Huge thanks to Cédric Luthi for creating XCDYoutubeKit, which makes it possible to obtain direct video links!
 https://github.com/0xced
 
+Many thanks to Takuya Okamoto as well for implementing the Youtube Search UI!
+https://github.com/entotsu
+
 
 ######Features:
 
+    -Youtube integration
     -background downloading
     -background audio play
     -song info during background play
@@ -43,16 +49,16 @@ https://github.com/0xced
 
 ######Screenshots:
 
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3896.PNG" width="300">
 
- 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3896.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3907.PNG" width="533">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3907.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4164.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4164.jpg)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_4214.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3898.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3898.jpg" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3897.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3897.PNG" width="300">
 
-![](https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3899.PNG)
+<img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/IMG_3899.PNG" width="300">
