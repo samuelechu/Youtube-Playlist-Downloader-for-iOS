@@ -13,14 +13,11 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     let webView: YouTubeSearchWebView
     
-    let downloader = Downloader()
-    var tableDelegate : inputVCTableDelegate? {
-        get {
-            return downloader.tableDelegate
-        }
-        set {
-            downloader.tableDelegate = newValue
-        }
+    var downloader: Downloader!
+    // Please Call
+    func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
+        downloader = Downloader(tableDelegate: tableDelegate)
+        downloader.setup()
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

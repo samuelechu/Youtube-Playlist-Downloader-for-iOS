@@ -186,11 +186,11 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDownloader" {
             let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
-            downloader.tableDelegate = self
+            downloader.setup(tableViewDelegate: self)
         }
         if segue.identifier == "showSearchWebView" {
             let downloader = segue.destinationViewController as! SearchWebViewController
-            downloader.tableDelegate = self
+            downloader.setup(tableViewDelegate: self)
         }
     }
 }
