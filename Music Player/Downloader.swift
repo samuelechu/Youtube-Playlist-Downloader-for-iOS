@@ -30,7 +30,7 @@ protocol inputVCTableDelegate{
 }
 
 
-protocol DownloaderDelegate {
+protocol DownloaderDelegate: class {
     func hideDownloadButton()
 }
 
@@ -45,11 +45,14 @@ class Downloader {
     var numDownloads = 0
     var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
 
-    var tableDelegate : inputVCTableDelegate? = nil
+    let tableDelegate : inputVCTableDelegate
     var dlObject : dataDownloadObject!
 
-    var delegate: DownloaderDelegate?
+    weak var delegate: DownloaderDelegate?
     
+    init(tableDelegate : inputVCTableDelegate) {
+        self.tableDelegate = tableDelegate
+    }
     
     // called in viewDidLoad @ IDInputvc
     func setup() {
@@ -75,15 +78,15 @@ class Downloader {
         }
         
         //get identifiers lost from popping off view
-        uncachedVideos = (tableDelegate?.getUncachedVids())!
-        downloadTasks = (tableDelegate?.getDLTasks())!
-        dlObject = tableDelegate?.getDLObject()
+        uncachedVideos = (tableDelegate.getUncachedVids())
+        downloadTasks = (tableDelegate.getDLTasks())
+        dlObject = tableDelegate.getDLObject()
         
         //If a background URLSession does not exist, create and save through table delegate for future reuse
         if dlObject == nil{
             dlObject = dataDownloadObject(coder: NSCoder())
             dlObject.setDownloadObjectDelegate((tableDelegate as? downloadObjectTableDelegate)!)
-            tableDelegate?.setDLObject(dlObject!)
+            tableDelegate.setDLObject(dlObject!)
         }
     }
     
@@ -110,13 +113,13 @@ class Downloader {
                 
                 startDownloadTaskHelper(ID, qual: qual)
                 downloadTasks += [ID]
-                tableDelegate?.addDLTask([ID])
+                tableDelegate.addDLTask([ID])
             }
         }
             
             
         else {
-            tableDelegate?.setDLButtonHidden(true)
+            tableDelegate.setDLButtonHidden(true)
             downloadVideosForPlayist(ID, pageToken: "", qual: qual)
         }
         
@@ -181,8 +184,8 @@ class Downloader {
                     
                     let dict = ["name" : video!.title, "duration" : duration, "thumbnail" : image!]
                     
-                    self.tableDelegate!.addCell(dict)
-                    self.tableDelegate!.reloadCells()
+                    self.tableDelegate.addCell(dict)
+                    self.tableDelegate.reloadCells()
                     
                     self.dlObject.addVidInfo(video!)
                     self.dlObject.startNewTask(desiredURL)
@@ -256,14 +259,14 @@ class Downloader {
                 else {
                     print("HTTP Status Code = \(HTTPStatusCode)")
                     print("Error while loading channel videos: \(error)")
-                    self.tableDelegate?.setDLButtonHidden(false)
+                    self.tableDelegate.setDLButtonHidden(false)
                     
                 }
             })
         }
             
         else{
-            tableDelegate?.setDLButtonHidden(false)
+            tableDelegate.setDLButtonHidden(false)
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
@@ -282,7 +285,7 @@ class Downloader {
                         if (!isStored){
                             self.startDownloadTaskHelper(identifier, qual: qual)
                             self.downloadTasks += [identifier]
-                            self.tableDelegate?.addDLTask([identifier])
+                            self.tableDelegate.addDLTask([identifier])
                         }
                     }
                 }
@@ -295,7 +298,7 @@ class Downloader {
                         if (!isStored){
                             
                             self.uncachedVideos += [identifier]
-                            self.tableDelegate?.addUncachedVid([identifier])
+                            self.tableDelegate.addUncachedVid([identifier])
                             self.saveVideoInfo(identifier)
                             
                         }
