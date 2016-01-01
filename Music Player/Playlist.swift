@@ -561,7 +561,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
             
         else{
-            
             let songRequest = NSFetchRequest(entityName: "Songs")
             songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
             let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)

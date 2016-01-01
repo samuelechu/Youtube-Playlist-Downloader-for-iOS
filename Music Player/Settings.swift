@@ -31,27 +31,10 @@ class Settings: UITableViewController {
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
-        //set initial quality to 360P if uninitialized
-        let request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = try! context.executeFetchRequest(request)
-        
-        //default settings : quality = 360P, cache videos within app
-        if results.count == 0 {
-            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context) 
-            
-            settings.setValue(0, forKey: "quality")
-            settings.setValue(0, forKey: "cache")
-            
-            do {
-                try context.save()
-            } catch _ {
-            }
-            results = try! context.executeFetchRequest(request)
-        }
-        
-        //retrieve settings if Settings Entity exists
-        settings = results[0] as! NSManagedObject
-        
+        //retrieve settings, or initialize default settings if unset
+        settings = MiscFuncs.getSettings()
+        let playlist = settings.valueForKey("playlist")
+        print(playlist)
         let qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
         deselectRow(qualRow)
         selectRow(qualRow)

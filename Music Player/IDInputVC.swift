@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreData
 
 class IDInputvc: UIViewController, DownloaderDelegate {
     
@@ -17,6 +17,7 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     @IBOutlet var indicator: UIActivityIndicatorView!
     
     var downloader: Downloader!
+    var settings : NSManagedObject!
     
     // Please Call
     func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
@@ -30,6 +31,8 @@ class IDInputvc: UIViewController, DownloaderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        settings = MiscFuncs.getSettings()
+        vidID.text = settings.valueForKey("playlist") as? String ?? "https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha"
         //hide download button if downloads are being queued
         manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
     }
@@ -57,6 +60,12 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     }
     
     @IBAction func startDownloadTask() {
+        
+        let (_, playlistId) = MiscFuncs.parseIDs(url: vidID.text ?? "")
+        if playlistId != nil {
+            settings.setValue(vidID.text, forKey: "playlist")
+        }
+        
         downloader.startDownloadVideoOrPlaylist(url: vidID.text ?? "")
         navigationController?.popViewControllerAnimated(true)
     }
