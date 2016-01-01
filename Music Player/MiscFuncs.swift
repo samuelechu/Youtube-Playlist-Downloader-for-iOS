@@ -81,6 +81,30 @@ public class MiscFuncs{
         
         return url
     }
+    
+    
+    public class func parseIDs(url url: String) -> (videoId: String?, playlistId: String?) {
+
+        var videoId: String? = nil
+        var playlistId: String? = nil
+
+        if let url: NSURL = NSURL(string: url) {
+            if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
+                if let queryItems = comp.queryItems {
+                    queryItems.forEach { item in
+                        switch item.name {
+                        case "list": playlistId = item.value
+                        case "v"   : videoId    = item.value
+                        default    : break
+                        }
+                    }
+                }
+            }
+        }
+
+        return (videoId: videoId, playlistId: playlistId)
+    }
+
 }
 
 

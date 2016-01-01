@@ -92,10 +92,11 @@ class Downloader {
     
     
     
-    func startDownloadTask(url: String) {
-        
-        let ID = MiscFuncs.parseID(url)
-        //get vid quality
+    func startDownloadTask(playlistOrVideoUrl: String) {
+
+        let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
+
+        //get video quality setting
         let request = NSFetchRequest(entityName: "Settings")
         let results : NSArray = try! context.executeFetchRequest(request)
         let settings = results[0] as! NSManagedObject
@@ -104,23 +105,23 @@ class Downloader {
         
         
         
-        if ID.characters.count == 11{
+        if let videoId = videoId {
             updateStoredSongs()
             
-            let isStored =  vidStored(ID)
+            let isStored =  vidStored(videoId)
             
             if (!isStored){
                 
-                startDownloadTaskHelper(ID, qual: qual)
-                downloadTasks += [ID]
-                tableDelegate.addDLTask([ID])
+                startDownloadTaskHelper(videoId, qual: qual)
+                downloadTasks += [videoId]
+                tableDelegate.addDLTask([videoId])
             }
         }
             
             
-        else {
+        else if let playlistId = playlistId {
             tableDelegate.setDLButtonHidden(true)
-            downloadVideosForPlayist(ID, pageToken: "", qual: qual)
+            downloadVideosForPlayist(playlistId, pageToken: "", qual: qual)
         }
         
         
