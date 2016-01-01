@@ -30,7 +30,7 @@ protocol inputVCTableDelegate{
 }
 
 
-protocol DownloaderDelegate {
+protocol DownloaderDelegate: class {
     func hideDownloadButton()
 }
 
@@ -48,7 +48,7 @@ class Downloader {
     var tableDelegate : inputVCTableDelegate? = nil
     var dlObject : dataDownloadObject!
 
-    var delegate: DownloaderDelegate?
+    weak var delegate: DownloaderDelegate?
     
     
     // called in viewDidLoad @ IDInputvc
