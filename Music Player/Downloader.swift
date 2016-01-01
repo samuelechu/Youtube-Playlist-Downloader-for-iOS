@@ -158,32 +158,33 @@ class Downloader {
         if(downloadTasks.indexOf(ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
-                    
-                    let streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
-                    var desiredURL : NSURL!
-                    
-                    if (qual == 0){ //360P
-                        desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
-                    }
+                    if let video = video {
+                        let streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                        var desiredURL : NSURL!
                         
-                    else { //720P
-                        desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                        if (qual == 0){ //360P
+                            desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
+                        }
+                            
+                        else { //720P
+                            desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                        }
+                        
+                        let duration = MiscFuncs.stringFromTimeInterval(video.duration)
+                        
+                        //get thumbnail
+                        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+                        let data = NSData(contentsOfURL: thumbnailURL!)
+                        let image = UIImage(data: data!)
+                        
+                        let dict = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
+                        
+                        self.tableDelegate.addCell(dict)
+                        self.tableDelegate.reloadCells()
+                        
+                        self.dlObject.addVidInfo(video)
+                        self.dlObject.startNewTask(desiredURL)
                     }
-                    
-                    let duration = MiscFuncs.stringFromTimeInterval(video!.duration)
-                    
-                    //get thumbnail
-                    let thumbnailURL = (video!.mediumThumbnailURL != nil ? video!.mediumThumbnailURL : video!.smallThumbnailURL)
-                    let data = NSData(contentsOfURL: thumbnailURL!)
-                    let image = UIImage(data: data!)
-                    
-                    let dict = ["name" : video!.title, "duration" : duration, "thumbnail" : image!]
-                    
-                    self.tableDelegate.addCell(dict)
-                    self.tableDelegate.reloadCells()
-                    
-                    self.dlObject.addVidInfo(video!)
-                    self.dlObject.startNewTask(desiredURL)
                 }
             })
         }
