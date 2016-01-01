@@ -94,7 +94,7 @@ class Downloader {
     
     
     
-    func startDownloadTask(playlistOrVideoUrl: String) {
+    func startDownloadVideoOrPlaylist(url playlistOrVideoUrl: String) {
 
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
 

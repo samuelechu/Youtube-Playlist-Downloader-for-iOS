@@ -58,7 +58,7 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     // MARK: YouTubeSearchWebViewDelegate
     func didTapDownloadButton(url: NSURL) {
-        downloader.startDownloadTask(url.absoluteString)
+        downloader.startDownloadVideoOrPlaylist(url: url.absoluteString)
         self.navigationController?.popViewControllerAnimated(true)
     }
 }
