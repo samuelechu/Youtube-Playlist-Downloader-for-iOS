@@ -41,18 +41,17 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
         let tabBarHeight: CGFloat = tabBarController?.tabBar.frame.size.height ?? 0
 
         webView.frame = CGRect(
             x: 0,
-            y: statusBarHeight,
+            y: 0,
             width: view.frame.width,
-            height: view.frame.height - statusBarHeight - tabBarHeight
+            height: view.frame.height - tabBarHeight
         )
         view.addSubview(webView)
         
-        let req = NSURLRequest(URL: NSURL(string:"https://www.youtube.com/results?filters=playlist&search_query=playlist&lclk=playlist")!)
+        let req = NSURLRequest(URL: NSURL(string:"https://www.youtube.com")!)
         webView.loadRequest(req)
     }
     
