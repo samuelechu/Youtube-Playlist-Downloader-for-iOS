@@ -63,24 +63,29 @@ public class MiscFuncs{
         return randomString
     }
     
-    //get id of youtube url
-    public class func parseID(url : String) -> String{
-        
-        if let index = url.characters.indexOf("=") {
-            return url.substringFromIndex(index.advancedBy(1))
+    
+    public class func parseIDs(url url: String) -> (videoId: String?, playlistId: String?) {
+
+        var videoId: String? = nil
+        var playlistId: String? = nil
+
+        if let url: NSURL = NSURL(string: url) {
+            if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
+                if let queryItems = comp.queryItems {
+                    queryItems.forEach { item in
+                        switch item.name {
+                        case "list": playlistId = item.value
+                        case "v"   : videoId    = item.value
+                        default    : break
+                        }
+                    }
+                }
+            }
         }
 
-        let ndx = url.rangeOfString("youtu.be/",
-            options: NSStringCompareOptions.LiteralSearch,
-            range: url.startIndex..<url.endIndex,
-            locale: nil)
-        
-        if let range = ndx {
-            return url[range.startIndex.advancedBy(9)..<url.endIndex]
-        }
-        
-        return url
+        return (videoId: videoId, playlistId: playlistId)
     }
+
 }
 
 

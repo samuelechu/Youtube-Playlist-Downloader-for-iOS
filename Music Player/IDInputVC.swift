@@ -16,27 +16,22 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     @IBOutlet var initializingLabel: UILabel!
     @IBOutlet var indicator: UIActivityIndicatorView!
     
-    var downloader = Downloader()
-    var tableDelegate : inputVCTableDelegate? {
-        get {
-            return downloader.tableDelegate
-        }
-        set {
-            downloader.tableDelegate = newValue
-        }
+    var downloader: Downloader!
+    
+    // Please Call
+    func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
+        downloader = Downloader(tableDelegate: tableDelegate)
+        
+        downloader.delegate = self
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
+        view.addGestureRecognizer(tap)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        downloader.setup()
-        
-        downloader.delegate = self
         //hide download button if downloads are being queued
-        manageButtons(dlButtonHidden: (tableDelegate?.dlButtonIsHidden())!)
-
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
-        view.addGestureRecognizer(tap)
+        manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
     }
     
     //hide download button and show download intializing buttons
