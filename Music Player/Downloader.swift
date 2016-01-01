@@ -53,9 +53,6 @@ class Downloader {
 
     init(tableDelegate : inputVCTableDelegate) {
         self.tableDelegate = tableDelegate
-    }
-    
-    func setup() {
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext

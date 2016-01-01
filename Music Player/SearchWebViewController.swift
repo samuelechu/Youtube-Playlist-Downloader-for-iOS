@@ -17,7 +17,6 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     // Please Call
     func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
         downloader = Downloader(tableDelegate: tableDelegate)
-        downloader.setup()
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -41,8 +40,6 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        downloader.setup()
 
         let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
         let tabBarHeight: CGFloat = tabBarController?.tabBar.frame.size.height ?? 0
