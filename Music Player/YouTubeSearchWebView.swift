@@ -56,8 +56,7 @@ class YouTubeSearchWebView: WKWebView {
     
     private func didChangeURL(url: NSURL) {
         switch detectURLType(url) {
-        case .Playlist: enableButton()
-        case .Video: enableButton()
+        case .Playlist, .Video: enableButton()
         case .Other: disableButton()
         }
     }
