@@ -35,15 +35,10 @@
 		D2B048EB1C2BAA8300E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
 		D2B048EC1C2BAA8400E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048CC1C2BA74200E45E96 /* JavaScriptCore.framework */; };
 		D2B048ED1C2BAA8400E45E96 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA21C14F06900F07C90 /* MediaPlayer.framework */; };
-		D2B048F01C2BAA8400E45E96 /* ARNTransitionAnimator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048EE1C2BAA8400E45E96 /* ARNTransitionAnimator.framework */; };
-		D2B048F11C2BAA8400E45E96 /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048EF1C2BAA8400E45E96 /* XCDYouTubeKit.framework */; };
 		D2B048F21C2BAA9C00E45E96 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9E1C14F05600F07C90 /* Foundation.framework */; };
 		D2B048F31C2BAA9C00E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
 		D2B048F41C2BAA9C00E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048CC1C2BA74200E45E96 /* JavaScriptCore.framework */; };
 		D2B048F51C2BAA9C00E45E96 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA21C14F06900F07C90 /* MediaPlayer.framework */; };
-		D2B048F91C2BAA9C00E45E96 /* ARNTransitionAnimator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F61C2BAA9C00E45E96 /* ARNTransitionAnimator.framework */; };
-		D2B048FA1C2BAA9C00E45E96 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F71C2BAA9C00E45E96 /* Pods.framework */; };
-		D2B048FB1C2BAA9C00E45E96 /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2B048F81C2BAA9C00E45E96 /* XCDYouTubeKit.framework */; };
 		D2B7DA5A1C349BDB0018106A /* Screenshots in Resources */ = {isa = PBXBuildFile; fileRef = D2B7DA591C349BDB0018106A /* Screenshots */; };
 		EFC267E450DB689C9374BF3D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC4DEA411428B95B5F3B017C /* Pods.framework */; };
 /* End PBXBuildFile section */
@@ -95,17 +90,6 @@
 		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		D2263AA21C14F06900F07C90 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		D2B048CC1C2BA74200E45E96 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/PrivateFrameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		D2B048DA1C2BA85700E45E96 /* ARNTransitionAnimator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARNTransitionAnimator.framework; path = "Pods/../build/Debug-iphoneos/ARNTransitionAnimator.framework"; sourceTree = "<group>"; };
-		D2B048DB1C2BA85700E45E96 /* Pods.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods.framework; path = "Pods/../build/Debug-iphoneos/Pods.framework"; sourceTree = "<group>"; };
-		D2B048DC1C2BA85700E45E96 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = "Pods/../build/Debug-iphoneos/XCDYouTubeKit.framework"; sourceTree = "<group>"; };
-		D2B048E41C2BA87F00E45E96 /* ARNTransitionAnimator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARNTransitionAnimator.framework; path = "Pods/../build/Debug-iphoneos/ARNTransitionAnimator.framework"; sourceTree = "<group>"; };
-		D2B048E51C2BA87F00E45E96 /* Pods.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods.framework; path = "Pods/../build/Debug-iphoneos/Pods.framework"; sourceTree = "<group>"; };
-		D2B048E61C2BA87F00E45E96 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = "Pods/../build/Debug-iphoneos/XCDYouTubeKit.framework"; sourceTree = "<group>"; };
-		D2B048EE1C2BAA8400E45E96 /* ARNTransitionAnimator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARNTransitionAnimator.framework; path = "Pods/../build/Debug-iphoneos/ARNTransitionAnimator.framework"; sourceTree = "<group>"; };
-		D2B048EF1C2BAA8400E45E96 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = "Pods/../build/Debug-iphoneos/XCDYouTubeKit.framework"; sourceTree = "<group>"; };
-		D2B048F61C2BAA9C00E45E96 /* ARNTransitionAnimator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARNTransitionAnimator.framework; path = "Pods/../build/Debug-iphoneos/ARNTransitionAnimator.framework"; sourceTree = "<group>"; };
-		D2B048F71C2BAA9C00E45E96 /* Pods.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods.framework; path = "Pods/../build/Debug-iphoneos/Pods.framework"; sourceTree = "<group>"; };
-		D2B048F81C2BAA9C00E45E96 /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = "Pods/../build/Debug-iphoneos/XCDYouTubeKit.framework"; sourceTree = "<group>"; };
 		D2B7DA591C349BDB0018106A /* Screenshots */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Screenshots; path = Images/Screenshots; sourceTree = "<group>"; };
 		F21E113ABCDB957DFAD2D41E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F5EB519E79CB1AE21C1131B5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -116,8 +100,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2B048F01C2BAA8400E45E96 /* ARNTransitionAnimator.framework in Frameworks */,
-				D2B048F11C2BAA8400E45E96 /* XCDYouTubeKit.framework in Frameworks */,
 				D2B048EA1C2BAA8300E45E96 /* Foundation.framework in Frameworks */,
 				D2B048EB1C2BAA8300E45E96 /* JavaScriptCore.framework in Frameworks */,
 				D2B048EC1C2BAA8400E45E96 /* JavaScriptCore.framework in Frameworks */,
@@ -130,9 +112,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2B048F91C2BAA9C00E45E96 /* ARNTransitionAnimator.framework in Frameworks */,
-				D2B048FA1C2BAA9C00E45E96 /* Pods.framework in Frameworks */,
-				D2B048FB1C2BAA9C00E45E96 /* XCDYouTubeKit.framework in Frameworks */,
 				D2B048F21C2BAA9C00E45E96 /* Foundation.framework in Frameworks */,
 				D2B048F31C2BAA9C00E45E96 /* JavaScriptCore.framework in Frameworks */,
 				D2B048F41C2BAA9C00E45E96 /* JavaScriptCore.framework in Frameworks */,
@@ -234,17 +213,6 @@
 		43023294B39B809D25A34FED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D2B048F61C2BAA9C00E45E96 /* ARNTransitionAnimator.framework */,
-				D2B048F71C2BAA9C00E45E96 /* Pods.framework */,
-				D2B048F81C2BAA9C00E45E96 /* XCDYouTubeKit.framework */,
-				D2B048EE1C2BAA8400E45E96 /* ARNTransitionAnimator.framework */,
-				D2B048EF1C2BAA8400E45E96 /* XCDYouTubeKit.framework */,
-				D2B048E41C2BA87F00E45E96 /* ARNTransitionAnimator.framework */,
-				D2B048E51C2BA87F00E45E96 /* Pods.framework */,
-				D2B048E61C2BA87F00E45E96 /* XCDYouTubeKit.framework */,
-				D2B048DA1C2BA85700E45E96 /* ARNTransitionAnimator.framework */,
-				D2B048DB1C2BA85700E45E96 /* Pods.framework */,
-				D2B048DC1C2BA85700E45E96 /* XCDYouTubeKit.framework */,
 				D2B048CC1C2BA74200E45E96 /* JavaScriptCore.framework */,
 				D2263AA21C14F06900F07C90 /* MediaPlayer.framework */,
 				D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */,
