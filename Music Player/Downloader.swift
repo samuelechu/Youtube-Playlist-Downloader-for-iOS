@@ -12,24 +12,6 @@ import CoreData
 
 
 
-protocol inputVCTableDelegate{
-    func addCell(dict : NSDictionary)
-    func reloadCells()
-    
-    //necessary because IDInputvc view is reset when it is popped
-    func setDLObject(session : dataDownloadObject)
-    func getDLObject() -> dataDownloadObject?
-    func addDLTask(tasks : [String])
-    func getDLTasks() -> [String]
-    
-    func addUncachedVid(tasks : [String])
-    func getUncachedVids() -> [String]
-    
-    func setDLButtonHidden(value : Bool)
-    func dlButtonIsHidden() -> Bool
-}
-
-
 
 
 protocol DownloaderDelegate: class {
@@ -42,7 +24,7 @@ protocol DownloaderDelegate: class {
 class Downloader {
     
     weak var delegate: DownloaderDelegate?
-    let tableDelegate : inputVCTableDelegate
+    let downloadListView : DownloadListView
     
     private var context : NSManagedObjectContext!
     private var appDel : AppDelegate?
@@ -56,8 +38,8 @@ class Downloader {
     private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
 
     
-    init(tableDelegate : inputVCTableDelegate) {
-        self.tableDelegate = tableDelegate
+    init(downloadListView : DownloadListView) {
+        self.downloadListView = downloadListView
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
@@ -80,15 +62,15 @@ class Downloader {
         }
         
         //get identifiers lost from popping off view
-        uncachedVideos = (tableDelegate.getUncachedVids())
-        downloadTasks = (tableDelegate.getDLTasks())
-        dlObject = tableDelegate.getDLObject()
+        uncachedVideos = (downloadListView.getUncachedVids())
+        downloadTasks = (downloadListView.getDLTasks())
+        dlObject = downloadListView.getDLObject()
         
         //If a background URLSession does not exist, create and save through table delegate for future reuse
         if dlObject == nil{
             dlObject = dataDownloadObject(coder: NSCoder())
-            dlObject.setDownloadObjectDelegate((tableDelegate as? downloadObjectTableDelegate)!)
-            tableDelegate.setDLObject(dlObject!)
+            dlObject.setDownloadObjectDelegate((downloadListView as? downloadObjectTableDelegate)!)
+            downloadListView.setDLObject(dlObject!)
         }
     }
     
@@ -112,11 +94,11 @@ class Downloader {
             if (!isStored){
                 startDownloadVideo(videoId, qual: qual)
                 downloadTasks += [videoId]
-                tableDelegate.addDLTask([videoId])
+                downloadListView.addDLTask([videoId])
             }
         }
         else if let playlistId = playlistId {
-            tableDelegate.setDLButtonHidden(true)
+            downloadListView.setDLButtonHidden(true)
             downloadVideosForPlayist(playlistId, pageToken: "", qual: qual)
         }
     }
@@ -177,10 +159,10 @@ class Downloader {
                         let data = NSData(contentsOfURL: thumbnailURL!)
                         let image = UIImage(data: data!)
                         
-                        let dict = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
+                        let videoInfo = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
                         
-                        self.tableDelegate.addCell(dict)
-                        self.tableDelegate.reloadCells()
+                        self.downloadListView.addCell(videoInfo)
+                        self.downloadListView.reloadCells()
                         
                         self.dlObject.addVidInfo(video)
                         self.dlObject.startNewTask(desiredURL)
@@ -255,14 +237,14 @@ class Downloader {
                 else {
                     print("HTTP Status Code = \(HTTPStatusCode)")
                     print("Error while loading channel videos: \(error)")
-                    self.tableDelegate.setDLButtonHidden(false)
+                    self.downloadListView.setDLButtonHidden(false)
                     
                 }
             })
         }
             
         else{
-            tableDelegate.setDLButtonHidden(false)
+            downloadListView.setDLButtonHidden(false)
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
@@ -281,7 +263,7 @@ class Downloader {
                         if (!isStored){
                             self.startDownloadVideo(identifier, qual: qual)
                             self.downloadTasks += [identifier]
-                            self.tableDelegate.addDLTask([identifier])
+                            self.downloadListView.addDLTask([identifier])
                         }
                     }
                 }
@@ -294,7 +276,7 @@ class Downloader {
                         if (!isStored){
                             
                             self.uncachedVideos += [identifier]
-                            self.tableDelegate.addUncachedVid([identifier])
+                            self.downloadListView.addUncachedVid([identifier])
                             self.saveVideoInfo(identifier)
                             
                         }

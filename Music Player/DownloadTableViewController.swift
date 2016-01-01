@@ -8,7 +8,28 @@
 
 import UIKit
 
-class downloadTableViewController: UITableViewController, inputVCTableDelegate, downloadObjectTableDelegate {
+
+
+protocol DownloadListView{
+    func addCell(dict : NSDictionary)
+    func reloadCells()
+    
+    //necessary because IDInputvc view is reset when it is popped
+    func setDLObject(session : dataDownloadObject)
+    func getDLObject() -> dataDownloadObject?
+    func addDLTask(tasks : [String])
+    func getDLTasks() -> [String]
+    
+    func addUncachedVid(tasks : [String])
+    func getUncachedVids() -> [String]
+    
+    func setDLButtonHidden(value : Bool)
+    func dlButtonIsHidden() -> Bool
+}
+
+
+
+class downloadTableViewController: UITableViewController, DownloadListView, downloadObjectTableDelegate {
     
     var progressValues : [Float] = []
     var downloadNames : [String] = []
@@ -186,11 +207,11 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDownloader" {
             let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
-            downloader.setup(tableViewDelegate: self)
+            downloader.setup(downloadListView: self)
         }
         if segue.identifier == "showSearchWebView" {
             let downloader = segue.destinationViewController as! SearchWebViewController
-            downloader.setup(tableViewDelegate: self)
+            downloader.setup(downloadListView: self)
         }
     }
 }

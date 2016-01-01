@@ -19,8 +19,8 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     var downloader: Downloader!
     
     // Please Call
-    func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
-        downloader = Downloader(tableDelegate: tableDelegate)
+    func setup(downloadListView downloadListView : DownloadListView) {
+        downloader = Downloader(downloadListView: downloadListView)
         
         downloader.delegate = self
         
@@ -31,7 +31,7 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         //hide download button if downloads are being queued
-        manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
+        manageButtons(dlButtonHidden: (downloader.downloadListView.dlButtonIsHidden()))
     }
     
     //hide download button and show download intializing buttons
