@@ -57,7 +57,7 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     }
     
     @IBAction func startDownloadTask() {
-        downloader.startDownloadTask(vidID.text ?? "")
+        downloader.startDownloadVideoOrPlaylist(url: vidID.text ?? "")
         navigationController?.popViewControllerAnimated(true)
     }
     

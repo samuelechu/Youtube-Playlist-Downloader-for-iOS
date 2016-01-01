@@ -30,27 +30,32 @@ protocol inputVCTableDelegate{
 }
 
 
+
+
 protocol DownloaderDelegate: class {
     func hideDownloadButton()
 }
 
+
+
+
 class Downloader {
     
     weak var delegate: DownloaderDelegate?
-
     let tableDelegate : inputVCTableDelegate
     
     private var context : NSManagedObjectContext!
     private var appDel : AppDelegate?
+    private var dlObject : dataDownloadObject!
 
     private var downloadTasks : [String] = []//array of video identifiers
     private var downloadedIDs : [String] = [] //array of downloaded video identifiers
     private var uncachedVideos : [String] = []//array of video identifiers for uncached videos
+
     private var numDownloads = 0
     private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
 
-    private var dlObject : dataDownloadObject!
-
+    
     init(tableDelegate : inputVCTableDelegate) {
         self.tableDelegate = tableDelegate
         
@@ -89,7 +94,7 @@ class Downloader {
     
     
     
-    func startDownloadTask(playlistOrVideoUrl: String) {
+    func startDownloadVideoOrPlaylist(url playlistOrVideoUrl: String) {
 
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
 
@@ -98,9 +103,6 @@ class Downloader {
         let results : NSArray = try! context.executeFetchRequest(request)
         let settings = results[0] as! NSManagedObject
         let qual = settings.valueForKey("quality") as! Int
-        
-        
-        
         
         if let videoId = videoId {
             updateStoredSongs()
@@ -114,14 +116,10 @@ class Downloader {
                 tableDelegate.addDLTask([videoId])
             }
         }
-            
-            
         else if let playlistId = playlistId {
             tableDelegate.setDLButtonHidden(true)
             downloadVideosForPlayist(playlistId, pageToken: "", qual: qual)
         }
-        
-        
     }
     
     
