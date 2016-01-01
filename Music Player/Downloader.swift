@@ -108,7 +108,7 @@ class Downloader {
         if let videoId = videoId {
             updateStoredSongs()
             
-            let isStored =  vidStored(videoId)
+            let isStored =  isVideoStored(videoId)
             
             if (!isStored){
                 
@@ -142,17 +142,17 @@ class Downloader {
     }
     
     //check if video in stored memory or currently downloading videos
-    func vidStored (identifier : String) -> Bool {
+    func isVideoStored (videoId : String) -> Bool {
         
-        if(downloadedIDs.indexOf(identifier) != nil){
+        if(downloadedIDs.indexOf(videoId) != nil){
             return true
         }
             
-        else if((downloadTasks.indexOf(identifier)) != nil){
+        else if((downloadTasks.indexOf(videoId)) != nil){
             return true
         }
             
-        else if((uncachedVideos.indexOf(identifier)) != nil){
+        else if((uncachedVideos.indexOf(videoId)) != nil){
             return true
         }
         
@@ -281,7 +281,7 @@ class Downloader {
                 if downloadVid != 2 {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.vidStored(identifier)
+                        let isStored = self.isVideoStored(identifier)
                         
                         if (!isStored){
                             self.startDownloadTaskHelper(identifier, qual: qual)
@@ -294,7 +294,7 @@ class Downloader {
                 else {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.vidStored(identifier)
+                        let isStored = self.isVideoStored(identifier)
                         
                         if (!isStored){
                             
