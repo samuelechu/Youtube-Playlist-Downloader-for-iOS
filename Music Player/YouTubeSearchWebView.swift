@@ -10,9 +10,18 @@ import UIKit
 import WebKit
 import SnapKit
 
+
 protocol YouTubeSearchWebViewDelegate {
     func didTapDownloadButton(url: NSURL)
 }
+
+
+enum YoutubeUrlType {
+    case Playlist(id: String)
+    case Video(id: String)
+    case Other
+}
+
 
 class YouTubeSearchWebView: WKWebView {
 
@@ -46,11 +55,10 @@ class YouTubeSearchWebView: WKWebView {
     // MARK: Check URL
     
     private func didChangeURL(url: NSURL) {
-        if isPlaylistURL(url) {
-            enableButton()
-        }
-        else {
-            disableButton()
+        switch detectURLType(url) {
+        case .Playlist: enableButton()
+        case .Video: enableButton()
+        case .Other: disableButton()
         }
     }
     
@@ -96,20 +104,17 @@ class YouTubeSearchWebView: WKWebView {
 // util
 extension YouTubeSearchWebView {
     
-    private func isPlaylistURL(url: NSURL) -> Bool {
-        if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
-            if let queryItems = comp.queryItems {
-                var isPlaylist = false
-                queryItems.forEach { item in
-                    if item.name == "list" {
-                        isPlaylist = true
-                    }
-                }
-                return isPlaylist
-            }
-            return false
+    private func detectURLType(url: NSURL) -> YoutubeUrlType {
+        let (videoId, playlistId) = MiscFuncs.parseIDs(url: url.absoluteString)
+        if let playlistId = playlistId {
+            return YoutubeUrlType.Playlist(id: playlistId)
         }
-        return false
+        else if let videoId = videoId {
+            return YoutubeUrlType.Video(id: videoId)
+        }
+        else {
+            return YoutubeUrlType.Other
+        }
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
