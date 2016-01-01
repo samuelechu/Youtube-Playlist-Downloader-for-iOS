@@ -110,8 +110,7 @@ class Downloader {
             let isStored =  isVideoStored(videoId)
             
             if (!isStored){
-                
-                startDownloadTaskHelper(videoId, qual: qual)
+                startDownloadVideo(videoId, qual: qual)
                 downloadTasks += [videoId]
                 tableDelegate.addDLTask([videoId])
             }
@@ -155,7 +154,7 @@ class Downloader {
     }
     
     
-    private func startDownloadTaskHelper(ID : String, qual : Int){
+    private func startDownloadVideo(ID : String, qual : Int){
         if(downloadTasks.indexOf(ID) == nil){
             XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
@@ -279,7 +278,7 @@ class Downloader {
                         let isStored = self.isVideoStored(identifier)
                         
                         if (!isStored){
-                            self.startDownloadTaskHelper(identifier, qual: qual)
+                            self.startDownloadVideo(identifier, qual: qual)
                             self.downloadTasks += [identifier]
                             self.tableDelegate.addDLTask([identifier])
                         }
