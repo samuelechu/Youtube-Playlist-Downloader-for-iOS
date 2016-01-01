@@ -106,11 +106,11 @@ extension YouTubeSearchWebView {
     
     private func detectURLType(url: NSURL) -> YoutubeUrlType {
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: url.absoluteString)
-        if let playlistId = playlistId {
-            return YoutubeUrlType.Playlist(id: playlistId)
-        }
-        else if let videoId = videoId {
+        if let videoId = videoId {
             return YoutubeUrlType.Video(id: videoId)
+        }
+        else if let playlistId = playlistId {
+            return YoutubeUrlType.Playlist(id: playlistId)
         }
         else {
             return YoutubeUrlType.Other
