@@ -20,8 +20,8 @@ class IDInputvc: UIViewController, DownloaderDelegate {
     var settings : NSManagedObject!
     
     // Please Call
-    func setup(tableViewDelegate tableDelegate : inputVCTableDelegate) {
-        downloader = Downloader(tableDelegate: tableDelegate)
+    func setup(downloadListView downloadListView : DownloadListView) {
+        downloader = Downloader(downloadListView: downloadListView)
         
         downloader.delegate = self
         
@@ -34,7 +34,7 @@ class IDInputvc: UIViewController, DownloaderDelegate {
         settings = MiscFuncs.getSettings()
         vidID.text = settings.valueForKey("playlist") as? String ?? "https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha"
         //hide download button if downloads are being queued
-        manageButtons(dlButtonHidden: (downloader.tableDelegate.dlButtonIsHidden()))
+        manageButtons(dlButtonHidden: (downloader.downloadListView.dlButtonIsHidden()))
     }
     
     //hide download button and show download intializing buttons
