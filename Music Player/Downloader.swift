@@ -172,10 +172,6 @@ class Downloader {
         }
     }
     
-    
-    
-    
-    
     private func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: targetURL)
         request.HTTPMethod = "GET"
@@ -247,7 +243,7 @@ class Downloader {
                 let downloadVid = settings.valueForKey("cache") as! Int
                 
                 //download videos if cache option selected, otherwise save song object to persistent memory
-                if downloadVid != 2 {
+                if downloadVid != 1 {
                     for identifier : String in self.videoIDs {
                         
                         let isStored = self.isVideoStored(identifier)

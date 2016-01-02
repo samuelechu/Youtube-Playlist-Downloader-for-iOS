@@ -94,11 +94,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                     try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
                 }catch _ as NSError{}
                 
-                //if download to photos album selected, save to photos album
-                /*if (downloadLocation == 1) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil)
-                }*/
-                
                 //save to CoreData
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
                 newSong.setValue(identifier, forKey: "identifier")
