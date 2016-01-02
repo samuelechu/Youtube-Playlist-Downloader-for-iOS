@@ -46,6 +46,22 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
         reloadCells()
     }
     
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    func setup() {
+        if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
+            appDel.downloadListView = self
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideTabBar")
@@ -59,7 +75,7 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
     }
-     
+    
     func hideTabBar(){
         setTabBarVisible(!(tabBarIsVisible()), animated: true)
         let visible = (navigationController?.navigationBarHidden)!
@@ -205,14 +221,14 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
         return cell
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDownloader" {
-            let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
-            downloader.setup(downloadListView: self)
-        }
-        if segue.identifier == "showSearchWebView" {
-            let downloader = segue.destinationViewController as! SearchWebViewController
-            downloader.setup(downloadListView: self)
-        }
-    }
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if segue.identifier == "showDownloader" {
+//            let downloader : IDInputvc = segue.destinationViewController as! IDInputvc
+//            downloader.setup(downloadListView: self)
+//        }
+//        if segue.identifier == "showSearchWebView" {
+//            let downloader = segue.destinationViewController as! SearchWebViewController
+//            downloader.setup(downloadListView: self, playlistName: )
+//        }
+//    }
 }

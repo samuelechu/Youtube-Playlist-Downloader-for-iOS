@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15B42" minimumToolsVersion="Automatic">
     <entity name="Settings" syncable="YES">
         <attribute name="cache" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="playlist" optional="YES" attributeType="String" syncable="YES"/>
@@ -11,12 +11,13 @@
         <attribute name="expireDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isDownloaded" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="playlistName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="streamURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Settings" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="Songs" positionX="-63" positionY="-9" width="128" height="165"/>
+        <element name="Songs" positionX="-63" positionY="-9" width="128" height="180"/>
     </elements>
 </model>
