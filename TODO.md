@@ -1,6 +1,10 @@
 
 # TODO
 
+## primary
+* don't back from search view
+
+
 ## feature
 * edit playlist name
 * remove playlist
