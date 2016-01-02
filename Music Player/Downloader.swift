@@ -45,21 +45,7 @@ class Downloader {
         context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
-        let request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = try! context.executeFetchRequest(request)
-        
-        if results.count == 0 {
-            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context)
-            
-            settings.setValue(0, forKey: "quality")
-            settings.setValue(0, forKey: "cache")
-            
-            do {
-                try context.save()
-            } catch _ {
-            }
-            results = try! context.executeFetchRequest(request)
-        }
+        MiscFuncs.getSettings()
         
         //get identifiers lost from popping off view
         uncachedVideos = (downloadListView.getUncachedVids())
@@ -74,16 +60,12 @@ class Downloader {
         }
     }
     
-    
-    
     func startDownloadVideoOrPlaylist(url playlistOrVideoUrl: String) {
 
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
 
         //get video quality setting
-        let request = NSFetchRequest(entityName: "Settings")
-        let results : NSArray = try! context.executeFetchRequest(request)
-        let settings = results[0] as! NSManagedObject
+        let settings = MiscFuncs.getSettings()
         let qual = settings.valueForKey("quality") as! Int
         
         if let videoId = videoId {
@@ -172,10 +154,6 @@ class Downloader {
         }
     }
     
-    
-    
-    
-    
     private func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
         let request = NSMutableURLRequest(URL: targetURL)
         request.HTTPMethod = "GET"
@@ -226,11 +204,6 @@ class Downloader {
                         self.videoIDs += [vidID]
                     }
                     
-                    
-                    
-                    
-                    
-                    
                     self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
                 }
                     
@@ -248,14 +221,11 @@ class Downloader {
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
-                let request = NSFetchRequest(entityName: "Settings")
-                let results : NSArray = try! self.context.executeFetchRequest(request)
-                
-                let settings = results[0] as! NSManagedObject
+                let settings = MiscFuncs.getSettings()
                 let downloadVid = settings.valueForKey("cache") as! Int
                 
                 //download videos if cache option selected, otherwise save song object to persistent memory
-                if downloadVid != 2 {
+                if downloadVid != 1 {
                     for identifier : String in self.videoIDs {
                         
                         let isStored = self.isVideoStored(identifier)

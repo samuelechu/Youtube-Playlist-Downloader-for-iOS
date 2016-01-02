@@ -13,12 +13,26 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        addCustomMenuItems()
         return true
     }
-      
+    
+    private func addCustomMenuItems() {
+        
+        let menuController = UIMenuController.sharedMenuController()
+        var menuItems = menuController.menuItems ?? [UIMenuItem]()
+        
+        let copyLinkItem = UIMenuItem(title: "Copy Link", action: MenuAction.copyLink.selector())
+        let saveVideoItem = UIMenuItem(title: "Save to Camera Roll", action: MenuAction.saveVideo.selector())
+        
+        menuItems.append(copyLinkItem)
+        menuItems.append(saveVideoItem)
+        menuController.menuItems = menuItems
+    }
+    
     func applicationWillResignActive(application: UIApplication) {
         
     }
@@ -32,26 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //renable video tracks
         NSNotificationCenter.defaultCenter().postNotificationName("enteredForegroundID", object: nil)
-        
-        /*
-        
-        var request = NSFetchRequest(entityName: "Songs")
-        
-        var songs = managedObjectContext!.executeFetchRequest(request, error: nil)
-        
-        for song in songs as! [NSManagedObject]{
-            
-            var file = song.valueForKey("identifier") as! String
-            file = file.stringByAppendingString(".mp4")
-            var filePath = documentsDir.stringByAppendingPathComponent(file)
-            
-            if !NSFileManager.defaultManager().fileExistsAtPath(filePath) {
-                managedObjectContext!.deleteObject(song)
-                managedObjectContext!.save(nil)
-            }
-        }*/
-        
-        
     }
     
     func applicationDidBecomeActive(application: UIApplication) {
@@ -63,13 +57,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let fileMgr = NSFileManager.defaultManager()
         
         //remove excess documents and data
-        let cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] 
+        let cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
         
         let cacheDir1 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
         let cacheDir2 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
         
         if fileMgr.fileExistsAtPath(cacheDir1){
-            let dir1Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir1)) 
+            let dir1Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir1))
             
             for file : String in dir1Contents {
                 do {
@@ -80,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if fileMgr.fileExistsAtPath(cacheDir2){
-            let dir2Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir2)) 
+            let dir2Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir2))
             
             for file : String in dir2Contents {
                 do {
@@ -90,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        let tmpDir : [String] = (try! fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory())) 
+        let tmpDir : [String] = (try! fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory()))
         
         for file : String in tmpDir {
             do {
@@ -107,14 +101,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.Music_Player" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] 
-        }()
+        return urls[urls.count-1]
+    }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = NSBundle.mainBundle().URLForResource("Music_Player", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
-        }()
+    }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
@@ -143,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         return coordinator
-        }()
+    }()
     
     lazy var managedObjectContext: NSManagedObjectContext? = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
@@ -154,7 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var managedObjectContext = NSManagedObjectContext()
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
-        }()
+    }()
     
     // MARK: - Core Data Saving support
     
@@ -174,6 +168,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
 }
 

@@ -16,6 +16,7 @@ class SongCell: UITableViewCell {
     @IBOutlet var durationLabel: UILabel!
     @IBOutlet var imageLabel: UIImageView!
     @IBOutlet var positionLabel: UILabel!
+    var identifier : String!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,5 +28,21 @@ class SongCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     } 
 
+    func copyLinkAction(sender:AnyObject?){
+        UIPasteboard.generalPasteboard().string = "youtube.com/watch?v=\(identifier)"
+    }
+    
+    func saveToCameraRollAction(sender:AnyObject?){
+        
+        let filePath = grabFilePath("\(identifier).mp4")
+        UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil)
+    }
+    
+    func grabFilePath(fileName : String) -> String {
+        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
+        
+        return writePath
+    }
     
 }

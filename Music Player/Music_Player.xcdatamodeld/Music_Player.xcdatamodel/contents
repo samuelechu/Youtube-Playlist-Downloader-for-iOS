@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14A389" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Automatic">
     <entity name="Settings" syncable="YES">
         <attribute name="cache" optional="YES" attributeType="Integer 32" syncable="YES"/>
+        <attribute name="playlist" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="quality" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Songs" syncable="YES">
@@ -15,7 +16,7 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Settings" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="Settings" positionX="-63" positionY="-18" width="128" height="90"/>
         <element name="Songs" positionX="-63" positionY="-9" width="128" height="165"/>
     </elements>
 </model>

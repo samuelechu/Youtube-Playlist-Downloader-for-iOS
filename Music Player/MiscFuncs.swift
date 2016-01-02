@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreData
+
 public class MiscFuncs{
     
     //convert double to format : hh:mm:ss
@@ -84,6 +86,33 @@ public class MiscFuncs{
         }
 
         return (videoId: videoId, playlistId: playlistId)
+    }
+    
+    //return current settings or initialize defaults
+    public class func getSettings() -> NSManagedObject {
+        
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let context = appDel!.managedObjectContext!
+        
+        //set initial quality to 360P if uninitialized
+        let request = NSFetchRequest(entityName: "Settings")
+        var results : NSArray = try! context.executeFetchRequest(request)
+        
+        //default settings : quality = 360P, cache videos within app
+        if results.count == 0 {
+            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context)
+            
+            settings.setValue(0, forKey: "quality")
+            settings.setValue(0, forKey: "cache")
+            settings.setValue("https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha", forKey: "playlist")
+            do {
+                try context.save()
+            } catch _ {
+            }
+            results = try! context.executeFetchRequest(request)
+        }
+        
+        return results[0] as! NSManagedObject
     }
 
 }
