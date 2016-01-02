@@ -2,5 +2,4 @@ pod "XCDYouTubeKit", "~> 2.4.3"
 platform :ios, '8.0'
 use_frameworks!
 
-pod "ARNTransitionAnimator"
 pod 'SnapKit'
