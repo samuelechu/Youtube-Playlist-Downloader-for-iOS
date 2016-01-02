@@ -79,6 +79,7 @@ class downloadTableViewController: UITableViewController, inputVCTableDelegate, 
     func addUncachedVid(identifier: [String]) { uncachedVideos += identifier}
     func getUncachedVids() -> [String] { return uncachedVideos }
     
+    //to do : delete recent downloaded
     /*override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             //var row = x[indexPath.row]

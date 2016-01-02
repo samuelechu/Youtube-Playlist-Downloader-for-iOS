@@ -161,17 +161,32 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     ////////////////   TableView / Editing Functions
     
     
+    override func tableView(tableView: UITableView, shouldShowMenuForRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, canPerformAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool {
+        //return action == MenuAction.Copy.selector() || action == MenuAction.Custom.selector()
+        return action == MenuAction.copyLink.selector() || action == MenuAction.saveVideo.selector()
+    }
+    
+    override func tableView(tableView: UITableView, performAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) {
+        //needs to be present for the menu to display
+    }
+    
     //populate tableView
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
         
         var songName : String!
         var duration : String!
+        var identifier : String!
         var imageData : NSData!
         
         if resultSearchController.active && resultSearchController.searchBar.text != "" {
             songName = filteredSongs[indexPath.row].valueForKey("title") as! String
             duration = filteredSongs[indexPath.row].valueForKey("durationStr") as! String
+            identifier = filteredSongs[indexPath.row].valueForKey("identifier") as! String
             imageData = filteredSongs[indexPath.row].valueForKey("thumbnail") as! NSData
         }
             
@@ -179,11 +194,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             let row = x[indexPath.row]
             songName = songs[row].valueForKey("title") as! String
             duration = songs[row].valueForKey("durationStr") as! String
+            identifier = songs[row].valueForKey("identifier") as! String
             imageData = songs[row].valueForKey("thumbnail") as! NSData
         }
         
         cell.songLabel.text = songName
         cell.durationLabel.text = duration
+        cell.identifier = identifier
         cell.imageLabel.image = UIImage(data: imageData)
         cell.positionLabel.text = "\(indexPath.row + 1)"
         cell.contentView.backgroundColor = UIColor.clearColor()

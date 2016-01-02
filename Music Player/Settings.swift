@@ -33,8 +33,6 @@ class Settings: UITableViewController {
         
         //retrieve settings, or initialize default settings if unset
         settings = MiscFuncs.getSettings()
-        let playlist = settings.valueForKey("playlist")
-        print(playlist)
         let qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
         deselectRow(qualRow)
         selectRow(qualRow)
