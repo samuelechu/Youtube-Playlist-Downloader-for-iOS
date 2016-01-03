@@ -341,13 +341,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="playlistCell" id="E5i-jN-OUa">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="playlistCell" id="E5i-jN-OUa">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="E5i-jN-OUa" id="eS6-pN-Ejz">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -630,6 +631,6 @@
         <image name="video.png" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fkn-bp-M2p"/>
+        <segue reference="naN-s0-TY4"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -31,6 +31,13 @@ class YouTubeSearchWebView: WKWebView {
     
     init() {
         let conf = WKWebViewConfiguration()
+        //doesn't work
+        /*if #available(iOS 9.0, *) {
+            conf.requiresUserActionForMediaPlayback = true
+        } else {
+            conf.mediaPlaybackRequiresUserAction = true
+        }
+        conf.allowsInlineMediaPlayback = true*/
         super.init(frame: CGRectZero, configuration: conf)
         setup()
     }

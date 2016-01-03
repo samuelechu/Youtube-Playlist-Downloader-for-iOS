@@ -533,7 +533,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         if !tableView.editing || identifier == "PlaylistToSearchView"{
             setEditing(false, animated: true)
-            navigationController!.setNavigationBarHidden(true, animated: true)
             return true
         }
         

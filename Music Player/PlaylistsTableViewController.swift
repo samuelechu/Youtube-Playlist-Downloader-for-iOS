@@ -26,6 +26,13 @@ class PlaylistsTableViewController: UITableViewController {
         tableView.delegate = self
         PlaylistManager().initPlaylistDirIfNotExist()
         playlists = PlaylistManager().getPlaylists()
+        
+        //set background image
+        tableView.backgroundColor = UIColor.clearColor()
+        let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
+        imgView.frame = tableView.frame
+        tableView.backgroundView = imgView
+        
         tableView.reloadData()
     }
     
