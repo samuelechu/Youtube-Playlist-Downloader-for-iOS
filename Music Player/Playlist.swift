@@ -90,8 +90,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.backgroundView = imgView
         
         //initialize shuffle, select, and delete buttons
-        navigationItem.rightBarButtonItems?.insert(editButtonItem(), atIndex: 1)
-        editButtonItem().title = "Select"
+        
+        self.navigationItem.leftBarButtonItem = self.editButtonItem()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        
+        editButtonItem().title = "Edit"
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
         
         shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
@@ -99,6 +102,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
+        
+        //self.navigationItem.hidesBackButton = true
         
         //initialize search bar
         resultSearchController.searchResultsUpdater = self
@@ -112,7 +117,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         refreshPlaylist()
         resetX()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -254,7 +259,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
             
         else {
-            editButtonItem().title = "Select"
+            editButtonItem().title = "Edit"
             shuffleButton.enabled = true
             navigationController!.hidesBarsOnSwipe = false
             navigationController!.toolbarHidden = true
@@ -526,7 +531,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //don't segue to AVPlayer if editing
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if !tableView.editing {
+        if !tableView.editing || identifier == "PlaylistToSearchView"{
+            setEditing(false, animated: true)
+            navigationController!.setNavigationBarHidden(true, animated: true)
             return true
         }
         
