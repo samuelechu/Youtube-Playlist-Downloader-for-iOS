@@ -28,6 +28,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     @IBOutlet var shuffleButton: UIBarButtonItem!
     @IBOutlet var deleteButton: UIBarButtonItem!
     
+    var playlistName: String?
+    
     var appDel : AppDelegate!
     var context : NSManagedObjectContext!
     var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
@@ -58,6 +60,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         resultSearchController.active = false
         definesPresentationContext = true
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -87,7 +90,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.backgroundView = imgView
         
         //initialize shuffle, select, and delete buttons
-        navigationItem.leftBarButtonItem = editButtonItem()
+        navigationItem.rightBarButtonItems?.insert(editButtonItem(), atIndex: 1)
         editButtonItem().title = "Select"
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
         
@@ -106,41 +109,48 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.tableHeaderView = resultSearchController.searchBar
         
         //initialize playlist
-    
         refreshPlaylist()
         resetX()
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
     func updatePlaylist(notification: NSNotification){
+        updatePlaylist()
+    }
+    
+    func updatePlaylist(){
         refreshPlaylist()
         resetX()
         shuffleButton.tintColor = UIColor.grayColor()
     }
+
     
     func refreshPlaylist(){
-        let request = NSFetchRequest(entityName: "Songs")
-        request.sortDescriptors = [songSortDescriptor]
-        
-        if !isConnected {//removes nonDownloaded songs from list if no connection detected
-            request.predicate = NSPredicate(format: "isDownloaded = %@", true)
+        if let playlistName = playlistName {
+            let request = NSFetchRequest(entityName: "Songs")
+            request.sortDescriptors = [songSortDescriptor]
+            if !isConnected {//removes nonDownloaded songs from list if no connection detected
+                let playlistFilter = NSPredicate(format: "playlistName = %@", playlistName)
+                let downloadedFilter = NSPredicate(format: "isDownloaded = %@", true)
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [playlistFilter, downloadedFilter])
+            }
+            songs = try? context.executeFetchRequest(request)
+            identifiers = []
+            var playlistDuration = 0.0
+            for song in songs{
+                let identifier = song.valueForKey("identifier") as! String
+                let duration = song.valueForKey("duration") as! Double
+                identifiers += [identifier]
+                playlistDuration += duration
+            }
+            
+            navigationItem.title = "Duration - \(MiscFuncs.hrsAndMinutes(playlistDuration))"
+            
+            tableView.reloadData()
         }
-        songs = try? context.executeFetchRequest(request)
-        identifiers = []
-        var playlistDuration = 0.0
-        for song in songs{
-            let identifier = song.valueForKey("identifier") as! String
-            let duration = song.valueForKey("duration") as! Double
-            identifiers += [identifier]
-            playlistDuration += duration
-        }
-        
-        navigationItem.title = "Duration - \(MiscFuncs.hrsAndMinutes(playlistDuration))"
-        
-        tableView.reloadData()
-        
     }
     func resetX(){
         x = []
@@ -150,6 +160,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
         }
     }
+    
     
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -524,7 +535,20 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //if playlist item selected, segue to avplayer
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showPlayer"{
+        if (segue.identifier == "PlaylistToSearchView") {
+            let searchVC = (segue.destinationViewController as? SearchWebViewController)!
+            if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
+                if let dlView = appDel.downloadListView {
+                    if let playlistName = playlistName {
+                        searchVC.setup(downloadListView: dlView, playlistName: playlistName)
+                    }
+                }
+                else {
+                    errorAlert("error", message: "couldn't get download table view object")
+                }
+            }
+        }
+        else if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
             
             

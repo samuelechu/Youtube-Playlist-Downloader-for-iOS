@@ -15,8 +15,8 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     var downloader: Downloader!
     // Please Call
-    func setup(downloadListView downloadListView : DownloadListView) {
-        downloader = Downloader(downloadListView: downloadListView)
+    func setup(downloadListView downloadListView : DownloadListView, playlistName: String) {
+        downloader = Downloader(downloadListView: downloadListView, playlistName: playlistName)
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

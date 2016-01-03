@@ -25,6 +25,7 @@ class Downloader {
     
     weak var delegate: DownloaderDelegate?
     let downloadListView : DownloadListView
+    let playlistName: String
     
     private var context : NSManagedObjectContext!
     private var appDel : AppDelegate?
@@ -38,8 +39,9 @@ class Downloader {
     private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
 
     
-    init(downloadListView : DownloadListView) {
+    init(downloadListView : DownloadListView, playlistName: String) {
         self.downloadListView = downloadListView
+        self.playlistName = playlistName
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
@@ -146,7 +148,7 @@ class Downloader {
                         self.downloadListView.addCell(videoInfo)
                         self.downloadListView.reloadCells()
                         
-                        self.dlObject.addVidInfo(video)
+                        self.dlObject.addVidInfo(DownloadingVideoInfo(video: video, playlistName: self.playlistName))
                         self.dlObject.startNewTask(desiredURL)
                     }
                 }

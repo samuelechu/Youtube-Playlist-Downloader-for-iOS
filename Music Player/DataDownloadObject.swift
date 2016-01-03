@@ -17,12 +17,22 @@ protocol downloadObjectTableDelegate{
     func reloadCellAtNdx(cellNum : Int)
 }
 
+class DownloadingVideoInfo {
+    let video: XCDYouTubeVideo
+    let playlistName: String
+    init(video: XCDYouTubeVideo, playlistName: String)  {
+        self.video = video
+        self.playlistName = playlistName
+    }
+}
+
+
 class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     
-    var videoData : [XCDYouTubeVideo] = []
+    var videoData : [DownloadingVideoInfo] = []
     
     var session : NSURLSession!
     var taskIDs : [Int] = []
@@ -43,7 +53,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
     
-    func addVidInfo(vid : XCDYouTubeVideo){
+    func addVidInfo(vid : DownloadingVideoInfo){
         videoData += [vid]
     }
     
@@ -87,7 +97,10 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             let cellNum  = taskIDs.indexOf(downloadTask.taskIdentifier)
             if cellNum != nil{
                 
-                let identifier = videoData[cellNum!].identifier
+                let video = videoData[cellNum!].video
+                let playlistName = videoData[cellNum!].playlistName
+                
+                let identifier = video.identifier
                 let filePath = grabFilePath("\(identifier).mp4")
                 
                 do{
@@ -97,25 +110,26 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 //save to CoreData
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
                 newSong.setValue(identifier, forKey: "identifier")
-                newSong.setValue(videoData[cellNum!].title, forKey: "title")
+                newSong.setValue(video.title, forKey: "title")
+                newSong.setValue(playlistName, forKey: "playlistName")
                 
-                var expireDate = videoData[cellNum!].expirationDate
+                var expireDate = video.expirationDate
                 expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
                 newSong.setValue(expireDate, forKey: "expireDate")
                 newSong.setValue(true, forKey: "isDownloaded")
                 
-                let duration = videoData[cellNum!].duration
+                let duration = video.duration
                 let durationStr = MiscFuncs.stringFromTimeInterval(duration)
                 newSong.setValue(duration, forKey: "duration")
                 newSong.setValue(durationStr, forKey: "durationStr")
                 
-                var streamURLs = videoData[cellNum!].streamURLs
+                var streamURLs = video.streamURLs
                 let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
                 newSong.setValue("\(desiredURL)", forKey: "streamURL")
                 
-                let large = videoData[cellNum!].largeThumbnailURL
-                let medium = videoData[cellNum!].mediumThumbnailURL
-                let small = videoData[cellNum!].smallThumbnailURL
+                let large = video.largeThumbnailURL
+                let medium = video.mediumThumbnailURL
+                let small = video.smallThumbnailURL
                 let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 newSong.setValue(imgData, forKey: "thumbnail")
                 

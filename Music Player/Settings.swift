@@ -45,9 +45,7 @@ class Settings: UITableViewController {
         tableView.backgroundColor = UIColor.clearColor()
         let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
-        tableView.backgroundView = imgView
-        
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        tableView.backgroundView = imgView        
     }
     
     override func didReceiveMemoryWarning() {

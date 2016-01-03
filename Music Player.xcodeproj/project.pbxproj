@@ -31,6 +31,8 @@
 		B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */; };
 		B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */; };
 		B093A2A61C34429D00AC86C0 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A51C34429D00AC86C0 /* Downloader.swift */; };
+		B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */; };
+		B0DA10F11C380833009BE745 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */; };
 		D2392EDF1C3757E5004AD31C /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2392EDE1C3757E5004AD31C /* MenuAction.swift */; };
 		D2B048EA1C2BAA8300E45E96 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263A9E1C14F05600F07C90 /* Foundation.framework */; };
 		D2B048EB1C2BAA8300E45E96 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */; };
@@ -86,6 +88,8 @@
 		B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchWebViewController.swift; sourceTree = "<group>"; };
 		B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeSearchWebView.swift; sourceTree = "<group>"; };
 		B093A2A51C34429D00AC86C0 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
+		B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		CC4DEA411428B95B5F3B017C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2263A9E1C14F05600F07C90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -167,10 +171,12 @@
 				222ABEFA1BA6715C003B05A1 /* MiscFuncs.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
+				B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */,
 				22AD6B311B47BB7D00428602 /* Settings.swift */,
 				2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */,
 				B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */,
 				B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */,
+				B0DA10ED1C380821009BE745 /* helper */,
 				22433FE11B47212F00C075FF /* Main.storyboard */,
 				22433FE41B47212F00C075FF /* Images.xcassets */,
 				22433FE61B47212F00C075FF /* LaunchScreen.xib */,
@@ -224,6 +230,22 @@
 				CC4DEA411428B95B5F3B017C /* Pods.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B0DA10ED1C380821009BE745 /* helper */ = {
+			isa = PBXGroup;
+			children = (
+				B0DA10EF1C380826009BE745 /* extensions */,
+			);
+			path = helper;
+			sourceTree = "<group>";
+		};
+		B0DA10EF1C380826009BE745 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */,
+			);
+			path = extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -391,6 +413,7 @@
 				2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */,
 				224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */,
 				22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */,
+				B0DA10F11C380833009BE745 /* UIViewController+Alert.swift in Sources */,
 				222ABEFB1BA6715C003B05A1 /* MiscFuncs.swift in Sources */,
 				22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */,
 				B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */,
@@ -401,6 +424,7 @@
 				B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */,
 				224340021B47253C00C075FF /* IDInputVC.swift in Sources */,
 				22433FDB1B47212F00C075FF /* AppDelegate.swift in Sources */,
+				B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */,
 				225F06121B613BB6005D0DEA /* Player.swift in Sources */,
 				224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */,
 			);
