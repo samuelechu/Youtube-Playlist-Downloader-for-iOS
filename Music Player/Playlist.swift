@@ -15,6 +15,7 @@ import XCDYouTubeKit
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
+    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////
     ////////
@@ -36,7 +37,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
     
     var songs : NSArray!
-    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
     var identifiers : [String] = []
     
     //search control
@@ -61,7 +62,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         resultSearchController.active = false
         definesPresentationContext = true
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -131,7 +132,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         resetX()
         shuffleButton.tintColor = UIColor.grayColor()
     }
-
+    
     
     func refreshPlaylist(){
         if let playlistName = playlistName {
@@ -295,7 +296,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if tableView.editing{
             deleteButton.enabled = true
         }
-        
+            
         else{
             setupPlayerQueue()
             playlistContainer.startPlayer()
@@ -306,6 +307,14 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         let selectedRows = tableView.indexPathsForSelectedRows
         if selectedRows == nil {
             deleteButton.enabled = false
+        }
+    }
+    
+    
+    //push WebView from PlayerVC
+    @IBAction func pushWebView() {
+        if(playlistContainer != nil){
+            playlistContainer.performSegueWithIdentifier("playlistToSearchView", sender: nil)
         }
     }
     
@@ -536,7 +545,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //don't segue to AVPlayer if editing
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if !tableView.editing || identifier == "PlaylistToSearchView"{
+        if !tableView.editing{
             setEditing(false, animated: true)
             return true
         }
@@ -546,20 +555,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //if playlist item selected, segue to avplayer
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "PlaylistToSearchView") {
-            let searchVC = (segue.destinationViewController as? SearchWebViewController)!
-            if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
-                if let dlView = appDel.downloadListView {
-                    if let playlistName = playlistName {
-                        searchVC.setup(downloadListView: dlView, playlistName: playlistName)
-                    }
-                }
-                else {
-                    errorAlert("error", message: "couldn't get download table view object")
-                }
-            }
-        }
-        else if segue.identifier == "showPlayer"{
+        if segue.identifier == "showPlayer"{
             playerQueue.removeAllItems()
             
             
@@ -651,7 +647,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                         selectedSong.setValue(video!.expirationDate, forKey: "expireDate")
                         selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
                         
-                       
+                        
                         do {
                             try self.context.save()
                         } catch _ as NSError{}
@@ -677,28 +673,30 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     func updateNowPlayingInfo(){
         loopCount++
         let curItem = playerQueue.currentItem
-        let title = curSong.valueForKey("title") as! String
-        let imageData = curSong.valueForKey("thumbnail") as! NSData
-        let artworkImage = UIImage(data: imageData)
-        let artwork = MPMediaItemArtwork(image: artworkImage!)
-        
-        let songInfo: Dictionary <NSObject, AnyObject> = [
+        if(curItem != nil){
+            let title = curSong.valueForKey("title") as! String
+            let imageData = curSong.valueForKey("thumbnail") as! NSData
+            let artworkImage = UIImage(data: imageData)
+            let artwork = MPMediaItemArtwork(image: artworkImage!)
             
-            MPMediaItemPropertyTitle: title,
+            let songInfo: Dictionary <NSObject, AnyObject> = [
+                
+                MPMediaItemPropertyTitle: title,
+                
+                MPMediaItemPropertyArtist:"",
+                
+                MPMediaItemPropertyArtwork: artwork,
+                MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)",
+                
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(curItem!.currentTime()),
+                
+                MPMediaItemPropertyPlaybackDuration: NSTimeInterval(CMTimeGetSeconds(curItem!.duration))
+                
+            ]
             
-            MPMediaItemPropertyArtist:"",
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
             
-            MPMediaItemPropertyArtwork: artwork,
-            MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)",
-            
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(curItem!.currentTime()),
-            
-            MPMediaItemPropertyPlaybackDuration: NSTimeInterval(CMTimeGetSeconds(curItem!.duration))
-            
-        ]
-        
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
-
+        }
         
         if(loopCount > 12){
             if (updater != nil){
@@ -709,7 +707,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
-      func togglePlayPause(){
+    func togglePlayPause(){
         if (playerQueue.rate == 0){
             playerQueue.play()
         }
@@ -813,7 +811,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if curSong != nil {
             loopCount = 0
             if(updater == nil){
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+                updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
             }
         }
         
@@ -822,10 +820,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         let curItem = playerQueue.currentItem
         if(curItem != nil){
-        videoTracks = playerQueue.currentItem!.tracks
-        for track : AVPlayerItemTrack in videoTracks{
-            track.enabled = true; // enable the track
-        }
+            videoTracks = playerQueue.currentItem!.tracks
+            for track : AVPlayerItemTrack in videoTracks{
+                track.enabled = true; // enable the track
+            }
         }
     }
 }

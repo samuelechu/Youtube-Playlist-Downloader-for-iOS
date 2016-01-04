@@ -10,7 +10,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="xQf-uU-QuQ">
             <objects>
-                <tabBarController id="nfX-Dt-vOK" sceneMemberID="viewController">
+                <tabBarController id="nfX-Dt-vOK" customClass="TabBarController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="1Mc-cb-5j5"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fEX-lI-NPM">
@@ -214,7 +214,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="H9y-Te-LJ9"/>
                         <barButtonItem systemItem="add" id="Kvc-zs-xja">
                             <connections>
-                                <segue destination="VD7-5s-3Vi" kind="show" identifier="PlaylistToSearchView" id="E1Y-Z9-a5p"/>
+                                <action selector="pushWebView" destination="Mzs-fZ-jAu" id="xxj-yP-6oU"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="A4X-3z-6bp"/>
@@ -329,6 +329,7 @@
                     </view>
                     <connections>
                         <outlet property="container" destination="4jQ-YF-TMI" id="J3x-Xt-ZLV"/>
+                        <segue destination="VD7-5s-3Vi" kind="show" identifier="playlistToSearchView" id="s0Q-in-hCh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wf2-mq-AvJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -577,7 +578,7 @@
                         <viewControllerLayoutGuide type="bottom" id="fEg-v2-l8I"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dhT-su-17v">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="408"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -585,7 +586,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74t-KO-6PU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3598" y="-827"/>
+            <point key="canvasLocation" x="4032" y="-1823"/>
         </scene>
     </scenes>
     <resources>

@@ -21,29 +21,44 @@ class PlayerVC: UIViewController {
         self.navigationController?.navigationBarHidden = true
     }
     
+    override func viewDidAppear(animated: Bool) {
+        stopVid = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
         //allow swipe left to right to go back
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        
     }
     
+    //stop video play when navigating back to playlist list
+    var stopVid : Bool!
     override func viewWillDisappear(animated: Bool)
     {
         super.viewWillDisappear(animated)
+        if(self.isMovingFromParentViewController() || self.isBeingDismissed()){
+            stopVid = true
+        }
         self.navigationController?.navigationBarHidden = false
     }
     
+    //stop video only when view popped
+    override func viewDidDisappear(animated: Bool) {
+        if (stopVid == true){
+            playlist.playerQueue.removeAllItems()
+        }
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
+
+
     // MARK: - Navigation
-    
+
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
@@ -60,6 +75,22 @@ class PlayerVC: UIViewController {
         else if(segue.identifier == "showPlayer"){
             
             player = segue.destinationViewController as! Player
+            
+        }
+            
+        else if(segue.identifier == "playlistToSearchView"){
+            let searchVC = (segue.destinationViewController as? SearchWebViewController)!
+            if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
+                if let dlView = appDel.downloadListView {
+                    if let playlistName = playlistName {
+                        searchVC.setup(downloadListView: dlView, playlistName: playlistName)
+                    }
+                }
+                else {
+                    errorAlert("error", message: "couldn't get download table view object")
+                }
+            }
+            
             
         }
     }
