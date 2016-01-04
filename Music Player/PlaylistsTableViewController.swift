@@ -60,7 +60,7 @@ class PlaylistsTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "PlaylistsToPlaylist") {
             let playlistName = sender as! String
-            let playlistVC = (segue.destinationViewController as? Playlist)!
+            let playlistVC = (segue.destinationViewController as? PlayerVC)!
             playlistVC.playlistName = playlistName
         }
     }

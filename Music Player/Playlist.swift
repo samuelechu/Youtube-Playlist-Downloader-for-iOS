@@ -29,6 +29,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     @IBOutlet var deleteButton: UIBarButtonItem!
     
     var playlistName: String?
+    var playlistContainer : PlayerVC!
     
     var appDel : AppDelegate!
     var context : NSManagedObjectContext!
@@ -294,6 +295,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if tableView.editing{
             deleteButton.enabled = true
+        }
+        
+        else{
+            setupPlayerQueue()
+            playlistContainer.startPlayer()
         }
     }
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
@@ -586,6 +592,26 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
     }
     
+    func setupPlayerQueue(){
+        playerQueue.removeAllItems()
+        
+        
+        if resultSearchController.active && resultSearchController.searchBar.text != ""{
+            let selectedRow = (tableView.indexPathForSelectedRow?.row)!
+            curNdx = findNdxInFullList(selectedRow)
+            
+            resultSearchController.active = false
+            let path = NSIndexPath(forRow: curNdx, inSection: 0)
+            tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+        }
+            
+            
+        else{
+            
+            curNdx = (tableView.indexPathForSelectedRow?.row)!
+        }
+        addSongToQueue(curNdx)
+    }
     func addSongToQueue(index : Int) {
         if let curItem = playerQueue.currentItem{
             curItem.seekToTime(kCMTimeZero)

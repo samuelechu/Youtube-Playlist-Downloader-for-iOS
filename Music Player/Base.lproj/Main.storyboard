@@ -32,12 +32,12 @@
             <objects>
                 <tableViewController id="Mzs-fZ-jAu" customClass="Playlist" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="86" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="408"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SongCell" rowHeight="82" id="n1b-by-OAB" customClass="SongCell" customModule="Music_Player" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="114" width="600" height="82"/>
+                                <rect key="frame" x="0.0" y="94" width="600" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n1b-by-OAB" id="TxN-5Q-dXq">
                                     <rect key="frame" x="0.0" y="0.0" width="567" height="81"/>
@@ -196,7 +196,6 @@
                                     <outlet property="imageLabel" destination="W6Z-ns-klj" id="7xm-hK-pM8"/>
                                     <outlet property="positionLabel" destination="zI8-Wc-9Gv" id="Rib-4b-2ZA"/>
                                     <outlet property="songLabel" destination="Sil-aW-AWr" id="yG2-dr-VWn"/>
-                                    <segue destination="0Af-T0-k7Q" kind="presentation" identifier="showPlayer" modalTransitionStyle="flipHorizontal" id="GwX-sb-3QR"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -248,7 +247,7 @@
                 <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="0Af-T0-k7Q" customClass="Player" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nIP-4b-37Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3556" y="-1449"/>
+            <point key="canvasLocation" x="4032" y="-1349"/>
         </scene>
         <!-- -->
         <scene sceneID="9c3-vF-bII">
@@ -364,12 +363,59 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="Mzs-fZ-jAu" kind="show" identifier="PlaylistsToPlaylist" id="naN-s0-TY4"/>
+                        <segue destination="ANP-zS-Gpz" kind="show" identifier="PlaylistsToPlaylist" id="3Gn-F9-n5t"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fbo-sG-gCb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2356" y="-1702"/>
+        </scene>
+        <!--PlayerVC-->
+        <scene sceneID="VuV-cl-Iou">
+            <objects>
+                <viewController id="ANP-zS-Gpz" customClass="PlayerVC" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="M83-v4-xvJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="kkO-pP-xSK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KGa-xf-M5t">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dOM-2X-q46">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="195"/>
+                                <connections>
+                                    <segue destination="0Af-T0-k7Q" kind="embed" identifier="showPlayer" id="X2F-rm-gft"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4jQ-YF-TMI">
+                                <rect key="frame" x="0.0" y="192" width="600" height="408"/>
+                                <connections>
+                                    <segue destination="Ab2-ns-uI0" kind="embed" identifier="showPlaylist" id="aUH-ar-gjB"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="leading" secondItem="KGa-xf-M5t" secondAttribute="leadingMargin" constant="-20" id="1Md-aw-vs8"/>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="top" secondItem="KGa-xf-M5t" secondAttribute="top" constant="231" id="Aq8-Eg-7X4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dOM-2X-q46" secondAttribute="trailing" constant="-20" id="Pb9-ek-gUl"/>
+                            <constraint firstItem="dOM-2X-q46" firstAttribute="leading" secondItem="KGa-xf-M5t" secondAttribute="leadingMargin" constant="-20" id="R1j-U7-1Du"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4jQ-YF-TMI" secondAttribute="trailing" constant="-20" id="TYl-ZN-Jj5"/>
+                            <constraint firstItem="dOM-2X-q46" firstAttribute="top" secondItem="KGa-xf-M5t" secondAttribute="topMargin" id="WRq-Dk-oIi"/>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="top" secondItem="dOM-2X-q46" secondAttribute="bottom" id="c2e-zs-W2P"/>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="leading" secondItem="KGa-xf-M5t" secondAttribute="leadingMargin" id="eCy-jy-vqX"/>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="top" secondItem="dOM-2X-q46" secondAttribute="bottom" id="mGr-Tj-Ldh"/>
+                            <constraint firstItem="4jQ-YF-TMI" firstAttribute="bottom" secondItem="KGa-xf-M5t" secondAttribute="bottomMargin" id="mUO-l9-YYY"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="container" destination="4jQ-YF-TMI" id="J3x-Xt-ZLV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wf2-mq-AvJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3214" y="-1591"/>
         </scene>
         <!--Playlists-->
         <scene sceneID="kyB-Mf-8hV">
@@ -574,7 +620,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="dqf-jq-HxC">
-                        <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                        <rect key="frame" x="0.0" y="364" width="600" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -613,7 +659,7 @@
                         <viewControllerLayoutGuide type="bottom" id="fEg-v2-l8I"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dhT-su-17v">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="408"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -623,6 +669,19 @@
             </objects>
             <point key="canvasLocation" x="3586" y="-641"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="2UX-cs-3kl">
+            <objects>
+                <viewController id="McD-Ut-6xm" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1dN-sd-4E7">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nBf-mN-T8U" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
     </scenes>
     <resources>
         <image name="black.png" width="90" height="60"/>
@@ -630,7 +689,4 @@
         <image name="shuffle.png" width="25" height="25"/>
         <image name="video.png" width="30" height="30"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="naN-s0-TY4"/>
-    </inferredMetricsTieBreakers>
 </document>
