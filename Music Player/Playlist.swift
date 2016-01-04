@@ -93,7 +93,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         //initialize shuffle, select, and delete buttons
         
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
         editButtonItem().title = "Edit"
         deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
