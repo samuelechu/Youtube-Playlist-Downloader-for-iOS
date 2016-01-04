@@ -14,3 +14,4 @@
 
 ## fix
 * download to playlist folder
+* avplayerviewcontroller doesn't respond to swipe gestures in full screen
