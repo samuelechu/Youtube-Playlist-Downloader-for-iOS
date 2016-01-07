@@ -10,7 +10,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="xQf-uU-QuQ">
             <objects>
-                <tabBarController id="nfX-Dt-vOK" customClass="TabBarController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="tabBarController" id="nfX-Dt-vOK" customClass="TabBarController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="1Mc-cb-5j5"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fEX-lI-NPM">
@@ -288,10 +288,10 @@
             </objects>
             <point key="canvasLocation" x="2356" y="-1702"/>
         </scene>
-        <!--PlayerVC-->
+        <!--Playlist View Controller-->
         <scene sceneID="VuV-cl-Iou">
             <objects>
-                <viewController id="ANP-zS-Gpz" customClass="PlayerVC" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ANP-zS-Gpz" customClass="PlaylistViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="M83-v4-xvJ"/>
                         <viewControllerLayoutGuide type="bottom" id="kkO-pP-xSK"/>

@@ -15,7 +15,7 @@ extension UIViewController {
     func showTextFieldDialog(title: String, message: String, placeHolder: String, okButtonTitle: String, didTapOkButton: ((String?) -> Void)) {
 
         let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-
+        
         alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
             //print("Pushed CANCEL")
         })

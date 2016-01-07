@@ -8,14 +8,13 @@
 
 import UIKit
 
-class PlayerVC: UIViewController {
+//the View Controller that contains the Player and Playlist
+class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     
     @IBOutlet weak var container: UIView!
     var playlist: Playlist!
-    var playlistName : String!
     var player : Player!
-    
-    
+    var playlistName : String!
     
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
@@ -46,38 +45,32 @@ class PlayerVC: UIViewController {
     //stop video only when view popped
     override func viewDidDisappear(animated: Bool) {
         if (stopVid == true){
-            playlist.playerQueue.removeAllItems()
+            player.stop()
         }
         
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        if( segue.identifier == "showPlaylist")
+        
+        //initialize playlist container
+        if(segue.identifier == "showPlaylist")
         {
             let navController = segue.destinationViewController as! UINavigationController
             playlist = navController.viewControllers[0] as! Playlist
             playlist.playlistName = playlistName
-            playlist.playlistContainer = self
+            playlist.playlistVCDelegate = self
             
         }
-            
+        
+        //initialize avPlayer container
         else if(segue.identifier == "showPlayer"){
-            
             player = segue.destinationViewController as! Player
-            
         }
             
+        //segue to Youtube WebView
         else if(segue.identifier == "playlistToSearchView"){
             let searchVC = (segue.destinationViewController as? SearchWebViewController)!
             if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
@@ -90,18 +83,21 @@ class PlayerVC: UIViewController {
                     errorAlert("error", message: "couldn't get download table view object")
                 }
             }
-            
-            
         }
     }
     
+    //initialize avPlayer
     func startPlayer(){
         if(player.playlistDelegate == nil){
             player.playlistDelegate = playlist
             player.player = playlist.playerQueue
         }
         player.player?.play()
-        
+    }
+    
+    //initialize Youtube WebView
+    func pushWebView() {
+        performSegueWithIdentifier("playlistToSearchView", sender: nil)
     }
     
 }

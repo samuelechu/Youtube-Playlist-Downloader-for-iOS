@@ -12,9 +12,10 @@ import SwiftFilePath
 class PlaylistsTableViewController: UITableViewController {
     
     @IBAction func didTapAddButton(sender: AnyObject) {
-        showTextFieldDialog("Add playlist", message: "please type title", placeHolder: "title", okButtonTitle: "Add", didTapOkButton: { titleOrNil in
-            print("titleOrNil \(titleOrNil)")
-            PlaylistManager().makeNewDirectory("muiaej")
+        showTextFieldDialog("Add playlist", message: "", placeHolder: "Name", okButtonTitle: "Add", didTapOkButton: { titleOrNil in
+            PlaylistManager().makeNewDirectory(titleOrNil!)
+            self.playlists = PlaylistManager().getPlaylists()
+            self.tableView.reloadData()
         })
     }
     
@@ -24,7 +25,6 @@ class PlaylistsTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        PlaylistManager().initPlaylistDirIfNotExist()
         playlists = PlaylistManager().getPlaylists()
         
         //set background image
@@ -60,19 +60,18 @@ class PlaylistsTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "PlaylistsToPlaylist") {
             let playlistName = sender as! String
-            let playlistVC = (segue.destinationViewController as? PlayerVC)!
+            let playlistVC = (segue.destinationViewController as? PlaylistViewController)!
             playlistVC.playlistName = playlistName
         }
     }
 }
-
-
 
 class PlaylistManager {
 
     let playlistDir = Path.documentsDir["playlists"]
     
     func getPlaylists() -> [String] {
+        PlaylistManager().initPlaylistDirIfNotExist()
         if let contents = playlistDir.contents {
             var playlists: [String] = []
             contents.forEach { path in

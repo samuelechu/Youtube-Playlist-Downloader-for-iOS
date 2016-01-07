@@ -26,7 +26,6 @@ class DownloadingVideoInfo {
     }
 }
 
-
 class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var appDel : AppDelegate?
@@ -101,7 +100,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 let playlistName = videoData[cellNum!].playlistName
                 
                 let identifier = video.identifier
-                let filePath = grabFilePath("\(identifier).mp4")
+                let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
                 
                 do{
                     try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
@@ -147,12 +146,5 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 tableDelegate.reloadCellAtNdx(cellNum!)
                 NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
-    }
-    
-    func grabFilePath(fileName : String) -> String {
-        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-        let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
-        
-        return writePath
     }
 }

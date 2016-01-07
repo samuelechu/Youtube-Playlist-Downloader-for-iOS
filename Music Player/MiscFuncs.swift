@@ -114,6 +114,14 @@ public class MiscFuncs{
         
         return results[0] as! NSManagedObject
     }
+    
+    //return path of video, input : video identifier
+    public class func grabFilePath(fileName : String) -> String {
+        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
+        
+        return writePath
+    }
 
 }
 

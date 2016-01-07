@@ -12,6 +12,11 @@ import AVFoundation
 import AVKit
 import XCDYouTubeKit
 
+protocol PlaylistViewControllerDelegate{
+    func pushWebView()
+    func startPlayer()
+}
+
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
@@ -30,7 +35,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     @IBOutlet var deleteButton: UIBarButtonItem!
     
     var playlistName: String?
-    var playlistContainer : PlayerVC!
+    var playlistVCDelegate : PlaylistViewControllerDelegate!
     
     var appDel : AppDelegate!
     var context : NSManagedObjectContext!
@@ -297,9 +302,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             deleteButton.enabled = true
         }
             
-        else{
+        else{//playlist cell selected
             setupPlayerQueue()
-            playlistContainer.startPlayer()
+            if(playlistVCDelegate != nil){
+                playlistVCDelegate.startPlayer()
+            }
         }
     }
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
@@ -313,8 +320,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //push WebView from PlayerVC
     @IBAction func pushWebView() {
-        if(playlistContainer != nil){
-            playlistContainer.performSegueWithIdentifier("playlistToSearchView", sender: nil)
+        if(playlistVCDelegate != nil){
+           playlistVCDelegate.pushWebView()
         }
     }
     
@@ -807,6 +814,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     track.enabled = false; // disable the track
                 }
             }
+            
+            //playback controls only work in 'playlists' tab
+            tabBarController?.selectedIndex = 0
         }
         if curSong != nil {
             loopCount = 0
@@ -825,5 +835,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 track.enabled = true; // enable the track
             }
         }
+    }
+    
+    func stop(){
+        playerQueue.removeAllItems()
     }
 }

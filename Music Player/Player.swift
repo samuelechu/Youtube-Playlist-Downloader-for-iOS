@@ -18,6 +18,7 @@ protocol PlaylistDelegate{
     func advance()
     func retreat()
     func updateNowPlayingInfo()
+    func stop()
 }
 
 class Player: AVPlayerViewController {
@@ -69,6 +70,11 @@ class Player: AVPlayerViewController {
                 break
             }
         }
+    }
+    
+    //stop video
+    func stop(){
+        playlistDelegate?.stop()
     }
     
     //recieve input from earphone button clicks
