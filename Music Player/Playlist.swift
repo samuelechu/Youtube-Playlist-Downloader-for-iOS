@@ -173,7 +173,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     
-    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////
     ////////
@@ -297,15 +296,19 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     //disable delete button when less than one item selected
+    //function to setup segue to start AVPlayer
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if tableView.editing{
             deleteButton.enabled = true
         }
             
         else{//playlist cell selected
+            
+            
             setupPlayerQueue()
             if(playlistVCDelegate != nil){
                 playlistVCDelegate.startPlayer()
+                
             }
         }
     }
@@ -321,7 +324,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     //push WebView from PlayerVC
     @IBAction func pushWebView() {
         if(playlistVCDelegate != nil){
-           playlistVCDelegate.pushWebView()
+            playlistVCDelegate.pushWebView()
         }
     }
     
@@ -558,40 +561,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         
         return false
-    }
-    
-    //if playlist item selected, segue to avplayer
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showPlayer"{
-            playerQueue.removeAllItems()
-            
-            
-            if resultSearchController.active && resultSearchController.searchBar.text != ""{
-                let selectedRow = (tableView.indexPathForSelectedRow?.row)!
-                curNdx = findNdxInFullList(selectedRow)
-                
-                resultSearchController.active = false
-                let path = NSIndexPath(forRow: curNdx, inSection: 0)
-                tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
-            }
-                
-                
-            else{
-                
-                curNdx = (tableView.indexPathForSelectedRow?.row)!
-            }
-            addSongToQueue(curNdx)
-            
-            
-            
-            //if download finished, initialize avplayer\
-            let player : Player = segue.destinationViewController as! Player
-            player.playlistDelegate = self
-            player.player = playerQueue
-            player.player?.play()
-        }
-        
-        
     }
     
     func setupPlayerQueue(){
