@@ -92,6 +92,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
             player.playlistDelegate = playlist
             player.player = playlist.playerQueue
         }
+        player.becomeFirstResponder()
         player.player?.play()
     }
     
