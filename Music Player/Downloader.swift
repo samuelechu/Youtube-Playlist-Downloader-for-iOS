@@ -19,13 +19,14 @@ protocol DownloaderDelegate: class {
 }
 
 
-
-
 class Downloader {
     
     weak var delegate: DownloaderDelegate?
     let downloadListView : DownloadListView
     let playlistName: String
+    
+    private var playlist : NSManagedObject!
+    private var songs : NSMutableSet!
     
     private var context : NSManagedObjectContext!
     private var appDel : AppDelegate?
@@ -45,6 +46,15 @@ class Downloader {
         
         appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
+        
+        
+        let request = NSFetchRequest(entityName: "Playlist")
+        request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+        
+        let playlists = try? context.executeFetchRequest(request) as NSArray
+        playlist = playlists![0] as! NSManagedObject
+        
+        songs = playlist.mutableSetValueForKey("songs")
         
         //set initial quality to 360P if uninitialized
         MiscFuncs.getSettings()
@@ -89,7 +99,7 @@ class Downloader {
     
     
     private func updateStoredSongs(){
-        let request = NSFetchRequest(entityName: "Songs")
+        let request = NSFetchRequest(entityName: "Song")
         request.predicate = NSPredicate(format: "isDownloaded = %@", true)
         
         let songs = try? context.executeFetchRequest(request)
@@ -105,20 +115,40 @@ class Downloader {
     private func isVideoStored (videoId : String) -> Bool {
         
         if(downloadedIDs.indexOf(videoId) != nil){
+            addStoredSong(videoId)
             return true
         }
             
         else if((downloadTasks.indexOf(videoId)) != nil){
+            addStoredSong(videoId)
             return true
         }
             
         else if((uncachedVideos.indexOf(videoId)) != nil){
+            addStoredSong(videoId)
             return true
         }
         
         return false
     }
     
+    func addStoredSong(videoId : String){
+        let request = NSFetchRequest(entityName: "Song")
+        request.predicate = NSPredicate(format: "identifier = %@", videoId)
+        
+        let fetchedSongs = try? context.executeFetchRequest(request) as NSArray
+        let song = fetchedSongs![0] as! NSManagedObject
+        
+        songs.addObject(song)
+        
+        do{
+            try self.context.save()
+        }catch _ as NSError{}
+        
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+
+    }
     
     private func startDownloadVideo(ID : String, qual : Int){
         if(downloadTasks.indexOf(ID) == nil){
@@ -266,7 +296,7 @@ class Downloader {
     private func saveVideoInfo(identifier : String) {
         XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
             if error == nil {
-                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: self.context)
+                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: self.context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video!.title, forKey: "title")
                 newSong.setValue(video!.expirationDate, forKey: "expireDate")
@@ -282,6 +312,7 @@ class Downloader {
                 let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 
                 newSong.setValue(imgData, forKey: "thumbnail")
+                
                 
                 
                 do{

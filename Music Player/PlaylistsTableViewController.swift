@@ -8,21 +8,30 @@
 
 import UIKit
 import SwiftFilePath
+import CoreData
 
 class PlaylistsTableViewController: UITableViewController {
     
     @IBAction func didTapAddButton(sender: AnyObject) {
-        showTextFieldDialog("Add playlist", message: "", placeHolder: "Name", okButtonTitle: "Add", didTapOkButton: { titleOrNil in
-            PlaylistManager().makeNewDirectory(titleOrNil!)
-            self.playlists = PlaylistManager().getPlaylists()
-            self.tableView.reloadData()
+        showTextFieldDialog("Add playlist", message: "", placeHolder: "Name", okButtonTitle: "Add", didTapOkButton: { title in
+            self.addPlaylist(title!)
+            self.refreshPlaylists()
         })
     }
     
-    var playlists: [String] = []
+    private var context : NSManagedObjectContext!
+    private var appDel : AppDelegate?
+    
+    var playlists: NSArray!
+    var playlistNames : [String] = []
+    var playlistSortDescriptor  = NSSortDescriptor(key: "playlistName", ascending: true, selector: "caseInsensitiveCompare:")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
+        
         tableView.dataSource = self
         tableView.delegate = self
         playlists = PlaylistManager().getPlaylists()
@@ -33,6 +42,8 @@ class PlaylistsTableViewController: UITableViewController {
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
         
+        refreshPlaylists()
+        
         tableView.reloadData()
     }
     
@@ -41,19 +52,19 @@ class PlaylistsTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlists.count
+        return playlistNames.count
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("playlistCell")! as UITableViewCell
-        cell.textLabel?.text = playlists[indexPath.row]
+        cell.textLabel?.text = playlistNames[indexPath.row]
         return cell
     }
     
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let playlistName = playlists[indexPath.row]
+        let playlistName = playlistNames[indexPath.row]
         performSegueWithIdentifier("PlaylistsToPlaylist", sender: playlistName)
     }
 
@@ -64,7 +75,37 @@ class PlaylistsTableViewController: UITableViewController {
             playlistVC.playlistName = playlistName
         }
     }
+
+    
+    func addPlaylist(name: String){
+        let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("Playlist", inManagedObjectContext: self.context)
+        newPlaylist.setValue(name, forKey: "playlistName")
+        
+        do{
+            try self.context.save()
+        }catch _ as NSError{}
+
+    }
+    
+    func refreshPlaylists(){
+        playlistNames = []
+        let request = NSFetchRequest(entityName: "Playlist")
+        request.sortDescriptors = [playlistSortDescriptor]
+        
+        playlists = try? context.executeFetchRequest(request)
+        for playlist in playlists{
+            let playlistName = playlist.valueForKey("playlistName") as! String
+            playlistNames += [playlistName]
+        }
+        
+        tableView.reloadData()
+    }
+
+
 }
+
+
+
 
 class PlaylistManager {
 

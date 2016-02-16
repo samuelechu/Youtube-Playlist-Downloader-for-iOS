@@ -37,6 +37,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     var taskIDs : [Int] = []
     var tasks : [NSURLSessionDownloadTask] = []
     
+    var playlist: NSManagedObject!
+    
     var tableDelegate : downloadObjectTableDelegate!
     
     required init(coder aDecoder: NSCoder){
@@ -107,7 +109,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 }catch _ as NSError{}
                 
                 //save to CoreData
-                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Songs", inManagedObjectContext: context)
+                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video.title, forKey: "title")
                 newSong.setValue(playlistName, forKey: "playlistName")
@@ -131,6 +133,18 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 let small = video.smallThumbnailURL
                 let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 newSong.setValue(imgData, forKey: "thumbnail")
+                
+                
+                let request = NSFetchRequest(entityName: "Playlist")
+                request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+                
+                let playlists = try? context.executeFetchRequest(request) as NSArray
+                playlist = playlists![0] as! NSManagedObject
+                
+                let songs = playlist.mutableSetValueForKey("songs")
+                songs.addObject(newSong)
+
+                
                 
                 do {
                     try context.save()

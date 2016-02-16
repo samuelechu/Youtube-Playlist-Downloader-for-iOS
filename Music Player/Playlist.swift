@@ -39,7 +39,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     var appDel : AppDelegate!
     var context : NSManagedObjectContext!
-    var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+    var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: "caseInsensitiveCompare:")
     
     var songs : NSArray!
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
@@ -141,14 +141,14 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     func refreshPlaylist(){
         if let playlistName = playlistName {
-            let request = NSFetchRequest(entityName: "Songs")
-            request.sortDescriptors = [songSortDescriptor]
-            if !isConnected {//removes nonDownloaded songs from list if no connection detected
-                let playlistFilter = NSPredicate(format: "playlistName = %@", playlistName)
-                let downloadedFilter = NSPredicate(format: "isDownloaded = %@", true)
-                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [playlistFilter, downloadedFilter])
-            }
-            songs = try? context.executeFetchRequest(request)
+            let request = NSFetchRequest(entityName: "Playlist")
+           // request.sortDescriptors = [songSortDescriptor]
+            request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+            
+            let playlists = try? context.executeFetchRequest(request) as NSArray
+            let playlist = playlists![0].valueForKey("songs") as! NSSet
+            songs = playlist.allObjects as NSArray
+            
             identifiers = []
             var playlistDuration = 0.0
             for song in songs{
@@ -351,7 +351,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             setEditing(false, animated: true)
         }
         
-        let request = NSFetchRequest(entityName: "Songs")
+        let request = NSFetchRequest(entityName: "Song")
         request.sortDescriptors = [songSortDescriptor]
         request.predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
         filteredSongs = try? context.executeFetchRequest(request)
@@ -510,7 +510,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     func deleteSong(identifier : String){
-        let songRequest = NSFetchRequest(entityName: "Songs")
+        let songRequest = NSFetchRequest(entityName: "Song")
         songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
         let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)
         let selectedSong = fetchedSongs[0] as! NSManagedObject
@@ -605,7 +605,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
             
         else{
-            let songRequest = NSFetchRequest(entityName: "Songs")
+            let songRequest = NSFetchRequest(entityName: "Song")
             songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
             let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)
             let selectedSong = fetchedSongs[0] as! NSManagedObject
