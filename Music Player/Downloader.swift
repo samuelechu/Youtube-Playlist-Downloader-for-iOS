@@ -157,7 +157,7 @@ class Downloader {
                     if let video = video {
                         let streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
                         var desiredURL : NSURL!
-                        
+                         
                         if (qual == 0){ //360P
                             desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
                         }
