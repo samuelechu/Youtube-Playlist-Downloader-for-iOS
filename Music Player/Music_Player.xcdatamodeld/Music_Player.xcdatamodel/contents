@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Automatic">
     <entity name="Playlist" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="playlistName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="songs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Song" inverseName="playlists" inverseEntity="Song" syncable="YES"/>
     </entity>
     <entity name="Settings" syncable="YES">
         <attribute name="cache" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="playlist" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="quality" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
-    <entity name="Songs" syncable="YES">
+    <entity name="Song" syncable="YES">
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="durationStr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="expireDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -18,11 +19,11 @@
         <attribute name="streamURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Playlist" syncable="YES"/>
+        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Playlist" inverseName="songs" inverseEntity="Playlist" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Playlist" positionX="-92" positionY="203" width="128" height="75"/>
         <element name="Settings" positionX="-234" positionY="81" width="128" height="90"/>
-        <element name="Songs" positionX="-387" positionY="198" width="128" height="195"/>
-        <element name="Playlist" positionX="-92" positionY="203" width="128" height="58"/>
+        <element name="Song" positionX="-387" positionY="198" width="128" height="195"/>
     </elements>
 </model>
