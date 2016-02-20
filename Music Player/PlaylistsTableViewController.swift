@@ -34,7 +34,6 @@ class PlaylistsTableViewController: UITableViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        playlists = PlaylistManager().getPlaylists()
         
         //set background image
         tableView.backgroundColor = UIColor.clearColor()
@@ -43,8 +42,6 @@ class PlaylistsTableViewController: UITableViewController {
         tableView.backgroundView = imgView
         
         refreshPlaylists()
-        
-        tableView.reloadData()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -135,39 +132,4 @@ class PlaylistsTableViewController: UITableViewController {
         }
     }
 
-}
-
-
-
-
-class PlaylistManager {
-
-    let playlistDir = Path.documentsDir["playlists"]
-    
-    func getPlaylists() -> [String] {
-        PlaylistManager().initPlaylistDirIfNotExist()
-        if let contents = playlistDir.contents {
-            var playlists: [String] = []
-            contents.forEach { path in
-                playlists.append(path.basename as String)
-            }
-            return playlists
-        }
-        else {
-            return []
-        }
-    }
-    
-    func makeNewDirectory(directoryName: String) {
-        playlistDir[directoryName].mkdir()
-    }
-    
-    func initPlaylistDirIfNotExist() {
-        if !playlistDir.exists {
-            playlistDir.mkdir()
-            ["Favorites", "Love", "Best", "Good"].forEach { title in
-                playlistDir[title].mkdir()
-            }
-        }
-    }
 }
