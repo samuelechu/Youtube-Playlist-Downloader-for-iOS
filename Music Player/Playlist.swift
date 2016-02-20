@@ -138,16 +138,24 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         shuffleButton.tintColor = UIColor.grayColor()
     }
     
+    //get songs from current playlist
+    func getCurSongs() -> NSArray{
+        let request = NSFetchRequest(entityName: "Playlist")
+        // request.sortDescriptors = [songSortDescriptor]
+        request.predicate = NSPredicate(format: "playlistName = %@", playlistName!)
+        
+        let playlists = try? context.executeFetchRequest(request) as NSArray
+        if(playlists?.count >= 1){
+        let playlist = playlists![0].valueForKey("songs") as! NSSet
+        let songsUnsorted = playlist.allObjects as NSArray
+        return songsUnsorted.sortedArrayUsingDescriptors([songSortDescriptor])
+        }
+        return []
+    }
     
     func refreshPlaylist(){
-        if let playlistName = playlistName {
-            let request = NSFetchRequest(entityName: "Playlist")
-           // request.sortDescriptors = [songSortDescriptor]
-            request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-            
-            let playlists = try? context.executeFetchRequest(request) as NSArray
-            let playlist = playlists![0].valueForKey("songs") as! NSSet
-            songs = playlist.allObjects as NSArray
+        if (playlistName != nil) {
+            songs = getCurSongs()
             
             identifiers = []
             var playlistDuration = 0.0
@@ -351,10 +359,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             setEditing(false, animated: true)
         }
         
-        let request = NSFetchRequest(entityName: "Song")
-        request.sortDescriptors = [songSortDescriptor]
-        request.predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
-        filteredSongs = try? context.executeFetchRequest(request)
+        let curSongs = getCurSongs()
+        let predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
+        filteredSongs = curSongs.filteredArrayUsingPredicate(predicate)
         tableView.reloadData()
         
         
@@ -414,7 +421,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     selectedRows += [selectedRow]
                     let identifier = songs[ndxIdentifiers].valueForKey("identifier") as! String
                     
-                    deleteSong(identifier)
+                    SongManager.deleteSong(identifier)
+                    updateInPlaylist(selectedRow)
                 }
                 
                 
@@ -426,7 +434,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     let row = x[indexPath.row]
                     let identifier = songs[row].valueForKey("identifier") as! String
                     
-                    deleteSong(identifier)
+                    SongManager.deleteSong(identifier)
+                    updateInPlaylist(row)
                 }
             }
             
@@ -493,8 +502,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
             
             let identifier = songs[row].valueForKey("identifier") as! String
-            deleteSong(identifier)
-            
+            SongManager.deleteSong(identifier)
+            updateInPlaylist(row)
             
             for var index = 0; index < x.count; ++index {
                 if x[index] > row {
@@ -509,32 +518,16 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
     }
     
-    func deleteSong(identifier : String){
-        let songRequest = NSFetchRequest(entityName: "Song")
-        songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-        let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)
-        let selectedSong = fetchedSongs[0] as! NSManagedObject
-        
-        //allows for redownload of deleted song
-        let dict = ["identifier" : identifier]
-        NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
-        
-        let fileManager = NSFileManager.defaultManager()
-        
-        //remove item in both documents directory and persistentData
-        let isDownloaded = selectedSong.valueForKey("isDownloaded") as! Bool
+    //removes song from current playlist relationship
+    func updateInPlaylist(row : Int){
+        let inPlaylists = songs[row].mutableSetValueForKey("playlists")
         
         
-        if isDownloaded {
-            var file = selectedSong.valueForKey("identifier") as! String
-            file = file.stringByAppendingString(".mp4")
-            let filePath = (documentsDir as NSString).stringByAppendingPathComponent(file)
-            do {
-                try fileManager.removeItemAtPath(filePath)
-            } catch _ {
-            }
-        }
-        context.deleteObject(selectedSong)
+        let request = NSFetchRequest(entityName: "Playlist")
+        request.predicate = NSPredicate(format: "playlistName = %@", playlistName!)
+        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(request)
+        let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
+        inPlaylists.removeObject(selectedPlaylist)
         
         
         do {
@@ -542,7 +535,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         } catch _ {
         }
     }
-    
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////

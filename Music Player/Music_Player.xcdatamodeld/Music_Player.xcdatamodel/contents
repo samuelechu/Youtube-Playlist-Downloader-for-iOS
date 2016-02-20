@@ -19,11 +19,11 @@
         <attribute name="streamURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="Playlist" inverseName="songs" inverseEntity="Playlist" syncable="YES"/>
+        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Playlist" inverseName="songs" inverseEntity="Playlist" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Playlist" positionX="-92" positionY="203" width="128" height="73"/>
+        <element name="Playlist" positionX="-92" positionY="203" width="128" height="75"/>
         <element name="Settings" positionX="-234" positionY="81" width="128" height="90"/>
-        <element name="Song" positionX="-387" positionY="198" width="128" height="193"/>
+        <element name="Song" positionX="-387" positionY="198" width="128" height="195"/>
     </elements>
 </model>

@@ -51,8 +51,8 @@ class Downloader {
         let request = NSFetchRequest(entityName: "Playlist")
         request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
         
-        let playlists = try? context.executeFetchRequest(request) as NSArray
-        playlist = playlists![0] as! NSManagedObject
+        let playlists : NSArray = try! context.executeFetchRequest(request)
+        playlist = playlists[0] as! NSManagedObject
         
         songs = playlist.mutableSetValueForKey("songs")
         
@@ -136,8 +136,8 @@ class Downloader {
         let request = NSFetchRequest(entityName: "Song")
         request.predicate = NSPredicate(format: "identifier = %@", videoId)
         
-        let fetchedSongs = try? context.executeFetchRequest(request) as NSArray
-        let song = fetchedSongs![0] as! NSManagedObject
+        let fetchedSongs : NSArray = try! context.executeFetchRequest(request)
+        let song = fetchedSongs[0] as! NSManagedObject
         
         songs.addObject(song)
         

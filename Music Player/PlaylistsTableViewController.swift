@@ -100,7 +100,40 @@ class PlaylistsTableViewController: UITableViewController {
         
         tableView.reloadData()
     }
-
+    
+    
+    //swipe to delete
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            let row = indexPath.row
+            let playlistName = playlists[row].valueForKey("playlistName") as! String
+            deletePlaylist(playlistName)
+            refreshPlaylists()
+        }
+    }
+    
+    //delete playlist and all songs in it
+    func deletePlaylist(playlistName : String){
+        let request = NSFetchRequest(entityName: "Playlist")
+        request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(request)
+        let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
+        
+        let songs = selectedPlaylist.valueForKey("songs") as! NSSet
+        
+        for song in songs{
+            let identifier = song.valueForKey("identifier") as! String
+            SongManager.deleteSong(identifier)
+            
+        }
+        
+        context.deleteObject(selectedPlaylist)
+        
+        do {
+            try context.save()
+        } catch _ {
+        }
+    }
 
 }
 
