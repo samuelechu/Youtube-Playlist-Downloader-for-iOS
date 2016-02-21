@@ -588,10 +588,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         if isDownloaded {
             
-            let file = identifier.stringByAppendingString(".mp4")
+            let file = identifier.stringByAppendingString(".m4a")
             let filePath = (documentsDir as NSString).stringByAppendingPathComponent(file)
             let url = NSURL(fileURLWithPath: filePath)
-            
+
             let playerItem = AVPlayerItem(URL: url)
             playerQueue.insertItem(playerItem, afterItem: nil)
         }
@@ -799,6 +799,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     func stop(){
-        playerQueue.removeAllItems()
+        playerQueue.pause()
+        //prevent player from playing another song when different playlist opened
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
     }
 }

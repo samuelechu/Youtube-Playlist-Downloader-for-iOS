@@ -103,10 +103,24 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 
                 let identifier = video.identifier
                 let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
-                
+                //print(location.lastPathComponent!)
                 do{
                     try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
                 }catch _ as NSError{}
+
+                let asset = AVURLAsset(URL: NSURL(fileURLWithPath: filePath))
+                asset.writeAudioTrackToURL(NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
+)) {(success, error) -> () in
+                    if !success {
+                        print(error)
+                    }
+                }
+                
+                do {
+                    try NSFileManager.defaultManager().removeItemAtPath(filePath)
+                } catch _ {
+                }
+                
                 
                 //save to CoreData
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)

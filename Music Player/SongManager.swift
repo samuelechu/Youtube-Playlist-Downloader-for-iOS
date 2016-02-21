@@ -41,7 +41,7 @@ public class SongManager{
             
             if isDownloaded {
                 var file = selectedSong.valueForKey("identifier") as! String
-                file = file.stringByAppendingString(".mp4")
+                file = file.stringByAppendingString(".m4a")
                 let filePath = (documentsDir as NSString).stringByAppendingPathComponent(file)
                 do {
                     try fileManager.removeItemAtPath(filePath)

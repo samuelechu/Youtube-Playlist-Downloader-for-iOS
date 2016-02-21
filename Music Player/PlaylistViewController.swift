@@ -46,6 +46,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     override func viewDidDisappear(animated: Bool) {
         if (stopVid == true){
             player.stop()
+            player.player = nil
         }
         
     }
@@ -89,6 +90,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     //initialize avPlayer
     func startPlayer(){
         if(player.playlistDelegate == nil){
+            //sets avplayercontainer's delegate as the playlist shown
             player.playlistDelegate = playlist
             player.player = playlist.playerQueue
         }
