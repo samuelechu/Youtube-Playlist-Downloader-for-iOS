@@ -133,21 +133,8 @@ class Downloader {
     }
     
     func addStoredSong(videoId : String){
-        let request = NSFetchRequest(entityName: "Song")
-        request.predicate = NSPredicate(format: "identifier = %@", videoId)
-        
-        let fetchedSongs : NSArray = try! context.executeFetchRequest(request)
-        let song = fetchedSongs[0] as! NSManagedObject
-        
-        songs.addObject(song)
-        
-        do{
-            try self.context.save()
-        }catch _ as NSError{}
-        
-        
+        SongManager.addToRelationships(videoId, playlistName: playlistName)
         NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
-
     }
     
     private func startDownloadVideo(ID : String, qual : Int){

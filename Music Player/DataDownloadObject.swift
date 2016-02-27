@@ -98,29 +98,33 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             let cellNum  = taskIDs.indexOf(downloadTask.taskIdentifier)
             if cellNum != nil{
                 
+                let fileManager = NSFileManager.defaultManager()
                 let video = videoData[cellNum!].video
                 let playlistName = videoData[cellNum!].playlistName
                 
                 let identifier = video.identifier
                 let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
-                //print(location.lastPathComponent!)
+                
                 do{
                     try NSFileManager.defaultManager().moveItemAtPath(location.path!, toPath: filePath)
                 }catch _ as NSError{}
-
-                let asset = AVURLAsset(URL: NSURL(fileURLWithPath: filePath))
-                asset.writeAudioTrackToURL(NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
-)) {(success, error) -> () in
-                    if !success {
-                        print(error)
+                
+                let settings = MiscFuncs.getSettings()
+                let isAudio = settings.valueForKey("quality") as! Int == 2
+                if(isAudio && !fileManager.fileExistsAtPath(MiscFuncs.grabFilePath("\(identifier).m4a"))){
+                    let asset = AVURLAsset(URL: NSURL(fileURLWithPath: filePath))
+                    asset.writeAudioTrackToURL(NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
+                        )) {(success, error) -> () in
+                            if !success {
+                                print(error)
+                            }
+                    }
+                    
+                    do {
+                        try fileManager.removeItemAtPath(filePath)
+                    } catch _ {
                     }
                 }
-                
-                do {
-                    try NSFileManager.defaultManager().removeItemAtPath(filePath)
-                } catch _ {
-                }
-                
                 
                 //save to CoreData
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)
@@ -148,25 +152,25 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
+                //relevant playlist : selectedPlaylist
+                let playlistRequest = NSFetchRequest(entityName: "Playlist")
+                playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+                let fetchedPlaylists : NSArray = try! context.executeFetchRequest(playlistRequest)
+                let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
                 
-                let request = NSFetchRequest(entityName: "Playlist")
-                request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+                //delete song reference in songs relationship (in playlist entity)
+                let playlist = selectedPlaylist.mutableSetValueForKey("songs")
+                playlist.addObject(newSong)
                 
-                let playlists = try? context.executeFetchRequest(request) as NSArray
-                playlist = playlists![0] as! NSManagedObject
-                
-                let songs = playlist.mutableSetValueForKey("songs")
-                songs.addObject(newSong)
+                //remove from playlist reference in playlists relationship (in song entity)
+                let inPlaylists = newSong.mutableSetValueForKey("playlists")
+                inPlaylists.addObject(selectedPlaylist)
 
-                
-                
                 do {
                     try context.save()
                 } catch _ {
                 }
-                
-                
-                
+              
                 //display checkmark for completion
                 let dict = ["ndx" : cellNum!, "value" : "1.0" ]
                 

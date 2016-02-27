@@ -64,7 +64,7 @@ class PlaylistsTableViewController: UITableViewController {
         let playlistName = playlistNames[indexPath.row]
         performSegueWithIdentifier("PlaylistsToPlaylist", sender: playlistName)
     }
-
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "PlaylistsToPlaylist") {
             let playlistName = sender as! String
@@ -72,7 +72,7 @@ class PlaylistsTableViewController: UITableViewController {
             playlistVC.playlistName = playlistName
         }
     }
-
+    
     
     func addPlaylist(name: String){
         let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("Playlist", inManagedObjectContext: self.context)
@@ -81,7 +81,7 @@ class PlaylistsTableViewController: UITableViewController {
         do{
             try self.context.save()
         }catch _ as NSError{}
-
+        
     }
     
     func refreshPlaylists(){
@@ -118,12 +118,15 @@ class PlaylistsTableViewController: UITableViewController {
         
         let songs = selectedPlaylist.valueForKey("songs") as! NSSet
         
+        var songIdentifiers : [String] = []
         for song in songs{
             let identifier = song.valueForKey("identifier") as! String
-            SongManager.deleteSong(identifier)
-            
+            songIdentifiers += [identifier]
         }
         
+        for identifier in songIdentifiers{
+            SongManager.deleteSong(identifier, playlistName: playlistName)
+        }
         context.deleteObject(selectedPlaylist)
         
         do {
@@ -131,5 +134,5 @@ class PlaylistsTableViewController: UITableViewController {
         } catch _ {
         }
     }
-
+    
 }
