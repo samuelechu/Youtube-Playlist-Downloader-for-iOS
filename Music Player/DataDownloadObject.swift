@@ -130,7 +130,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video.title, forKey: "title")
-                newSong.setValue(playlistName, forKey: "playlistName")
                 
                 var expireDate = video.expirationDate
                 expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour

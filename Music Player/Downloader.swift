@@ -31,14 +31,14 @@ class Downloader {
     private var context : NSManagedObjectContext!
     private var appDel : AppDelegate?
     private var dlObject : dataDownloadObject!
-
+    
     private var downloadTasks : [String] = []//array of video identifiers
     private var downloadedIDs : [String] = [] //array of downloaded video identifiers
     private var uncachedVideos : [String] = []//array of video identifiers for uncached videos
-
+    
     private var numDownloads = 0
     private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
-
+    
     
     init(downloadListView : DownloadListView, playlistName: String) {
         self.downloadListView = downloadListView
@@ -73,9 +73,9 @@ class Downloader {
     }
     
     func startDownloadVideoOrPlaylist(url playlistOrVideoUrl: String) {
-
+        
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
-
+        
         //get video quality setting
         let settings = MiscFuncs.getSettings()
         let qual = settings.valueForKey("quality") as! Int
@@ -114,18 +114,13 @@ class Downloader {
     //check if video in stored memory or currently downloading videos
     private func isVideoStored (videoId : String) -> Bool {
         
-        if(downloadedIDs.indexOf(videoId) != nil){
-            addStoredSong(videoId)
+        let isDownloaded = downloadedIDs.indexOf(videoId) != nil || uncachedVideos.indexOf(videoId) != nil
+        
+        if(isDownloaded){
             return true
         }
             
         else if((downloadTasks.indexOf(videoId)) != nil){
-            addStoredSong(videoId)
-            return true
-        }
-            
-        else if((uncachedVideos.indexOf(videoId)) != nil){
-            addStoredSong(videoId)
             return true
         }
         
@@ -144,7 +139,7 @@ class Downloader {
                     if let video = video {
                         let streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
                         var desiredURL : NSURL!
-                         
+                        
                         if (qual == 0){ //360P
                             desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
                         }
@@ -249,10 +244,34 @@ class Downloader {
                         
                         let isStored = self.isVideoStored(identifier)
                         
+                        
+                        
                         if (!isStored){
                             self.startDownloadVideo(identifier, qual: qual)
                             self.downloadTasks += [identifier]
                             self.downloadListView.addDLTask([identifier])
+                        }
+                            
+                        else if (downloadTasks.indexOf(identifier) == nil){
+                            let settings = MiscFuncs.getSettings()
+                            let qual = settings.valueForKey("quality") as! Int
+                            let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
+                            let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
+                            
+                            //video option selected but no video file detected
+                            let shouldDownloadVid = (qual == 0 || qual == 1) && !NSFileManager.defaultManager().fileExistsAtPath(filePath0)
+                            
+                            //audio option selected but no audio file detected
+                            let shouldDownloadAudio = qual == 2 && !NSFileManager.defaultManager().fileExistsAtPath(filePath1)
+                            
+                            if(shouldDownloadVid || shouldDownloadAudio){
+                                self.startDownloadVideo(identifier, qual: qual)
+                                self.downloadTasks += [identifier]
+                                self.downloadListView.addDLTask([identifier])
+                            }
+                            else{
+                                addStoredSong(identifier)
+                            }
                         }
                     }
                 }
@@ -269,6 +288,7 @@ class Downloader {
                             self.saveVideoInfo(identifier)
                             
                         }
+                        
                     }
                     
                     delegate?.hideDownloadButton()
