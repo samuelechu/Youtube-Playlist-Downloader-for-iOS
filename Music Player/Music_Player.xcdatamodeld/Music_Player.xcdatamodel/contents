@@ -15,7 +15,6 @@
         <attribute name="expireDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isDownloaded" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="playlistName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="streamURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,6 +23,6 @@
     <elements>
         <element name="Playlist" positionX="-92" positionY="203" width="128" height="75"/>
         <element name="Settings" positionX="-234" positionY="81" width="128" height="90"/>
-        <element name="Song" positionX="-387" positionY="198" width="128" height="195"/>
+        <element name="Song" positionX="-387" positionY="198" width="128" height="180"/>
     </elements>
 </model>

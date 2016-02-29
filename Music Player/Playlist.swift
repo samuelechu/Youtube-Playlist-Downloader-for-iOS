@@ -421,8 +421,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     selectedRows += [selectedRow]
                     let identifier = songs[ndxIdentifiers].valueForKey("identifier") as! String
                     
-                    SongManager.deleteSong(identifier)
-                    updateInPlaylist(selectedRow)
+                    SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
                 
                 
@@ -434,8 +433,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                     let row = x[indexPath.row]
                     let identifier = songs[row].valueForKey("identifier") as! String
                     
-                    SongManager.deleteSong(identifier)
-                    updateInPlaylist(row)
+                    SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
             }
             
@@ -502,8 +500,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
             
             let identifier = songs[row].valueForKey("identifier") as! String
-            SongManager.deleteSong(identifier)
-            updateInPlaylist(row)
+            SongManager.deleteSong(identifier, playlistName: playlistName!)
             
             for var index = 0; index < x.count; ++index {
                 if x[index] > row {
@@ -515,24 +512,6 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             editButtonItem().enabled = true
             updateSearchResultsForSearchController(resultSearchController)
             
-        }
-    }
-    
-    //removes song from current playlist relationship
-    func updateInPlaylist(row : Int){
-        let inPlaylists = songs[row].mutableSetValueForKey("playlists")
-        
-        
-        let request = NSFetchRequest(entityName: "Playlist")
-        request.predicate = NSPredicate(format: "playlistName = %@", playlistName!)
-        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(request)
-        let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
-        inPlaylists.removeObject(selectedPlaylist)
-        
-        
-        do {
-            try context.save()
-        } catch _ {
         }
     }
     
@@ -588,9 +567,12 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         if isDownloaded {
             
-            let file = identifier.stringByAppendingString(".mp4")
-            let filePath = (documentsDir as NSString).stringByAppendingPathComponent(file)
-            let url = NSURL(fileURLWithPath: filePath)
+            let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
+            var url = NSURL(fileURLWithPath: filePath)
+
+            if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)){
+                url = NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a"))
+            }
             
             let playerItem = AVPlayerItem(URL: url)
             playerQueue.insertItem(playerItem, afterItem: nil)
@@ -799,6 +781,16 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     func stop(){
-        playerQueue.removeAllItems()
+        playerQueue.pause()
+        //prevent player from playing another song when different playlist opened
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "reloadPlaylistID", object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "enteredBackgroundID", object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "enteredForegroundID", object: nil)
+        if (updater != nil){
+            updater.invalidate()
+        }
+        updater = nil
+        loopCount = 0
     }
 }
