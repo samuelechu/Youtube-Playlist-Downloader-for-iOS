@@ -146,9 +146,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         let playlists = try? context.executeFetchRequest(request) as NSArray
         if(playlists?.count >= 1){
-        let playlist = playlists![0].valueForKey("songs") as! NSSet
-        let songsUnsorted = playlist.allObjects as NSArray
-        return songsUnsorted.sortedArrayUsingDescriptors([songSortDescriptor])
+            let playlist = playlists![0].valueForKey("songs") as! NSSet
+            let songsUnsorted = playlist.allObjects as NSArray
+            return songsUnsorted.sortedArrayUsingDescriptors([songSortDescriptor])
         }
         return []
     }
@@ -224,13 +224,18 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             songName = songs[row].valueForKey("title") as! String
             duration = songs[row].valueForKey("durationStr") as! String
             identifier = songs[row].valueForKey("identifier") as! String
-            imageData = songs[row].valueForKey("thumbnail") as! NSData
+            if(songs[row].valueForKey("thumbnail") != nil){
+                imageData = songs[row].valueForKey("thumbnail") as! NSData
+            }
         }
         
         cell.songLabel.text = songName
         cell.durationLabel.text = duration
         cell.identifier = identifier
-        cell.imageLabel.image = UIImage(data: imageData)
+        
+        if (imageData != nil){
+            cell.imageLabel.image = UIImage(data: imageData)
+        }
         cell.positionLabel.text = "\(indexPath.row + 1)"
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
@@ -569,7 +574,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
             var url = NSURL(fileURLWithPath: filePath)
-
+            
             if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)){
                 url = NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a"))
             }
