@@ -130,8 +130,9 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
         let cellNum : Int = dict.valueForKey("ndx")!.integerValue
         
         if cellNum < downloadCells.count {
-            let taskProgress : Double = dict.valueForKey("value")!
+            let taskProgress : Float = dict.valueForKey("value") as! Float
             downloadCells[cellNum].setProgress(taskProgress)
+            reloadCellAtNdx(cellNum)
         }
     }
     
@@ -153,7 +154,7 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> downloadCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("downloadCell", forIndexPath: indexPath) as! downloadCell
         
-        let cellInfo = downloadCells[cellNum]
+        let cellInfo = downloadCells[indexPath.row]
         
         cell.accessoryType = UITableViewCellAccessoryType.None
         if cellInfo.downloadFinished() { cell.accessoryType = UITableViewCellAccessoryType.Checkmark }

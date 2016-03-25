@@ -6,6 +6,7 @@
 //  Copyright © 2016 Sem. All rights reserved.
 //
 
+import XCDYouTubeKit
 import Foundation
 
 class DownloadingVideoInfo {
@@ -21,7 +22,7 @@ class DownloadCellInfo {
     let image : UIImage
     let duration : String
     let name : String
-    var progress : Double
+    var progress : Float
     
     init(image : UIImage, duration : String, name : String) {
         self.image = image
@@ -30,7 +31,7 @@ class DownloadCellInfo {
         self.progress = 0.0
     }
     
-    private func setProgress(progress : Double) {
+    func setProgress(progress : Float) {
         self.progress = progress
     }
     

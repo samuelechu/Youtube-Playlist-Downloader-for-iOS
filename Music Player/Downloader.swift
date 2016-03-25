@@ -137,7 +137,7 @@ class Downloader {
                         }
                         
                         let videoToDL = DownloadingVideoInfo(video: video, playlistName: self.playlistName)
-                        self.dlObject.startNewTask(desiredURL, vid: videoToDL)
+                        self.dlObject.startNewTask(desiredURL, vidInfo: videoToDL)
                     }
                 }
             })

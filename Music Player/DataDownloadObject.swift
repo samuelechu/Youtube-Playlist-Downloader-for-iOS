@@ -48,7 +48,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         let data = NSData(contentsOfURL: thumbnailURL!)
         let image = UIImage(data: data!)
         
-        let newCell = DownloadCellInfo(image, duration, video.title)
+        let newCell = DownloadCellInfo(image: image!, duration: duration, name: video.title)
         let dict = ["cellInfo" : newCell]
         self.tableDelegate.addCell(dict)
         
@@ -60,7 +60,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
         tasks += [task]
-        videoData += [vid]
+        videoData += [vidInfo]
         task.resume()
     }
     
@@ -75,7 +75,7 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
             let cellNum = taskIDs.indexOf(downloadTask.taskIdentifier)
             
             if cellNum != nil{
-                let taskProgress = Double(totalBytesWritten) / totalBytesExpectedToWrite
+                let taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 let num = taskProgress * 100
                 
                 if ( num % 10 ) < 0.8 && taskProgress != 1.0 {
@@ -83,7 +83,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                         let dict = ["ndx" : cellNum!, "value" : taskProgress ]
                         
                         self.tableDelegate.setProgressValue(dict)
-                        self.tableDelegate.reloadCellAtNdx(cellNum!)
                     })
                 }
             }
@@ -169,10 +168,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 }
               
                 //display checkmark for completion
-                let dict = ["ndx" : cellNum!, "value" : "1.0" ]
+                let dict = ["ndx" : cellNum!, "value" : 1.0 ]
                 
                 tableDelegate.setProgressValue(dict)
-                tableDelegate.reloadCellAtNdx(cellNum!)
                 NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
     }

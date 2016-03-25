@@ -22,7 +22,7 @@ extension AVAsset {
             
         } catch {
             
-            print("\(self.dynamicType) \(#function) [\(#line)], error:\(error)")
+            print("\(self.dynamicType), error:\(error)")
         }
     }
     
