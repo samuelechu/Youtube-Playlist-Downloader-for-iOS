@@ -10,17 +10,6 @@ import UIKit
 import AVKit
 import AVFoundation
 
-
-protocol PlaylistDelegate{
-    func seekForward()
-    func seekBackward()
-    func togglePlayPause()
-    func advance()
-    func retreat()
-    func updateNowPlayingInfo()
-    func stop()
-}
-
 class Player: AVPlayerViewController {
     
     var playlistDelegate : PlaylistDelegate? = nil
@@ -38,11 +27,11 @@ class Player: AVPlayerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(Player.respondToSwipeGesture(_:)))
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
         view.addGestureRecognizer(swipeRight)
         
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(Player.respondToSwipeGesture(_:)))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
         view.addGestureRecognizer(swipeLeft)
     }

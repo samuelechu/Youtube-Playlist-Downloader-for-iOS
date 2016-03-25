@@ -10,18 +10,8 @@ import Foundation
 import XCDYouTubeKit
 import CoreData
 
-
-
-
-
-protocol DownloaderDelegate: class {
-    func hideDownloadButton()
-}
-
-
 class Downloader {
     
-    weak var delegate: DownloaderDelegate?
     let downloadListView : DownloadListView
     let playlistName: String
     
@@ -29,7 +19,6 @@ class Downloader {
     private var songs : NSMutableSet!
     
     private var context : NSManagedObjectContext!
-    private var appDel : AppDelegate?
     private var dlObject : dataDownloadObject!
     
     private var downloadTasks : [String] = []//array of video identifiers
@@ -44,9 +33,8 @@ class Downloader {
         self.downloadListView = downloadListView
         self.playlistName = playlistName
         
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
-        
         
         let request = NSFetchRequest(entityName: "Playlist")
         request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
@@ -67,7 +55,7 @@ class Downloader {
         //If a background URLSession does not exist, create and save through table delegate for future reuse
         if dlObject == nil{
             dlObject = dataDownloadObject(coder: NSCoder())
-            dlObject.setDownloadObjectDelegate((downloadListView as? downloadObjectTableDelegate)!)
+            dlObject.tableDelegate = (downloadListView as? downloadTableViewControllerDelegate)!
             downloadListView.setDLObject(dlObject!)
         }
     }
@@ -148,20 +136,8 @@ class Downloader {
                             desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                         }
                         
-                        let duration = MiscFuncs.stringFromTimeInterval(video.duration)
-                        
-                        //get thumbnail
-                        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
-                        let data = NSData(contentsOfURL: thumbnailURL!)
-                        let image = UIImage(data: data!)
-                        
-                        let videoInfo = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
-                        
-                        self.downloadListView.addCell(videoInfo)
-                        self.downloadListView.reloadCells()
-                        
-                        self.dlObject.addVidInfo(DownloadingVideoInfo(video: video, playlistName: self.playlistName))
-                        self.dlObject.startNewTask(desiredURL)
+                        let videoToDL = DownloadingVideoInfo(video: video, playlistName: self.playlistName)
+                        self.dlObject.startNewTask(desiredURL, vid: videoToDL)
                     }
                 }
             })
@@ -290,9 +266,6 @@ class Downloader {
                         }
                         
                     }
-                    
-                    delegate?.hideDownloadButton()
-                    
                 }
             }
             videoIDs = []

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class Settings: UITableViewController {
-    var appDel : AppDelegate?
+    
     var context : NSManagedObjectContext!
     var settings : NSManagedObject!
     
@@ -28,7 +28,7 @@ class Settings: UITableViewController {
         super.viewDidLoad()
         tableView.rowHeight = 44
         
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         //retrieve settings, or initialize default settings if unset

@@ -12,23 +12,8 @@ import CoreData
 import XCDYouTubeKit
 import AssetsLibrary
 
-protocol downloadObjectTableDelegate{
-    func setProgressValue(dict : NSDictionary)
-    func reloadCellAtNdx(cellNum : Int)
-}
-
-class DownloadingVideoInfo {
-    let video: XCDYouTubeVideo
-    let playlistName: String
-    init(video: XCDYouTubeVideo, playlistName: String)  {
-        self.video = video
-        self.playlistName = playlistName
-    }
-}
-
 class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
-    var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     
     var videoData : [DownloadingVideoInfo] = []
@@ -39,32 +24,44 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var playlist: NSManagedObject!
     
-    var tableDelegate : downloadObjectTableDelegate!
+    //delegate set by Downloader
+    var tableDelegate : downloadTableViewControllerDelegate!
     
     required init(coder aDecoder: NSCoder){
         super.init()
+        
         let randomString = MiscFuncs.randomStringWithLength(30)
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
-        context = appDel!.managedObjectContext
-        
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
     }
     
-    func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
-    
-    func addVidInfo(vid : DownloadingVideoInfo){
-        videoData += [vid]
+    func addVideoToDownloadTable(vidInfo : DownloadingVideoInfo) {
+        let video = vidInfo.video
+        let duration = MiscFuncs.stringFromTimeInterval(video.duration)
+        
+        //get thumbnail
+        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+        let data = NSData(contentsOfURL: thumbnailURL!)
+        let image = UIImage(data: data!)
+        
+        let newCell = DownloadCellInfo(image, duration, video.title)
+        let dict = ["cellInfo" : newCell]
+        self.tableDelegate.addCell(dict)
+        
     }
     
-    func startNewTask(targetUrl : NSURL) {
+    func startNewTask(targetUrl : NSURL, vidInfo : DownloadingVideoInfo) {
+        addVideoToDownloadTable(vidInfo)
         
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
         tasks += [task]
+        videoData += [vid]
         task.resume()
-        
     }
     
     //update progress when data is received
@@ -73,11 +70,12 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         didWriteData bytesWritten: Int64,
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
-            
+        
+            //cell order in tableDelegate identical to order in taskIDs
             let cellNum = taskIDs.indexOf(downloadTask.taskIdentifier)
             
             if cellNum != nil{
-                let taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                let taskProgress = Double(totalBytesWritten) / totalBytesExpectedToWrite
                 let num = taskProgress * 100
                 
                 if ( num % 10 ) < 0.8 && taskProgress != 1.0 {

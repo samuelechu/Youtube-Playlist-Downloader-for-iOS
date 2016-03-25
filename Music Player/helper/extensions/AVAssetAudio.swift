@@ -22,7 +22,7 @@ extension AVAsset {
             
         } catch {
             
-            print("\(self.dynamicType) \(__FUNCTION__) [\(__LINE__)], error:\(error)")
+            print("\(self.dynamicType) \(#function) [\(#line)], error:\(error)")
         }
     }
     

@@ -12,11 +12,6 @@ import AVFoundation
 import AVKit
 import XCDYouTubeKit
 
-protocol PlaylistViewControllerDelegate{
-    func pushWebView()
-    func startPlayer()
-}
-
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
@@ -37,9 +32,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var playlistName: String?
     var playlistVCDelegate : PlaylistViewControllerDelegate!
     
-    var appDel : AppDelegate!
     var context : NSManagedObjectContext!
-    var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: "caseInsensitiveCompare:")
+    var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
     
     var songs : NSArray!
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
@@ -71,13 +65,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDel = UIApplication.sharedApplication().delegate as! AppDelegate
-        context = appDel!.managedObjectContext
+        let appDel = UIApplication.sharedApplication().delegate as! AppDelegate
+        context = appDel.managedObjectContext
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredBackground:", name: "enteredBackgroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "enteredForeground:", name: "enteredForegroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updatePlaylist:", name: "reloadPlaylistID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playerItemDidReachEnd:", name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.enteredBackground(_:)), name: "enteredBackgroundID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.enteredForeground(_:)), name: "enteredForegroundID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.updatePlaylist(_:)), name: "reloadPlaylistID", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.playerItemDidReachEnd(_:)), name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
         
         //set audio to play in bg
         let audio : AVAudioSession = AVAudioSession()
@@ -174,7 +168,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     func resetX(){
         x = []
         if songs.count > 0 {
-            for var index = 0; index < songs.count; ++index {
+            for index in 0 ..< songs.count {
                 x += [index]
             }
         }
@@ -224,18 +218,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             songName = songs[row].valueForKey("title") as! String
             duration = songs[row].valueForKey("durationStr") as! String
             identifier = songs[row].valueForKey("identifier") as! String
-            if(songs[row].valueForKey("thumbnail") != nil){
-                imageData = songs[row].valueForKey("thumbnail") as! NSData
-            }
+            imageData = songs[row].valueForKey("thumbnail") as! NSData
         }
         
         cell.songLabel.text = songName
         cell.durationLabel.text = duration
         cell.identifier = identifier
-        
-        if (imageData != nil){
-            cell.imageLabel.image = UIImage(data: imageData)
-        }
+        cell.imageLabel.image = UIImage(data: imageData)
         cell.positionLabel.text = "\(indexPath.row + 1)"
         cell.contentView.backgroundColor = UIColor.clearColor()
         cell.backgroundColor = UIColor.clearColor()
@@ -289,7 +278,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     @IBAction func selectPressed() {
         
         if selectButton.title == "Select All"{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+            for row in 0 ..< tableView.numberOfRowsInSection(0) {
                 let indexPath = NSIndexPath(forRow: row, inSection: 0)
                 tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
             }
@@ -298,7 +287,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
             
         else{
-            for var row = 0; row < tableView.numberOfRowsInSection(0); ++row {
+            for row in 0 ..< tableView.numberOfRowsInSection(0) {
                 let indexPath = NSIndexPath(forRow: row, inSection: 0)
                 tableView.deselectRowAtIndexPath(indexPath, animated: true)
             }
@@ -450,19 +439,21 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
                 selectedSongs += [x[num]]
             }
             
-            for var index = 0; index < x.count; ++index {
+            var index = 0
+            while index < x.count {
                 if var _ = selectedSongs.indexOf(x[index]) {
                     x.removeAtIndex(index)
-                    index--
+                    index -= 1
                 }
+                index += 1
             }
             
             var temp2 = x
             for num in temp {
                 if x.indexOf(num) == nil {
-                    for var index = 0; index < x.count; ++index {
+                    for index in 0 ..< x.count {
                         if x[index] > num {
-                            temp2[index]--
+                            temp2[index] -= 1
                         }
                     }
                 }
@@ -507,9 +498,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             let identifier = songs[row].valueForKey("identifier") as! String
             SongManager.deleteSong(identifier, playlistName: playlistName!)
             
-            for var index = 0; index < x.count; ++index {
+            for index in 0 ..< x.count {
                 if x[index] > row {
-                    x[index]--
+                    x[index] -= 1
                 }
             }
             
@@ -626,7 +617,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var loopCount = 0
     var updater : NSTimer!
     func updateNowPlayingInfo(){
-        loopCount++
+        loopCount += 1
         let curItem = playerQueue.currentItem
         if(curItem != nil){
             let title = curSong.valueForKey("title") as! String
@@ -673,7 +664,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         
         if(updater == nil){
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         
     }
@@ -688,7 +679,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     func advance(){
         if curNdx == songs.count - 1 { curNdx = 0 }
-        else{ curNdx++ }
+        else{ curNdx += 1 }
         
         enableVidTracks()
         addSongToQueue(curNdx)
@@ -696,7 +687,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         //set lock screen info
         loopCount = 0
         if(updater == nil){
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         togglePlayPause()
         togglePlayPause()
@@ -710,7 +701,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     func retreat(){
         if curNdx == 0 { curNdx = songs.count - 1 }
-        else { curNdx-- }
+        else { curNdx -= 1 }
         
         if (songs.count == 1) { advance() }
         else{
@@ -719,7 +710,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             loopCount = 0
             if(updater == nil){
-                updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+                updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         togglePlayPause()
@@ -769,7 +760,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if curSong != nil {
             loopCount = 0
             if(updater == nil){
-                updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: "updateNowPlayingInfo", userInfo: nil, repeats: true)
+                updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         

@@ -88,7 +88,7 @@ class YouTubeSearchWebView: WKWebView {
             make.bottom.equalTo(self).offset(-margin)
         }
 
-        downloadButton.addTarget(self, action: "didTapDownloadButton", forControlEvents: .TouchUpInside)
+        downloadButton.addTarget(self, action: #selector(YouTubeSearchWebView.didTapDownloadButton), forControlEvents: .TouchUpInside)
     }
     
     private func disableButton() {
