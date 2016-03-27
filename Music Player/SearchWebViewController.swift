@@ -13,10 +13,11 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     let webView: YouTubeSearchWebView
     
-    var downloader: Downloader!
+    var downloadManager: DownloadManager!
+    
     // Please Call
-    func setup(downloadListView downloadListView : DownloadListView, playlistName: String) {
-        downloader = Downloader(downloadListView: downloadListView, playlistName: playlistName)
+    func setup(downloadTable : downloadTableViewControllerDelegate, playlistName: String) {
+        downloadManager = DownloadManager(downloadTable : downloadTable, playlistName: playlistName)
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -57,7 +58,7 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     
     // MARK: YouTubeSearchWebViewDelegate
     func didTapDownloadButton(url: NSURL) {
-        downloader.startDownloadVideoOrPlaylist(url: url.absoluteString)
+        downloadManager.startDownloadVideoOrPlaylist(url: url.absoluteString)
         self.navigationController?.popViewControllerAnimated(true)
     }
 }

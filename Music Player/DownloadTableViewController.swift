@@ -8,15 +8,14 @@
 
 import UIKit
 
-class downloadTableViewController: UITableViewController, DownloadListView, downloadTableViewControllerDelegate {
+class downloadTableViewController: UITableViewController, downloadTableViewControllerDelegate {
     
     
     var downloadCells: [DownloadCellInfo] = []
      
-    var dlObject : dataDownloadObject!
+    var dataDownloader : DataDownloader!
     var downloadTasks : [String] = []
     var uncachedVideos : [String] = []
-    var dlButtonHidden = false
     
     override func viewWillAppear(animated: Bool) {
         reloadCells()
@@ -34,7 +33,7 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
     
     func setup() {
         if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
-            appDel.downloadListView = self
+            appDel.downloadTable = self
         }
     }
     
@@ -85,8 +84,8 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
-    func setDLObject(session : dataDownloadObject){ dlObject = session }
-    func getDLObject() -> dataDownloadObject? { return dlObject }
+    //func setDLObject(session : DataDownloader){ dataDownloader = session }
+    //func getDLObject() -> DataDownloader? { return dataDownloader }
     func addDLTask(tasks : [String]){ downloadTasks += tasks }
     func getDLTasks() -> [String] { return downloadTasks }
     func addUncachedVid(identifier: [String]) { uncachedVideos += identifier}
@@ -106,14 +105,6 @@ class downloadTableViewController: UITableViewController, DownloadListView, down
             }
             
         }
-    }
-    
-    func setDLButtonHidden(value: Bool) {
-        dlButtonHidden = value
-    }
-    
-    func dlButtonIsHidden() -> Bool{
-        return dlButtonHidden
     }
     
     func reloadCells(){ tableView.reloadData() }

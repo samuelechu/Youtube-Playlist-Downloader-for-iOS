@@ -1,5 +1,5 @@
 //
-//  dataDownloadObject.swift
+//  DataDownloader.swift
 //  Music Player
 //
 //  Created by Sem on 7/3/15.
@@ -12,7 +12,8 @@ import CoreData
 import XCDYouTubeKit
 import AssetsLibrary
 
-class dataDownloadObject: NSObject, NSURLSessionDelegate{
+//only one instance of DataDownloader declared in AppDelegate.swift
+class DataDownloader: NSObject, NSURLSessionDelegate{
     
     var context : NSManagedObjectContext!
     
@@ -20,11 +21,10 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
     
     var session : NSURLSession!
     var taskIDs : [Int] = []
-    var tasks : [NSURLSessionDownloadTask] = []
     
     var playlist: NSManagedObject!
     
-    //delegate set by Downloader
+    //delegate set by DownloadManager
     var tableDelegate : downloadTableViewControllerDelegate!
     
     required init(coder aDecoder: NSCoder){
@@ -59,7 +59,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
-        tasks += [task]
         videoData += [vidInfo]
         task.resume()
     }
