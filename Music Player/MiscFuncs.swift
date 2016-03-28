@@ -30,13 +30,13 @@ public class MiscFuncs{
     
     //shuffle int array
     public class func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
-            let c = list.count
-            for i in 0..<(c - 1) {
-                let j = Int(arc4random_uniform(UInt32(c - i))) + i
-                if (i != j){
-                    swap(&list[i], &list[j])
-                }
+        let c = list.count
+        for i in 0..<(c - 1) {
+            let j = Int(arc4random_uniform(UInt32(c - i))) + i
+            if (i != j){
+                swap(&list[i], &list[j])
             }
+        }
         
     }
     
@@ -56,7 +56,7 @@ public class MiscFuncs{
         
         let randomString : NSMutableString = NSMutableString(capacity: len)
         
-        for (var i=0; i < len; i++){
+        for _ in 0 ..< len {
             let length = UInt32 (letters.length)
             let rand = arc4random_uniform(length)
             randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
@@ -67,10 +67,10 @@ public class MiscFuncs{
     
     
     public class func parseIDs(url url: String) -> (videoId: String?, playlistId: String?) {
-
+        
         var videoId: String? = nil
         var playlistId: String? = nil
-
+        
         if let url: NSURL = NSURL(string: url) {
             if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
                 if let queryItems = comp.queryItems {
@@ -84,7 +84,7 @@ public class MiscFuncs{
                 }
             }
         }
-
+        
         return (videoId: videoId, playlistId: playlistId)
     }
     
@@ -122,7 +122,22 @@ public class MiscFuncs{
         
         return writePath
     }
-
+    
+    //delete files in this directory
+    public class func deleteFiles(dir : String) {
+        let fileMgr = NSFileManager.defaultManager()
+        if fileMgr.fileExistsAtPath(dir){
+            let dirContents  = (try! fileMgr.contentsOfDirectoryAtPath(dir))
+            
+            for file : String in dirContents {
+                do {
+                    try fileMgr.removeItemAtPath((dir as NSString).stringByAppendingPathComponent(file))
+                } catch _ {
+                }
+            }
+        }
+    }
+    
 }
 
 

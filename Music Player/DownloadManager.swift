@@ -1,36 +1,26 @@
 //
-//  Downloader.swift
+//  DownloadManager.swift
 //  Music Player
 //
 //  Created by 岡本拓也 on 2015/12/31.
 //  Copyright © 2015年 Sem. All rights reserved.
 //
 
+///Gets Youtube videos, starts downloads
 import Foundation
 import XCDYouTubeKit
 import CoreData
 
-
-
-
-
-protocol DownloaderDelegate: class {
-    func hideDownloadButton()
-}
-
-
-class Downloader {
+class DownloadManager {
     
-    weak var delegate: DownloaderDelegate?
-    let downloadListView : DownloadListView
+    let downloadTable : downloadTableViewControllerDelegate
     let playlistName: String
     
     private var playlist : NSManagedObject!
     private var songs : NSMutableSet!
     
     private var context : NSManagedObjectContext!
-    private var appDel : AppDelegate?
-    private var dlObject : dataDownloadObject!
+    private var dataDownloader : DataDownloader!
     
     private var downloadTasks : [String] = []//array of video identifiers
     private var downloadedIDs : [String] = [] //array of downloaded video identifiers
@@ -40,36 +30,29 @@ class Downloader {
     private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
     
-    init(downloadListView : DownloadListView, playlistName: String) {
-        self.downloadListView = downloadListView
+    init(downloadTable : downloadTableViewControllerDelegate, playlistName: String) {
+        self.downloadTable = downloadTable
         self.playlistName = playlistName
         
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
-        
-        
-        let request = NSFetchRequest(entityName: "Playlist")
-        request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        
-        let playlists : NSArray = try! context.executeFetchRequest(request)
-        playlist = playlists[0] as! NSManagedObject
-        
-        songs = playlist.mutableSetValueForKey("songs")
         
         //set initial quality to 360P if uninitialized
         MiscFuncs.getSettings()
         
-        //get identifiers lost from popping off view
-        uncachedVideos = (downloadListView.getUncachedVids())
-        downloadTasks = (downloadListView.getDLTasks())
-        dlObject = downloadListView.getDLObject()
+        //get identifiers from downloadTableViewController
+        uncachedVideos = (downloadTable.getUncachedVids())
+        downloadTasks = (downloadTable.getDLTasks())
+        dataDownloader = appDel?.dataDownloader
         
-        //If a background URLSession does not exist, create and save through table delegate for future reuse
-        if dlObject == nil{
-            dlObject = dataDownloadObject(coder: NSCoder())
-            dlObject.setDownloadObjectDelegate((downloadListView as? downloadObjectTableDelegate)!)
-            downloadListView.setDLObject(dlObject!)
+        //dataDownloader has not been initialized for app
+        if dataDownloader == nil{
+            appDel!.dataDownloader = DataDownloader(coder: NSCoder())
+            appDel!.dataDownloader!.tableDelegate = downloadTable
+            dataDownloader = appDel?.dataDownloader
         }
+        
+        updateStoredSongs()
     }
     
     func startDownloadVideoOrPlaylist(url playlistOrVideoUrl: String) {
@@ -88,11 +71,10 @@ class Downloader {
             if (!isStored){
                 startDownloadVideo(videoId, qual: qual)
                 downloadTasks += [videoId]
-                downloadListView.addDLTask([videoId])
+                downloadTable.addDLTask([videoId])
             }
         }
         else if let playlistId = playlistId {
-            downloadListView.setDLButtonHidden(true)
             downloadVideosForPlayist(playlistId, pageToken: "", qual: qual)
         }
     }
@@ -148,20 +130,8 @@ class Downloader {
                             desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                         }
                         
-                        let duration = MiscFuncs.stringFromTimeInterval(video.duration)
-                        
-                        //get thumbnail
-                        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
-                        let data = NSData(contentsOfURL: thumbnailURL!)
-                        let image = UIImage(data: data!)
-                        
-                        let videoInfo = ["name" : video.title, "duration" : duration, "thumbnail" : image!]
-                        
-                        self.downloadListView.addCell(videoInfo)
-                        self.downloadListView.reloadCells()
-                        
-                        self.dlObject.addVidInfo(DownloadingVideoInfo(video: video, playlistName: self.playlistName))
-                        self.dlObject.startNewTask(desiredURL)
+                        let videoToDL = DownloadingVideoInfo(video: video, playlistName: self.playlistName)
+                        self.dataDownloader.startNewTask(desiredURL, vidInfo: videoToDL)
                     }
                 }
             })
@@ -224,14 +194,11 @@ class Downloader {
                 else {
                     print("HTTP Status Code = \(HTTPStatusCode)")
                     print("Error while loading channel videos: \(error)")
-                    self.downloadListView.setDLButtonHidden(false)
-                    
                 }
             })
         }
             
         else{
-            downloadListView.setDLButtonHidden(false)
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
@@ -249,7 +216,7 @@ class Downloader {
                         if (!isStored){
                             self.startDownloadVideo(identifier, qual: qual)
                             self.downloadTasks += [identifier]
-                            self.downloadListView.addDLTask([identifier])
+                            self.downloadTable.addDLTask([identifier])
                         }
                             
                         else if (downloadTasks.indexOf(identifier) == nil){
@@ -267,11 +234,23 @@ class Downloader {
                             if(shouldDownloadVid || shouldDownloadAudio){
                                 self.startDownloadVideo(identifier, qual: qual)
                                 self.downloadTasks += [identifier]
-                                self.downloadListView.addDLTask([identifier])
+                                self.downloadTable.addDLTask([identifier])
                             }
                             else{
                                 addStoredSong(identifier)
                             }
+                        }
+                        
+                        else {
+                            
+                            let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
+                            let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
+                            
+                            if( NSFileManager.defaultManager().fileExistsAtPath(filePath0) || NSFileManager.defaultManager().fileExistsAtPath(filePath1)){
+                                addStoredSong(identifier)
+                            }
+                            
+                            
                         }
                     }
                 }
@@ -284,15 +263,12 @@ class Downloader {
                         if (!isStored){
                             
                             self.uncachedVideos += [identifier]
-                            self.downloadListView.addUncachedVid([identifier])
+                            self.downloadTable.addUncachedVid([identifier])
                             self.saveVideoInfo(identifier)
                             
                         }
                         
                     }
-                    
-                    delegate?.hideDownloadButton()
-                    
                 }
             }
             videoIDs = []

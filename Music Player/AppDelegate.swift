@@ -15,8 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
     
-    // this will used when open search webview from playlist
-    var downloadListView: DownloadListView?
+    // this will be used when opening Webview from playlist
+    var downloadTable : downloadTableViewControllerDelegate?
+    var dataDownloader : DataDownloader?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         addCustomMenuItems()
@@ -57,45 +58,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(application: UIApplication) {
         
-        let fileMgr = NSFileManager.defaultManager()
-        
         //remove excess documents and data
         let cacheFolder = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
+        var dirsToClean : [String] = []
         
-        let cacheDir1 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.Music-Player/fsCachedData/")
-        let cacheDir2 = (cacheFolder as NSString).stringByAppendingPathComponent("/com.apple.nsurlsessiond/")
+        dirsToClean += [(cacheFolder as NSString).stringByAppendingPathComponent("/com.Music-Player/fsCachedData/"),
+                        (cacheFolder as NSString).stringByAppendingPathComponent("/com.apple.nsurlsessiond/"),
+                        (cacheFolder as NSString).stringByAppendingString("/WebKit/"),
+                        NSTemporaryDirectory()]
         
-        if fileMgr.fileExistsAtPath(cacheDir1){
-            let dir1Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir1))
-            
-            for file : String in dir1Contents {
-                do {
-                    try fileMgr.removeItemAtPath((cacheDir1 as NSString).stringByAppendingPathComponent(file))
-                } catch _ {
-                }
-            }
+        for dir : String in dirsToClean{
+            MiscFuncs.deleteFiles(dir)
         }
         
-        if fileMgr.fileExistsAtPath(cacheDir2){
-            let dir2Contents  = (try! fileMgr.contentsOfDirectoryAtPath(cacheDir2))
-            
-            for file : String in dir2Contents {
-                do {
-                    try fileMgr.removeItemAtPath((cacheDir2 as NSString).stringByAppendingPathComponent(file))
-                } catch _ {
-                }
-            }
-        }
-        
-        let tmpDir : [String] = (try! fileMgr.contentsOfDirectoryAtPath(NSTemporaryDirectory()))
-        
-        for file : String in tmpDir {
-            do {
-                try fileMgr.removeItemAtPath((NSTemporaryDirectory() as NSString).stringByAppendingPathComponent(file))
-            } catch _ {
-            }
-            
-        }
         self.saveContext()
     }
     

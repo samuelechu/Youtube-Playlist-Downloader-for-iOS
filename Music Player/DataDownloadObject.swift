@@ -1,5 +1,5 @@
 //
-//  dataDownloadObject.swift
+//  DataDownloader.swift
 //  Music Player
 //
 //  Created by Sem on 7/3/15.
@@ -12,59 +12,55 @@ import CoreData
 import XCDYouTubeKit
 import AssetsLibrary
 
-protocol downloadObjectTableDelegate{
-    func setProgressValue(dict : NSDictionary)
-    func reloadCellAtNdx(cellNum : Int)
-}
-
-class DownloadingVideoInfo {
-    let video: XCDYouTubeVideo
-    let playlistName: String
-    init(video: XCDYouTubeVideo, playlistName: String)  {
-        self.video = video
-        self.playlistName = playlistName
-    }
-}
-
-class dataDownloadObject: NSObject, NSURLSessionDelegate{
+//only one instance of DataDownloader declared in AppDelegate.swift
+class DataDownloader: NSObject, NSURLSessionDelegate{
     
-    var appDel : AppDelegate?
     var context : NSManagedObjectContext!
     
     var videoData : [DownloadingVideoInfo] = []
     
     var session : NSURLSession!
     var taskIDs : [Int] = []
-    var tasks : [NSURLSessionDownloadTask] = []
     
     var playlist: NSManagedObject!
     
-    var tableDelegate : downloadObjectTableDelegate!
+    //delegate set by DownloadManager
+    var tableDelegate : downloadTableViewControllerDelegate!
     
     required init(coder aDecoder: NSCoder){
         super.init()
+        
         let randomString = MiscFuncs.randomStringWithLength(30)
         let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
         config.timeoutIntervalForRequest = 600
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
-        context = appDel!.managedObjectContext
-        
         session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        context = appDel!.managedObjectContext
     }
     
-    func setDownloadObjectDelegate(del : downloadObjectTableDelegate){ tableDelegate = del }
-    
-    func addVidInfo(vid : DownloadingVideoInfo){
-        videoData += [vid]
+    func addVideoToDownloadTable(vidInfo : DownloadingVideoInfo) {
+        let video = vidInfo.video
+        let duration = MiscFuncs.stringFromTimeInterval(video.duration)
+        
+        //get thumbnail
+        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+        let data = NSData(contentsOfURL: thumbnailURL!)
+        let image = UIImage(data: data!)
+        
+        let newCell = DownloadCellInfo(image: image!, duration: duration, name: video.title)
+        let dict = ["cellInfo" : newCell]
+        self.tableDelegate.addCell(dict)
+        
     }
     
-    func startNewTask(targetUrl : NSURL) {
+    func startNewTask(targetUrl : NSURL, vidInfo : DownloadingVideoInfo) {
+        addVideoToDownloadTable(vidInfo)
         
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
-        tasks += [task]
+        videoData += [vidInfo]
         task.resume()
-        
     }
     
     //update progress when data is received
@@ -73,7 +69,8 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
         didWriteData bytesWritten: Int64,
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
-            
+        
+            //cell order in tableDelegate identical to order in taskIDs
             let cellNum = taskIDs.indexOf(downloadTask.taskIdentifier)
             
             if cellNum != nil{
@@ -85,7 +82,6 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                         let dict = ["ndx" : cellNum!, "value" : taskProgress ]
                         
                         self.tableDelegate.setProgressValue(dict)
-                        self.tableDelegate.reloadCellAtNdx(cellNum!)
                     })
                 }
             }
@@ -171,10 +167,9 @@ class dataDownloadObject: NSObject, NSURLSessionDelegate{
                 }
               
                 //display checkmark for completion
-                let dict = ["ndx" : cellNum!, "value" : "1.0" ]
+                let dict = ["ndx" : cellNum!, "value" : 1.0 ]
                 
                 tableDelegate.setProgressValue(dict)
-                tableDelegate.reloadCellAtNdx(cellNum!)
                 NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
             }
     }

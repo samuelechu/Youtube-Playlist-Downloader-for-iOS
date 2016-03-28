@@ -20,16 +20,15 @@ class PlaylistsTableViewController: UITableViewController {
     }
     
     private var context : NSManagedObjectContext!
-    private var appDel : AppDelegate?
     
     var playlists: NSArray!
     var playlistNames : [String] = []
-    var playlistSortDescriptor  = NSSortDescriptor(key: "playlistName", ascending: true, selector: "caseInsensitiveCompare:")
+    var playlistSortDescriptor  = NSSortDescriptor(key: "playlistName", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         tableView.dataSource = self

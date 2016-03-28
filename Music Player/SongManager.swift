@@ -10,11 +10,9 @@ import Foundation
 import CoreData
 
 public class SongManager{
-    static var appDel = UIApplication.sharedApplication().delegate as! AppDelegate
-    static var context = appDel.managedObjectContext!
+    
+    static var context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext!
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-    
-    
     
     //gets song associated with (identifier : String)
     public class func getSong(identifier : String) -> NSManagedObject {

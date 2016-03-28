@@ -75,9 +75,9 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
         else if(segue.identifier == "playlistToSearchView"){
             let searchVC = (segue.destinationViewController as? SearchWebViewController)!
             if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
-                if let dlView = appDel.downloadListView {
+                if let downloadTable = appDel.downloadTable {
                     if let playlistName = playlistName {
-                        searchVC.setup(downloadListView: dlView, playlistName: playlistName)
+                        searchVC.setup(downloadTable, playlistName: playlistName)
                     }
                 }
                 else {
