@@ -10,9 +10,11 @@ a Youtube video downloader for iOS
 ```
 
 ######Usage:
-    Go to the Downloads tab
+    Go to the Playlists tab
 
-    Tap the magnifying glass button on the top right corner
+    Select a playlist or make a new playlist using the 'plus' button on the top right-hand corner
+
+    Tap the 'Edit' button, then the 'plus' button on the toolbar that pops up
 
     (Optional) Sign in to Youtube
 
@@ -20,15 +22,11 @@ a Youtube video downloader for iOS
 
     Tap the red arrow to download all the songs on that playlist!
 
-Tapping the 'plus' button instead of the magnifying glass will bring up a text box. Download playlists or videos by pasting URLs into the text box. Example URLs:
-  
-    Playlist: https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha
-    Video: https://www.youtube.com/watch?v=DuAhRozlD3s , https://youtu.be/mHzf-cy_ydk
-
 Huge thanks to Cédric Luthi for creating XCDYoutubeKit, which makes it possible to obtain direct video links!
 https://github.com/0xced
 
-Many thanks to Takuya Okamoto as well for implementing the Youtube Search UI!
+Many thanks to Takuya Okamoto as well for implementing the Youtube Search UI and playlists!
+
 https://github.com/entotsu
 
 
@@ -38,13 +36,13 @@ https://github.com/entotsu
     -background downloading
     -background audio play
     -song info during background play
-    -360 or 720P downloading
+    -360P, 720P or audio only downloading
     -save to camera roll
 
-    -swipe left/right for prev/next tracks
-    -shuffle button
+    -multiple playlists
+    -shared video/playlist view for navigation within and outside of app
+    -shuffle
     -playlist search bar
-    -highlight of current song
     -easy deletion of songs : select multiple songs or swipe to delete
 
 ######Screenshots:
