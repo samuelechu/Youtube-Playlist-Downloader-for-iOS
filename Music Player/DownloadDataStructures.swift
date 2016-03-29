@@ -9,7 +9,7 @@
 import XCDYouTubeKit
 import Foundation
 
-class DownloadingVideoInfo {
+public class VideoDownloadInfo {
     let video: XCDYouTubeVideo
     let playlistName: String
     init(video: XCDYouTubeVideo, playlistName: String)  {

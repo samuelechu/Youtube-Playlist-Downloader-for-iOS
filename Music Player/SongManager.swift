@@ -63,6 +63,41 @@ public class SongManager{
         save()
     }
     
+    public class func addNewSong(vidInfo : VideoDownloadInfo) {
+        
+        let video = vidInfo.video
+        let playlistName = vidInfo.playlistName
+        
+        //save to CoreData
+        let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)
+        
+        newSong.setValue(video.identifier, forKey: "identifier")
+        newSong.setValue(video.title, forKey: "title")
+        
+        var expireDate = video.expirationDate
+        expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
+        newSong.setValue(expireDate, forKey: "expireDate")
+        newSong.setValue(true, forKey: "isDownloaded")
+        
+        let duration = video.duration
+        let durationStr = MiscFuncs.stringFromTimeInterval(duration)
+        newSong.setValue(duration, forKey: "duration")
+        newSong.setValue(durationStr, forKey: "durationStr")
+        
+        var streamURLs = video.streamURLs
+        let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
+        newSong.setValue("\(desiredURL)", forKey: "streamURL")
+        
+        let large = video.largeThumbnailURL
+        let medium = video.mediumThumbnailURL
+        let small = video.smallThumbnailURL
+        let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
+        newSong.setValue(imgData, forKey: "thumbnail")
+        
+        addToRelationships(video.identifier, playlistName: playlistName)
+        save()
+    }
+    
     //deletes song only if not in other playlists
     public class func deleteSong(identifier : String, playlistName : String){
         
