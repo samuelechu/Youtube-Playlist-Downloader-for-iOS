@@ -11,9 +11,7 @@ import Foundation
 
 protocol downloadTableViewControllerDelegate{
     func setProgressValue(dict : NSDictionary)
-    func reloadCellAtNdx(cellNum : Int)
     func addCell(dict : NSDictionary)
-    func reloadCells()
     
     //necessary to avoid duplicate downloads
     func addDLTask(tasks : [String])

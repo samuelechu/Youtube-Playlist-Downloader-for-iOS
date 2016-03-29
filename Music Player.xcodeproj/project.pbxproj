@@ -22,7 +22,7 @@
 		22433FE81B47212F00C075FF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22433FE61B47212F00C075FF /* LaunchScreen.xib */; };
 		224340041B47260500C075FF /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340031B47260500C075FF /* DownloadCell.swift */; };
 		224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340051B47266F00C075FF /* DownloadTableViewController.swift */; };
-		224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* DataDownloadObject.swift */; };
+		224340081B472FB800C075FF /* DataDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* DataDownloader.swift */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */; };
 		22AD6B321B47BB7D00428602 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* Settings.swift */; };
@@ -83,7 +83,7 @@
 		22433FF31B47212F00C075FF /* Music_PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music_PlayerTests.swift; sourceTree = "<group>"; };
 		224340031B47260500C075FF /* DownloadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		224340051B47266F00C075FF /* DownloadTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadTableViewController.swift; sourceTree = "<group>"; };
-		224340071B472FB800C075FF /* DataDownloadObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataDownloadObject.swift; sourceTree = "<group>"; };
+		224340071B472FB800C075FF /* DataDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataDownloader.swift; sourceTree = "<group>"; };
 		224340091B473C8B00C075FF /* bridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridgingHeader.h; sourceTree = "<group>"; };
 		2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		225F06111B613BB6005D0DEA /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 			children = (
 				D29E20291CA4E23E0079A261 /* DownloadDataStructures.swift */,
 				D2A1F8DB1CA0C58500F4ED53 /* DownloadProtocols.swift */,
-				224340071B472FB800C075FF /* DataDownloadObject.swift */,
+				224340071B472FB800C075FF /* DataDownloader.swift */,
 				224340031B47260500C075FF /* DownloadCell.swift */,
 				224340051B47266F00C075FF /* DownloadTableViewController.swift */,
 				B093A2A51C34429D00AC86C0 /* DownloadManager.swift */,
@@ -485,7 +485,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */,
-				224340081B472FB800C075FF /* DataDownloadObject.swift in Sources */,
+				224340081B472FB800C075FF /* DataDownloader.swift in Sources */,
 				D244D1C61C79858300A7E5B5 /* AVAssetAudio.swift in Sources */,
 				22433FDE1B47212F00C075FF /* Music_Player.xcdatamodeld in Sources */,
 				D2A23C6D1C784A6E00A9F644 /* SongManager.swift in Sources */,
@@ -691,22 +691,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";
@@ -717,18 +708,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Music PlayerTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Music Player.app/Music Player";

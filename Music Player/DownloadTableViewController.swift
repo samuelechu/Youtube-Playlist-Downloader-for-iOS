@@ -18,7 +18,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     var uncachedVideos : [String] = []
     
     override func viewWillAppear(animated: Bool) {
-        reloadCells()
+        tableView.reloadData()
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -107,15 +107,6 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         }
     }
     
-    func reloadCells(){ tableView.reloadData() }
-    
-    func reloadCellAtNdx(cellNum : Int){
-        if cellNum < downloadCells.count{
-            let indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        }
-    }
-    
     //update taskProgress of specific cell
     func setProgressValue(dict : NSDictionary){
         let cellNum : Int = dict.valueForKey("ndx")!.integerValue
@@ -127,10 +118,17 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         }
     }
     
+    func reloadCellAtNdx(cellNum : Int){
+        if cellNum < downloadCells.count{
+            let indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        }
+    }
+    
     func addCell(dict : NSDictionary){
         let newCell = dict.valueForKey("cellInfo") as! DownloadCellInfo
         downloadCells += [newCell]
-        reloadCells()
+        tableView.reloadData()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

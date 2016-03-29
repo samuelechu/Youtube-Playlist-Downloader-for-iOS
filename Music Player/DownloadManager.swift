@@ -130,8 +130,8 @@ class DownloadManager {
                             desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                         }
                         
-                        let videoToDL = DownloadingVideoInfo(video: video, playlistName: self.playlistName)
-                        self.dataDownloader.startNewTask(desiredURL, vidInfo: videoToDL)
+                        let vidInfo = VideoDownloadInfo(video: video, playlistName: self.playlistName)
+                        self.dataDownloader.startNewTask(desiredURL, vidInfo: vidInfo)
                     }
                 }
             })
