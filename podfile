@@ -1,17 +1,10 @@
-def the_pods
-  pod "XCDYouTubeKit", "~> 2.5"
-  platform :ios, '8.0'
-  use_frameworks!
+#Podfile
+platform :ios, '8.0'
 
+use_frameworks!
+
+target 'Music Player' do
+  pod "XCDYouTubeKit", "~> 2.5"
   pod 'SnapKit'
   pod  'SwiftFilePath'
-  
-end
-
-target 'Music Player'
-  the_pods
-end
-
-target 'Music PlayerTests
-  the_pods
 end
