@@ -31,6 +31,16 @@ public class SongManager{
         return fetchedPlaylists[0] as! NSManagedObject
     }
     
+    public class func isPlaylist(playlistName: String) -> Bool {
+        let playlistRequest = NSFetchRequest(entityName: "Playlist")
+        playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
+        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(playlistRequest)
+        if(fetchedPlaylists.count > 0) {
+            return true
+        }
+        return false
+    }
+    
     public class func addToRelationships(identifier : String, playlistName : String){
         
         let selectedPlaylist = getPlaylist(playlistName)
