@@ -74,12 +74,14 @@ class PlaylistsTableViewController: UITableViewController {
     
     
     func addPlaylist(name: String){
-        let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("Playlist", inManagedObjectContext: self.context)
-        newPlaylist.setValue(name, forKey: "playlistName")
-        
-        do{
-            try self.context.save()
-        }catch _ as NSError{}
+        if(!SongManager.isPlaylist(name)){
+            let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("Playlist", inManagedObjectContext: self.context)
+            newPlaylist.setValue(name, forKey: "playlistName")
+            
+            do{
+                try self.context.save()
+            }catch _ as NSError{}
+        }
         
     }
     
