@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
     
-    // this will be used when opening Webview from playlist
+    //this will be used when opening Webview from playlist
     var downloadTable : downloadTableViewControllerDelegate?
     var dataDownloader : DataDownloader?
     
@@ -30,10 +30,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var menuItems = menuController.menuItems ?? [UIMenuItem]()
         
         let copyLinkItem = UIMenuItem(title: "Copy Link", action: MenuAction.copyLink.selector())
-        let saveVideoItem = UIMenuItem(title: "Save to Camera Roll", action: MenuAction.saveVideo.selector())
+        //let saveVideoItem = UIMenuItem(title: "Save to Camera Roll", action: MenuAction.saveVideo.selector())
+        //let redownloadItem = UIMenuItem(title: "Re-download Video", action: MenuAction.redownloadVideo.selector())
         
         menuItems.append(copyLinkItem)
-        menuItems.append(saveVideoItem)
+        //menuItems.append(saveVideoItem)
+        //menuItems.append(redownloadItem)
         menuController.menuItems = menuItems
     }
     

@@ -21,6 +21,7 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
     //taskID index corresponds to videoData index, for assigning Song info after download is complete
     var taskIDs : [Int] = []
     var videoData : [VideoDownloadInfo] = []
+    var qualData : [Int] = []
     
     //delegate set in DownloadManager
     var tableDelegate : downloadTableViewControllerDelegate!
@@ -52,11 +53,12 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
         
     }
     
-    func startNewTask(targetUrl : NSURL, vidInfo : VideoDownloadInfo) {
+    func startNewTask(targetUrl : NSURL, vidInfo : VideoDownloadInfo, vidQual : Int) {
         addVideoToDownloadTable(vidInfo)
         let task = session.downloadTaskWithURL(targetUrl)
         taskIDs += [task.taskIdentifier]
         videoData += [vidInfo]
+        qualData += [vidQual]
         task.resume()
     }
     
@@ -92,9 +94,9 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
             if cellNum != nil{
                 
                 let vidInfo = videoData[cellNum!]
+                let qual = qualData[cellNum!]
                 
-                storeVideo(vidInfo, tempLocation: location.path!)
-                SongManager.addNewSong(vidInfo)
+                storeVideo(vidInfo, quality: qual, tempLocation: location.path!)
               
                 //display checkmark for completion
                 let dict = ["ndx" : cellNum!, "value" : 1.0 ]
@@ -105,7 +107,9 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
     }
     
     //stores the temporary file (downloaded video) to app data
-    func storeVideo(vidInfo : VideoDownloadInfo, tempLocation : String){
+    func storeVideo(vidInfo : VideoDownloadInfo, quality : Int, tempLocation : String){
+        
+        var qual = quality
         
         let fileManager = NSFileManager.defaultManager()
         let identifier = vidInfo.video.identifier
@@ -115,6 +119,7 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
             try NSFileManager.defaultManager().moveItemAtPath(tempLocation, toPath: filePath)
         }catch _ as NSError{}
         
+        //if audio only selected in settings, rip audio from video
         let settings = MiscFuncs.getSettings()
         let isAudio = settings.valueForKey("quality") as! Int == 2
         if(isAudio && !fileManager.fileExistsAtPath(MiscFuncs.grabFilePath("\(identifier).m4a"))){
@@ -130,7 +135,10 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
                 try fileManager.removeItemAtPath(filePath)
             } catch _ {
             }
+            qual = 2
         }
+        
+        SongManager.addNewSong(vidInfo, qual: qual)
     }
     
 }
