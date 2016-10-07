@@ -28,6 +28,10 @@ class SongCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     } 
 
+    func redownloadVideoAction(sender:AnyObject?){
+        UIPasteboard.generalPasteboard().string = "youtube.com/watch?v=\(identifier)"
+    }
+    
     func copyLinkAction(sender:AnyObject?){
         UIPasteboard.generalPasteboard().string = "youtube.com/watch?v=\(identifier)"
     }

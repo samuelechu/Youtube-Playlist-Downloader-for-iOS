@@ -73,7 +73,7 @@ public class SongManager{
         save()
     }
     
-    public class func addNewSong(vidInfo : VideoDownloadInfo) {
+    public class func addNewSong(vidInfo : VideoDownloadInfo, qual : Int) {
         
         let video = vidInfo.video
         let playlistName = vidInfo.playlistName
@@ -103,6 +103,8 @@ public class SongManager{
         let small = video.smallThumbnailURL
         let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
         newSong.setValue(imgData, forKey: "thumbnail")
+        
+        newSong.setValue(qual, forKey: "quality")
         
         addToRelationships(video.identifier, playlistName: playlistName)
         save()

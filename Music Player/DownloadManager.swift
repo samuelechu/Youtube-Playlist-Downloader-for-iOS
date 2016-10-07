@@ -66,7 +66,7 @@ class DownloadManager {
         if let videoId = videoId {
             updateStoredSongs()
             
-            let isStored =  isVideoStored(videoId)
+            let isStored =  isVideoStored(videoId, qual: qual)
             
             if (!isStored){
                 startDownloadVideo(videoId, qual: qual)
@@ -94,12 +94,21 @@ class DownloadManager {
     }
     
     //check if video in stored memory or currently downloading videos
-    private func isVideoStored (videoId : String) -> Bool {
+    private func isVideoStored (videoId : String, qual : Int) -> Bool {
         
         let isDownloaded = downloadedIDs.indexOf(videoId) != nil || uncachedVideos.indexOf(videoId) != nil
         
         if(isDownloaded){
-            return true
+            let song = SongManager.getSong(videoId) 
+            let quality = song.valueForKey("quality") as! Int
+            if(quality == qual){
+                return true
+            }
+            else{
+                SongManager.deleteSong(videoId, playlistName: playlistName)
+                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+                downloadTasks = (downloadTable.getDLTasks())
+            }
         }
             
         else if((downloadTasks.indexOf(videoId)) != nil){
@@ -121,17 +130,20 @@ class DownloadManager {
                     if let video = video {
                         let streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
                         var desiredURL : NSURL!
+                        var vidQual : Int
                         
-                        if (qual == 0){ //360P
+                        if (qual == 0  || qual == 2){ //360P or audio only
                             desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL
+                            vidQual = (streamURLs[18] != nil ? 0 : (streamURLs[22] != nil ? 1 : 0))
                         }
                             
                         else { //720P
                             desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                            vidQual = (streamURLs[22] != nil ? 1 : (streamURLs[18] != nil ? 0 : 0))
                         }
                         
                         let vidInfo = VideoDownloadInfo(video: video, playlistName: self.playlistName)
-                        self.dataDownloader.startNewTask(desiredURL, vidInfo: vidInfo)
+                        self.dataDownloader.startNewTask(desiredURL, vidInfo: vidInfo, vidQual: vidQual)
                     }
                 }
             })
@@ -209,7 +221,7 @@ class DownloadManager {
                 if downloadVid != 1 {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.isVideoStored(identifier)
+                        let isStored = self.isVideoStored(identifier, qual: qual)
                         
                         
                         
@@ -258,7 +270,7 @@ class DownloadManager {
                 else {
                     for identifier : String in self.videoIDs {
                         
-                        let isStored = self.isVideoStored(identifier)
+                        let isStored = self.isVideoStored(identifier, qual: qual)
                         
                         if (!isStored){
                             
