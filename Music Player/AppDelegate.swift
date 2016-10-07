@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
     
-    // this will be used when opening Webview from playlist
+    //this will be used when opening Webview from playlist
     var downloadTable : downloadTableViewControllerDelegate?
     var dataDownloader : DataDownloader?
     
