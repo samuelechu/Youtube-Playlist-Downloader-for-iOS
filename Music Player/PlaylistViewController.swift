@@ -16,34 +16,34 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     var player : Player!
     var playlistName : String!
     
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         stopVid = false
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
         //allow swipe left to right to go back
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
     
     //stop video play when navigating back to playlist list
     var stopVid : Bool!
-    override func viewWillDisappear(animated: Bool)
+    override func viewWillDisappear(_ animated: Bool)
     {
         super.viewWillDisappear(animated)
-        if(self.isMovingFromParentViewController() || self.isBeingDismissed()){
+        if(self.isMovingFromParentViewController || self.isBeingDismissed){
             stopVid = true
         }
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
     }
     
     //stop video only when view popped
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         if (stopVid == true){
             player.stop()
             player.player = nil
@@ -54,12 +54,12 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         //initialize playlist container
         if(segue.identifier == "showPlaylist")
         {
-            let navController = segue.destinationViewController as! UINavigationController
+            let navController = segue.destination as! UINavigationController
             playlist = navController.viewControllers[0] as! Playlist
             playlist.playlistName = playlistName
             playlist.playlistVCDelegate = self
@@ -68,13 +68,13 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
         
         //initialize avPlayer container
         else if(segue.identifier == "showPlayer"){
-            player = segue.destinationViewController as! Player
+            player = segue.destination as! Player
         }
             
         //segue to Youtube WebView
         else if(segue.identifier == "playlistToSearchView"){
-            let searchVC = (segue.destinationViewController as? SearchWebViewController)!
-            if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
+            let searchVC = (segue.destination as? SearchWebViewController)!
+            if let appDel = UIApplication.shared.delegate as? AppDelegate {
                 if let downloadTable = appDel.downloadTable {
                     if let playlistName = playlistName {
                         searchVC.setup(downloadTable, playlistName: playlistName)
@@ -100,7 +100,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     
     //initialize Youtube WebView
     func pushWebView() {
-        performSegueWithIdentifier("playlistToSearchView", sender: nil)
+        performSegue(withIdentifier: "playlistToSearchView", sender: nil)
     }
     
 }

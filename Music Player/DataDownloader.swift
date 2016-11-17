@@ -13,10 +13,10 @@ import XCDYouTubeKit
 import AssetsLibrary
 
 //only one instance of DataDownloader declared in AppDelegate.swift
-class DataDownloader: NSObject, NSURLSessionDelegate{
+class DataDownloader: NSObject, URLSessionDelegate{
     
     var context : NSManagedObjectContext!
-    var session : NSURLSession!
+    var session : Foundation.URLSession!
     
     //taskID index corresponds to videoData index, for assigning Song info after download is complete
     var taskIDs : [Int] = []
@@ -30,32 +30,35 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
         super.init()
         
         let randomString = MiscFuncs.randomStringWithLength(30)
-        let config = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("\(randomString)")
+        let config = URLSessionConfiguration.background(withIdentifier: "\(randomString)")
         config.timeoutIntervalForRequest = 600
-        session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        session = Foundation.URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
         
-        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.shared.delegate as? AppDelegate
         context = appDel!.managedObjectContext
     }
     
-    func addVideoToDownloadTable(vidInfo : VideoDownloadInfo) {
+    func addVideoToDownloadTable(_ vidInfo : VideoDownloadInfo) {
         let video = vidInfo.video
         let duration = MiscFuncs.stringFromTimeInterval(video.duration)
         
         //get thumbnail
         let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
-        let data = NSData(contentsOfURL: thumbnailURL!)
-        let image = UIImage(data: data!)
         
-        let newCell = DownloadCellInfo(image: image!, duration: duration, name: video.title)
-        let dict = ["cellInfo" : newCell]
-        self.tableDelegate.addCell(dict)
+        do {
+            let data = try Data(contentsOf: thumbnailURL!)
+            let image = UIImage(data: data)!
+            let newCell = DownloadCellInfo(image: image, duration: duration, name: video.title)
+            let dict = ["cellInfo" : newCell]
+            self.tableDelegate.addCell(dict as NSDictionary)
+        } catch _ {
+        }
         
     }
     
-    func startNewTask(targetUrl : NSURL, vidInfo : VideoDownloadInfo, vidQual : Int) {
+    func startNewTask(_ targetUrl : URL, vidInfo : VideoDownloadInfo, vidQual : Int) {
         addVideoToDownloadTable(vidInfo)
-        let task = session.downloadTaskWithURL(targetUrl)
+        let task = session.downloadTask(with: targetUrl)
         taskIDs += [task.taskIdentifier]
         videoData += [vidInfo]
         qualData += [vidQual]
@@ -63,23 +66,23 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
     }
     
     //update progress when data is received
-    func URLSession(session: NSURLSession,
-        downloadTask: NSURLSessionDownloadTask,
+    func URLSession(_ session: Foundation.URLSession,
+        downloadTask: URLSessionDownloadTask,
         didWriteData bytesWritten: Int64,
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
         
             //cell order in tableDelegate identical to order in taskIDs
-            let cellNum = taskIDs.indexOf(downloadTask.taskIdentifier)
+            let cellNum = taskIDs.index(of: downloadTask.taskIdentifier)
             
             if cellNum != nil{
                 let taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 let num = taskProgress * 100
                 
-                if ( num % 10 ) < 0.8 && taskProgress != 1.0 {
-                    dispatch_async(dispatch_get_main_queue(),{
-                        let dict = ["ndx" : cellNum!, "value" : taskProgress ]
-                        self.tableDelegate.setProgressValue(dict)
+                if ( num.truncatingRemainder(dividingBy: 10) ) < 0.8 && taskProgress != 1.0 {
+                    DispatchQueue.main.async(execute: {
+                        let dict = ["ndx" : cellNum!, "value" : taskProgress ] as [String : Any]
+                        self.tableDelegate.setProgressValue(dict as NSDictionary)
                     })
                 }
             }
@@ -87,52 +90,54 @@ class DataDownloader: NSObject, NSURLSessionDelegate{
     }
     
     ///save video when download completed
-    func URLSession(session: NSURLSession,
-        downloadTask: NSURLSessionDownloadTask,
-        didFinishDownloadingToURL location: NSURL){
-            let cellNum  = taskIDs.indexOf(downloadTask.taskIdentifier)
+    func URLSession(_ session: Foundation.URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didFinishDownloadingToURL location: URL){
+            let cellNum  = taskIDs.index(of: downloadTask.taskIdentifier)
             if cellNum != nil{
                 
                 let vidInfo = videoData[cellNum!]
                 let qual = qualData[cellNum!]
                 
-                storeVideo(vidInfo, quality: qual, tempLocation: location.path!)
+                storeVideo(vidInfo, quality: qual, tempLocation: location.path)
               
                 //display checkmark for completion
-                let dict = ["ndx" : cellNum!, "value" : 1.0 ]
+                DispatchQueue.main.async(execute: {
+                    let dict = ["ndx" : cellNum!, "value" : Float(1) ] as [String : Any]
+                    self.tableDelegate.setProgressValue(dict as NSDictionary)
+                })
                 
-                tableDelegate.setProgressValue(dict)
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
             }
     }
     
     //stores the temporary file (downloaded video) to app data
-    func storeVideo(vidInfo : VideoDownloadInfo, quality : Int, tempLocation : String){
+    func storeVideo(_ vidInfo : VideoDownloadInfo, quality : Int, tempLocation : String){
         
         var qual = quality
         
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
         let identifier = vidInfo.video.identifier
         let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
         
         do{
-            try NSFileManager.defaultManager().moveItemAtPath(tempLocation, toPath: filePath)
+            try FileManager.default.moveItem(atPath: tempLocation, toPath: filePath)
         }catch _ as NSError{}
         
         //if audio only selected in settings, rip audio from video
         let settings = MiscFuncs.getSettings()
-        let isAudio = settings.valueForKey("quality") as! Int == 2
-        if(isAudio && !fileManager.fileExistsAtPath(MiscFuncs.grabFilePath("\(identifier).m4a"))){
-            let asset = AVURLAsset(URL: NSURL(fileURLWithPath: filePath))
-            asset.writeAudioTrackToURL(NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
-            )) {(success, error) -> () in
+        let isAudio = settings.value(forKey: "quality") as! Int == 2
+        if(isAudio && !fileManager.fileExists(atPath: MiscFuncs.grabFilePath("\(identifier).m4a"))){
+            let asset = AVURLAsset(url: URL(fileURLWithPath: filePath))
+            asset.writeAudioTrackToURL(URL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
+            ) as NSURL) {(success, error) -> () in
                 if !success {
-                    print(error)
+                    print(error!)
                 }
             }
             
             do {
-                try fileManager.removeItemAtPath(filePath)
+                try fileManager.removeItem(atPath: filePath)
             } catch _ {
             }
             qual = 2

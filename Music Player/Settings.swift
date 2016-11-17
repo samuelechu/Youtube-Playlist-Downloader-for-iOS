@@ -14,35 +14,35 @@ class Settings: UITableViewController {
     var context : NSManagedObjectContext!
     var settings : NSManagedObject!
     
-    func selectRow(path : NSIndexPath){
-        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.None)
-        tableView.cellForRowAtIndexPath(path)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+    func selectRow(_ path : IndexPath){
+        tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.none)
+        tableView.cellForRow(at: path)?.accessoryType = UITableViewCellAccessoryType.checkmark
     }
     
-    func deselectRow(path : NSIndexPath){
-        tableView.deselectRowAtIndexPath(path, animated: false)
-        tableView.cellForRowAtIndexPath(path)?.accessoryType = UITableViewCellAccessoryType.None
+    func deselectRow(_ path : IndexPath){
+        tableView.deselectRow(at: path, animated: false)
+        tableView.cellForRow(at: path)?.accessoryType = UITableViewCellAccessoryType.none
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 44
         
-        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.shared.delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         //retrieve settings, or initialize default settings if unset
         settings = MiscFuncs.getSettings()
-        let qualRow = NSIndexPath(forRow: settings.valueForKey("quality") as! Int, inSection: 0)
+        let qualRow = IndexPath(row: settings.value(forKey: "quality") as! Int, section: 0)
         deselectRow(qualRow)
         selectRow(qualRow)
         
-        let cacheRow = NSIndexPath(forRow: settings.valueForKey("cache") as! Int, inSection: 1)
+        let cacheRow = IndexPath(row: settings.value(forKey: "cache") as! Int, section: 1)
         deselectRow(cacheRow)
         selectRow(cacheRow)
         
         //set background
-        tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clear
         let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView        
@@ -52,19 +52,19 @@ class Settings: UITableViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header: UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView //recast your view as a UITableViewHeaderFooterView
-        header.contentView.backgroundColor = UIColor.clearColor()
-        header.backgroundView?.backgroundColor = UIColor.clearColor()
+        header.contentView.backgroundColor = UIColor.clear
+        header.backgroundView?.backgroundColor = UIColor.clear
     }
     
     //deselect previously selected rows that are in same section
-    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        if let selectedRows = tableView.indexPathsForSelectedRows as [NSIndexPath]?{
-            for selectedIndexPath : NSIndexPath in selectedRows{
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if let selectedRows = tableView.indexPathsForSelectedRows as [IndexPath]?{
+            for selectedIndexPath : IndexPath in selectedRows{
                 if selectedIndexPath.section == indexPath.section{
-                    tableView.deselectRowAtIndexPath(selectedIndexPath, animated: false)
-                    tableView.cellForRowAtIndexPath(selectedIndexPath)?.accessoryType = UITableViewCellAccessoryType.None
+                    tableView.deselectRow(at: selectedIndexPath, animated: false)
+                    tableView.cellForRow(at: selectedIndexPath)?.accessoryType = UITableViewCellAccessoryType.none
                 }
             }
         }
@@ -72,8 +72,8 @@ class Settings: UITableViewController {
     }
     
     //0 is videoQual, 1 is cache Video
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.cellForRowAtIndexPath(indexPath)?.accessoryType = UITableViewCellAccessoryType.Checkmark
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
         switch indexPath.section {
         case 0: //Video Quality
             settings.setValue(indexPath.row, forKey: "quality")
@@ -90,7 +90,7 @@ class Settings: UITableViewController {
     }
     
    //user cannot deselect cells manually
-   override func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+   override func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
         return nil
     }
 }

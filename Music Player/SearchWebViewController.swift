@@ -16,11 +16,11 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
     var downloadManager: DownloadManager!
     
     // Please Call
-    func setup(downloadTable : downloadTableViewControllerDelegate, playlistName: String) {
+    func setup(_ downloadTable : downloadTableViewControllerDelegate, playlistName: String) {
         downloadManager = DownloadManager(downloadTable : downloadTable, playlistName: playlistName)
     }
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         self.webView = YouTubeSearchWebView()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setup()
@@ -35,7 +35,7 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
         super.init(nibName: nil, bundle: nil)
         setup()
     }
-    private func setup() {
+    fileprivate func setup() {
         webView.delegate = self
     }
     
@@ -52,13 +52,13 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
         )
         view.addSubview(webView)
         
-        let req = NSURLRequest(URL: NSURL(string:"https://www.youtube.com")!)
-        webView.loadRequest(req)
+        let req = URLRequest(url: URL(string:"https://www.youtube.com")!)
+        webView.load(req)
     }
     
     // MARK: YouTubeSearchWebViewDelegate
-    func didTapDownloadButton(url: NSURL) {
+    func didTapDownloadButton(_ url: URL) {
         downloadManager.startDownloadVideoOrPlaylist(url: url.absoluteString)
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
 }

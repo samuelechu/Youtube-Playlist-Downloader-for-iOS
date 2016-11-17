@@ -20,27 +20,27 @@ class SongCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        imageLabel.contentMode = .ScaleAspectFit
+        imageLabel.contentMode = .scaleAspectFit
         imageLabel.clipsToBounds = true
     }
  
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     } 
 
-    func redownloadVideoAction(sender:AnyObject?){
-        UIPasteboard.generalPasteboard().string = "youtube.com/watch?v=\(identifier)"
+    func redownloadVideoAction(_ sender:AnyObject?){
+        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier)"
     }
     
-    func copyLinkAction(sender:AnyObject?){
-        UIPasteboard.generalPasteboard().string = "youtube.com/watch?v=\(identifier)"
+    func copyLinkAction(_ sender:AnyObject?){
+        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier)"
     }
     
-    func saveToCameraRollAction(sender:AnyObject?){
+    func saveToCameraRollAction(_ sender:AnyObject?){
         
         let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
         
-        if(NSFileManager.defaultManager().fileExistsAtPath(filePath0)){
+        if(FileManager.default.fileExists(atPath: filePath0)){
             UISaveVideoAtPathToSavedPhotosAlbum(filePath0, nil, nil, nil)
         }
     }

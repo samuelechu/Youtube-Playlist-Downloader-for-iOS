@@ -14,25 +14,25 @@ class Player: AVPlayerViewController {
     
     var playlistDelegate : PlaylistDelegate? = nil
      
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
-        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(Player.respondToSwipeGesture(_:)))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.Right
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
         view.addGestureRecognizer(swipeRight)
         
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(Player.respondToSwipeGesture(_:)))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.Left
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         view.addGestureRecognizer(swipeLeft)
     }
     
@@ -46,14 +46,14 @@ class Player: AVPlayerViewController {
     }
     
     //swipe left : go to next song, swipe right : go to previous song
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+    func respondToSwipeGesture(_ gesture: UIGestureRecognizer) {
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.Right:
+            case UISwipeGestureRecognizerDirection.right:
                 playlistDelegate?.retreat()
-            case UISwipeGestureRecognizerDirection.Left:
+            case UISwipeGestureRecognizerDirection.left:
                 playlistDelegate?.advance()
             default:
                 break
@@ -67,29 +67,29 @@ class Player: AVPlayerViewController {
     }
     
     //recieve input from earphone button clicks
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+    override func remoteControlReceived(with event: UIEvent?) {
         let rc = event!.subtype
         switch rc {
-        case .RemoteControlNextTrack:
+        case .remoteControlNextTrack:
             playlistDelegate?.advance()
-        case .RemoteControlPreviousTrack:
+        case .remoteControlPreviousTrack:
             playlistDelegate?.retreat()
-        case .RemoteControlPause:
+        case .remoteControlPause:
             playlistDelegate?.togglePlayPause()
-        case .RemoteControlPlay:
+        case .remoteControlPlay:
             playlistDelegate?.togglePlayPause()
-        case .RemoteControlTogglePlayPause :
+        case .remoteControlTogglePlayPause :
             playlistDelegate?.togglePlayPause()
         
-        case .RemoteControlBeginSeekingForward:
+        case .remoteControlBeginSeekingForward:
             playlistDelegate?.seekForward()
-        case .RemoteControlBeginSeekingBackward:
+        case .remoteControlBeginSeekingBackward:
             playlistDelegate?.seekBackward()
         
-        case .RemoteControlEndSeekingBackward:
+        case .remoteControlEndSeekingBackward:
             playlistDelegate?.togglePlayPause()
             playlistDelegate?.togglePlayPause()
-        case .RemoteControlEndSeekingForward:
+        case .remoteControlEndSeekingForward:
             playlistDelegate?.togglePlayPause()
             playlistDelegate?.togglePlayPause()
             

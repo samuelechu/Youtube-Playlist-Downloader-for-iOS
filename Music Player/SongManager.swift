@@ -9,83 +9,83 @@
 import Foundation
 import CoreData
 
-public class SongManager{
+open class SongManager{
     
-    static var context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext!
-    static var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    static var context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext!
+    static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
     //gets song associated with (identifier : String)
-    public class func getSong(identifier : String) -> NSManagedObject {
+    open class func getSong(_ identifier : String) -> NSManagedObject {
         //relevant song : selectedSong
-        let songRequest = NSFetchRequest(entityName: "Song")
+        let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
         songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-        let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)
+        let fetchedSongs : NSArray = try! context.fetch(songRequest) as NSArray
         return fetchedSongs[0] as! NSManagedObject
     }
     
     //gets playlist associated with (playlistName : String)
-    public class func getPlaylist(playlistName : String) -> NSManagedObject {
-        let playlistRequest = NSFetchRequest(entityName: "Playlist")
+    open class func getPlaylist(_ playlistName : String) -> NSManagedObject {
+        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
         playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(playlistRequest)
+        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
         return fetchedPlaylists[0] as! NSManagedObject
     }
     
-    public class func isPlaylist(playlistName: String) -> Bool {
-        let playlistRequest = NSFetchRequest(entityName: "Playlist")
+    open class func isPlaylist(_ playlistName: String) -> Bool {
+        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
         playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(playlistRequest)
+        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
         if(fetchedPlaylists.count > 0) {
             return true
         }
         return false
     }
     
-    public class func addToRelationships(identifier : String, playlistName : String){
+    open class func addToRelationships(_ identifier : String, playlistName : String){
         
         let selectedPlaylist = getPlaylist(playlistName)
         let selectedSong = getSong(identifier)
         
         //add song reference to songs relationship (in playlist entity)
-        let playlist = selectedPlaylist.mutableSetValueForKey("songs")
-        playlist.addObject(selectedSong)
+        let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
+        playlist.add(selectedSong)
         
         //add playlist reference to playlists relationship (in song entity)
-        let inPlaylists = selectedSong.mutableSetValueForKey("playlists")
-        inPlaylists.addObject(selectedPlaylist)
+        let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
+        inPlaylists.add(selectedPlaylist)
         
         save()
     }
     
     
-    public class func removeFromRelationships(identifier : String, playlistName : String){
+    open class func removeFromRelationships(_ identifier : String, playlistName : String){
         let selectedPlaylist = getPlaylist(playlistName)
         let selectedSong = getSong(identifier)
         
         //delete song reference in songs relationship (in playlist entity)
-        let playlist = selectedPlaylist.mutableSetValueForKey("songs")
-        playlist.removeObject(selectedSong)
+        let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
+        playlist.remove(selectedSong)
         
         //remove from playlist reference in playlists relationship (in song entity)
-        let inPlaylists = selectedSong.mutableSetValueForKey("playlists")
-        inPlaylists.removeObject(selectedPlaylist)
+        let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
+        inPlaylists.remove(selectedPlaylist)
         
         save()
     }
     
-    public class func addNewSong(vidInfo : VideoDownloadInfo, qual : Int) {
+    open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
         
         let video = vidInfo.video
         let playlistName = vidInfo.playlistName
         
         //save to CoreData
-        let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: context)
+        let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: context)
         
         newSong.setValue(video.identifier, forKey: "identifier")
         newSong.setValue(video.title, forKey: "title")
         
         var expireDate = video.expirationDate
-        expireDate = expireDate!.dateByAddingTimeInterval(-60*60) //decrease expire time by 1 hour
+        expireDate = expireDate!.addingTimeInterval(-60*60) //decrease expire time by 1 hour
         newSong.setValue(expireDate, forKey: "expireDate")
         newSong.setValue(true, forKey: "isDownloaded")
         
@@ -94,15 +94,19 @@ public class SongManager{
         newSong.setValue(duration, forKey: "duration")
         newSong.setValue(durationStr, forKey: "durationStr")
         
-        var streamURLs = video.streamURLs
+       /* var streamURLs = video.streamURLs
         let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-        newSong.setValue("\(desiredURL)", forKey: "streamURL")
+        newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
         
-        let large = video.largeThumbnailURL
-        let medium = video.mediumThumbnailURL
-        let small = video.smallThumbnailURL
-        let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
-        newSong.setValue(imgData, forKey: "thumbnail")
+        do {
+            let large = video.largeThumbnailURL
+            let medium = video.mediumThumbnailURL
+            let small = video.smallThumbnailURL
+            let imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
+            newSong.setValue(imgData, forKey: "thumbnail")
+        } catch _ {
+        }
+        
         
         newSong.setValue(qual, forKey: "quality")
         
@@ -111,22 +115,22 @@ public class SongManager{
     }
     
     //deletes song only if not in other playlists
-    public class func deleteSong(identifier : String, playlistName : String){
+    open class func deleteSong(_ identifier : String, playlistName : String){
         
         removeFromRelationships(identifier, playlistName: playlistName)
         
         let selectedSong = getSong(identifier)
-        let inPlaylists = selectedSong.mutableSetValueForKey("playlists")
+        let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         
         if (inPlaylists.count < 1){
             
             //allows for redownload of deleted song
             let dict = ["identifier" : identifier]
-            NSNotificationCenter.defaultCenter().postNotificationName("resetDownloadTasksID", object: nil, userInfo: dict as [NSObject : AnyObject])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "resetDownloadTasksID"), object: nil, userInfo: dict as [AnyHashable: Any])
             
-            let fileManager = NSFileManager.defaultManager()
+            let fileManager = FileManager.default
             
-            let isDownloaded = selectedSong.valueForKey("isDownloaded") as! Bool
+            let isDownloaded = selectedSong.value(forKey: "isDownloaded") as! Bool
             
             //remove item in both documents directory and persistentData
             if isDownloaded {
@@ -134,21 +138,21 @@ public class SongManager{
                 let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
 
                 do {
-                    try fileManager.removeItemAtPath(filePath0)
+                    try fileManager.removeItem(atPath: filePath0)
                 } catch _ {
                 }
                 
                 do {
-                    try fileManager.removeItemAtPath(filePath1)
+                    try fileManager.removeItem(atPath: filePath1)
                 } catch _ {
                 }
             }
-            context.deleteObject(selectedSong)
+            context.delete(selectedSong)
         }
         save()
     }
     
-    private class func save() {
+    fileprivate class func save() {
         do {
             try context.save()
         } catch _ {

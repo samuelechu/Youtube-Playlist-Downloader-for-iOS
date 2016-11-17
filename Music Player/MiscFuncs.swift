@@ -9,10 +9,10 @@
 import Foundation
 import CoreData
 
-public class MiscFuncs{
+open class MiscFuncs{
     
     //convert double to format : hh:mm:ss
-    public class func stringFromTimeInterval(interval: NSTimeInterval) -> String {
+    open class func stringFromTimeInterval(_ interval: TimeInterval) -> String {
         let interval = Int(interval)
         let seconds = interval % 60
         let minutes = (interval / 60) % 60
@@ -21,7 +21,7 @@ public class MiscFuncs{
     }
     
     //convert double to format : xh xm
-    public class func hrsAndMinutes(interval: NSTimeInterval) -> String {
+    open class func hrsAndMinutes(_ interval: TimeInterval) -> String {
         let interval = Int(interval)
         let minutes = (interval / 60) % 60
         let hours = (interval / 3600)
@@ -29,8 +29,8 @@ public class MiscFuncs{
     }
     
     //shuffle int array
-    public class func shuffle<C: MutableCollectionType where C.Index == Int>(inout list: C) {
-        let c = list.count
+    open class func shuffle<C: MutableCollection>(_ list: inout C) where C.Index == Int {
+        let c = list.count as! Int
         for i in 0..<(c - 1) {
             let j = Int(arc4random_uniform(UInt32(c - i))) + i
             if (i != j){
@@ -41,16 +41,12 @@ public class MiscFuncs{
     }
     
     //delay execution, taken from : http://stackoverflow.com/questions/24034544/dispatch-after-gcd-in-swift
-    public class func delay(delay:Double, closure:()->()) {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
+    open class func delay(_ delay:Double, closure:@escaping ()->()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
     
-    public class func randomStringWithLength (len : Int) -> NSString {
+    open class func randomStringWithLength (_ len : Int) -> NSString {
         
         let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         
@@ -59,20 +55,20 @@ public class MiscFuncs{
         for _ in 0 ..< len {
             let length = UInt32 (letters.length)
             let rand = arc4random_uniform(length)
-            randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
+            randomString.appendFormat("%C", letters.character(at: Int(rand)))
         }
         
         return randomString
     }
     
     
-    public class func parseIDs(url url: String) -> (videoId: String?, playlistId: String?) {
+    open class func parseIDs(url: String) -> (videoId: String?, playlistId: String?) {
         
         var videoId: String? = nil
         var playlistId: String? = nil
         
-        if let url: NSURL = NSURL(string: url) {
-            if let comp = NSURLComponents(URL: url, resolvingAgainstBaseURL: true) {
+        if let url: URL = URL(string: url) {
+            if let comp = URLComponents(url: url, resolvingAgainstBaseURL: true) {
                 if let queryItems = comp.queryItems {
                     queryItems.forEach { item in
                         switch item.name {
@@ -89,18 +85,18 @@ public class MiscFuncs{
     }
     
     //return current settings or initialize defaults
-    public class func getSettings() -> NSManagedObject {
+    open class func getSettings() -> NSManagedObject {
         
-        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.shared.delegate as? AppDelegate
         let context = appDel!.managedObjectContext!
         
         //set initial quality to 360P if uninitialized
-        let request = NSFetchRequest(entityName: "Settings")
-        var results : NSArray = try! context.executeFetchRequest(request)
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var results : NSArray = try! context.fetch(request) as NSArray
         
         //default settings : quality = 360P, cache videos within app
         if results.count == 0 {
-            let settings = NSEntityDescription.insertNewObjectForEntityForName("Settings", inManagedObjectContext: context)
+            let settings = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
             
             settings.setValue(0, forKey: "quality")
             settings.setValue(0, forKey: "cache")
@@ -109,29 +105,29 @@ public class MiscFuncs{
                 try context.save()
             } catch _ {
             }
-            results = try! context.executeFetchRequest(request)
+            results = try! context.fetch(request) as NSArray
         }
         
         return results[0] as! NSManagedObject
     }
     
     //return path of video, input : video identifier
-    public class func grabFilePath(fileName : String) -> String {
-        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
-        let writePath = (documents as NSString).stringByAppendingPathComponent("\(fileName)")
+    open class func grabFilePath(_ fileName : String) -> String {
+        let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        let writePath = (documents as NSString).appendingPathComponent("\(fileName)")
         
         return writePath
     }
     
     //delete files in this directory
-    public class func deleteFiles(dir : String) {
-        let fileMgr = NSFileManager.defaultManager()
-        if fileMgr.fileExistsAtPath(dir){
-            let dirContents  = (try! fileMgr.contentsOfDirectoryAtPath(dir))
+    open class func deleteFiles(_ dir : String) {
+        let fileMgr = FileManager.default
+        if fileMgr.fileExists(atPath: dir){
+            let dirContents  = (try! fileMgr.contentsOfDirectory(atPath: dir))
             
             for file : String in dirContents {
                 do {
-                    try fileMgr.removeItemAtPath((dir as NSString).stringByAppendingPathComponent(file))
+                    try fileMgr.removeItem(atPath: (dir as NSString).appendingPathComponent(file))
                 } catch _ {
                 }
             }

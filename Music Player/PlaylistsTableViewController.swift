@@ -7,19 +7,18 @@
 //
 
 import UIKit
-import SwiftFilePath
 import CoreData
 
 class PlaylistsTableViewController: UITableViewController {
     
-    @IBAction func didTapAddButton(sender: AnyObject) {
+    @IBAction func didTapAddButton(_ sender: AnyObject) {
         showTextFieldDialog("Add playlist", message: "", placeHolder: "Name", okButtonTitle: "Add", didTapOkButton: { title in
             self.addPlaylist(title!)
             self.refreshPlaylists()
         })
     }
     
-    private var context : NSManagedObjectContext!
+    fileprivate var context : NSManagedObjectContext!
     
     var playlists: NSArray!
     var playlistNames : [String] = []
@@ -28,14 +27,14 @@ class PlaylistsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.shared.delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         tableView.dataSource = self
         tableView.delegate = self
         
         //set background image
-        tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clear
         let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
@@ -43,39 +42,39 @@ class PlaylistsTableViewController: UITableViewController {
         refreshPlaylists()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlistNames.count
     }
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("playlistCell")! as UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell")! as UITableViewCell
         cell.textLabel?.text = playlistNames[indexPath.row]
         return cell
     }
     
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playlistName = playlistNames[indexPath.row]
-        performSegueWithIdentifier("PlaylistsToPlaylist", sender: playlistName)
+        performSegue(withIdentifier: "PlaylistsToPlaylist", sender: playlistName)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "PlaylistsToPlaylist") {
             let playlistName = sender as! String
-            let playlistVC = (segue.destinationViewController as? PlaylistViewController)!
+            let playlistVC = (segue.destination as? PlaylistViewController)!
             playlistVC.playlistName = playlistName
         }
     }
     
     
-    func addPlaylist(name: String){
+    func addPlaylist(_ name: String){
         if(!SongManager.isPlaylist(name)){
-            let newPlaylist = NSEntityDescription.insertNewObjectForEntityForName("Playlist", inManagedObjectContext: self.context)
+            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: self.context)
             newPlaylist.setValue(name, forKey: "playlistName")
             
             do{
@@ -87,12 +86,12 @@ class PlaylistsTableViewController: UITableViewController {
     
     func refreshPlaylists(){
         playlistNames = []
-        let request = NSFetchRequest(entityName: "Playlist")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
         request.sortDescriptors = [playlistSortDescriptor]
         
-        playlists = try? context.executeFetchRequest(request)
+        playlists = try? context.fetch(request) as NSArray!
         for playlist in playlists{
-            let playlistName = playlist.valueForKey("playlistName") as! String
+            let playlistName = (playlist as AnyObject).value(forKey: "playlistName") as! String
             playlistNames += [playlistName]
         }
         
@@ -101,34 +100,34 @@ class PlaylistsTableViewController: UITableViewController {
     
     
     //swipe to delete
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
             let row = indexPath.row
-            let playlistName = playlists[row].valueForKey("playlistName") as! String
+            let playlistName = (playlists[row] as AnyObject).value(forKey: "playlistName") as! String
             deletePlaylist(playlistName)
             refreshPlaylists()
         }
     }
     
     //delete playlist and all songs in it
-    func deletePlaylist(playlistName : String){
-        let request = NSFetchRequest(entityName: "Playlist")
+    func deletePlaylist(_ playlistName : String){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
         request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.executeFetchRequest(request)
+        let fetchedPlaylists : NSArray = try! context.fetch(request) as NSArray
         let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
         
-        let songs = selectedPlaylist.valueForKey("songs") as! NSSet
+        let songs = selectedPlaylist.value(forKey: "songs") as! NSSet
         
         var songIdentifiers : [String] = []
         for song in songs{
-            let identifier = song.valueForKey("identifier") as! String
+            let identifier = (song as AnyObject).value(forKey: "identifier") as! String
             songIdentifiers += [identifier]
         }
         
         for identifier in songIdentifiers{
             SongManager.deleteSong(identifier, playlistName: playlistName)
         }
-        context.deleteObject(selectedPlaylist)
+        context.delete(selectedPlaylist)
         
         do {
             try context.save()

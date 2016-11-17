@@ -9,7 +9,7 @@ import Foundation
 
 extension AVAsset {
     
-    func writeAudioTrackToURL(URL: NSURL, completion: (Bool, NSError?) -> ()) {
+    func writeAudioTrackToURL(_ URL: NSURL, completion: @escaping (Bool, NSError?) -> ()) {
         
         do {
             
@@ -22,11 +22,11 @@ extension AVAsset {
             
         } catch {
             
-            print("\(self.dynamicType), error:\(error)")
+            print("\(type(of: self)), error:\(error)")
         }
     }
     
-    func writeToURL(URL: NSURL, completion: (Bool, NSError?) -> ()) {
+    func writeToURL(_ URL: NSURL, completion: @escaping (Bool, NSError?) -> ()) {
         
         guard let exportSession = AVAssetExportSession(asset: self, presetName: AVAssetExportPresetAppleM4A) else {
             completion(false, nil)
@@ -34,13 +34,13 @@ extension AVAsset {
         }
         
         exportSession.outputFileType = AVFileTypeAppleM4A
-        exportSession.outputURL      = URL
+        exportSession.outputURL      = URL as URL
         
-        exportSession.exportAsynchronouslyWithCompletionHandler {
+        exportSession.exportAsynchronously {
             switch exportSession.status {
-            case .Completed:
+            case .completed:
                 completion(true, nil)
-            case .Unknown, .Waiting, .Exporting, .Failed, .Cancelled:
+            case .unknown, .waiting, .exporting, .failed, .cancelled:
                 completion(false, nil)
             }
         }
@@ -50,13 +50,13 @@ extension AVAsset {
         
         let composition = AVMutableComposition()
         
-        let audioTracks = tracksWithMediaType(AVMediaTypeAudio)
+        let audioTracks = tracks(withMediaType: AVMediaTypeAudio)
         
         for track in audioTracks {
             
-            let compositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
+            let compositionTrack = composition.addMutableTrack(withMediaType: AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
             do {
-                try compositionTrack.insertTimeRange(track.timeRange, ofTrack: track, atTime: track.timeRange.start)
+                try compositionTrack.insertTimeRange(track.timeRange, of: track, at: track.timeRange.start)
             } catch {
                 throw error
             }

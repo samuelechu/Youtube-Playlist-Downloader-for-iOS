@@ -11,6 +11,30 @@ import CoreData
 import AVFoundation
 import AVKit
 import XCDYouTubeKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
@@ -36,7 +60,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
     
     var songs : NSArray!
-    var documentsDir = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+    var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     var identifiers : [String] = []
     
     //search control
@@ -52,26 +76,26 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     var isConnected = false
     
     //reset tableView
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
         definesPresentationContext = false
-        resultSearchController.active = false
+        resultSearchController.isActive = false
         definesPresentationContext = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let appDel = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDel = UIApplication.shared.delegate as! AppDelegate
         context = appDel.managedObjectContext
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.enteredBackground(_:)), name: "enteredBackgroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.enteredForeground(_:)), name: "enteredForegroundID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.updatePlaylist(_:)), name: "reloadPlaylistID", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(Playlist.playerItemDidReachEnd(_:)), name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.enteredBackground(_:)), name: NSNotification.Name(rawValue: "enteredBackgroundID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.enteredForeground(_:)), name: NSNotification.Name(rawValue: "enteredForegroundID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.updatePlaylist(_:)), name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.playerItemDidReachEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerQueue.currentItem)
         
         //set audio to play in bg
         let audio : AVAudioSession = AVAudioSession()
@@ -85,20 +109,20 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         
         //set background image
-        tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clear
         let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
         
         //initialize shuffle, select, and delete buttons
         
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
+        self.navigationItem.leftBarButtonItem = self.editButtonItem
         
-        editButtonItem().title = "Edit"
-        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
+        editButtonItem.title = "Edit"
+        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.gray], for: UIControlState.disabled)
         
-        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.grayColor()], forState: UIControlState.Disabled)
-        shuffleButton.tintColor = UIColor.grayColor()
+        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.gray], for: UIControlState.disabled)
+        shuffleButton.tintColor = UIColor.gray
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
@@ -122,27 +146,27 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         super.didReceiveMemoryWarning()
     }
     
-    func updatePlaylist(notification: NSNotification){
+    func updatePlaylist(_ notification: Notification){
         updatePlaylist()
     }
     
     func updatePlaylist(){
         refreshPlaylist()
         resetX()
-        shuffleButton.tintColor = UIColor.grayColor()
+        shuffleButton.tintColor = UIColor.gray
     }
     
     //get songs from current playlist
     func getCurSongs() -> NSArray{
-        let request = NSFetchRequest(entityName: "Playlist")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
         // request.sortDescriptors = [songSortDescriptor]
         request.predicate = NSPredicate(format: "playlistName = %@", playlistName!)
         
-        let playlists = try? context.executeFetchRequest(request) as NSArray
+        let playlists = try? context.fetch(request) as NSArray
         if(playlists?.count >= 1){
-            let playlist = playlists![0].valueForKey("songs") as! NSSet
+            let playlist = (playlists![0] as AnyObject).value(forKey: "songs") as! NSSet
             let songsUnsorted = playlist.allObjects as NSArray
-            return songsUnsorted.sortedArrayUsingDescriptors([songSortDescriptor])
+            return songsUnsorted.sortedArray(using: [songSortDescriptor]) as NSArray
         }
         return []
     }
@@ -154,8 +178,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             identifiers = []
             var playlistDuration = 0.0
             for song in songs{
-                let identifier = song.valueForKey("identifier") as! String
-                let duration = song.valueForKey("duration") as! Double
+                let identifier = (song as AnyObject).value(forKey: "identifier") as! String
+                let duration = (song as AnyObject).value(forKey: "duration") as! Double
                 identifiers += [identifier]
                 playlistDuration += duration
             }
@@ -184,41 +208,41 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     ////////////////   TableView / Editing Functions
     
     
-    override func tableView(tableView: UITableView, shouldShowMenuForRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, canPerformAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool {
+    override func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         //return action == MenuAction.Copy.selector() || action == MenuAction.Custom.selector()
         return action == MenuAction.copyLink.selector() || action == MenuAction.saveVideo.selector() || action == MenuAction.redownloadVideo.selector()
     }
     
-    override func tableView(tableView: UITableView, performAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) {
+    override func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
         //needs to be present for the menu to display
     }
     
     //populate tableView
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SongCell", forIndexPath: indexPath) as! SongCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath) as! SongCell
         
         var songName : String!
         var duration : String!
         var identifier : String!
-        var imageData : NSData!
+        var imageData : Data!
         
-        if resultSearchController.active && resultSearchController.searchBar.text != "" {
-            songName = filteredSongs[indexPath.row].valueForKey("title") as! String
-            duration = filteredSongs[indexPath.row].valueForKey("durationStr") as! String
-            identifier = filteredSongs[indexPath.row].valueForKey("identifier") as! String
-            imageData = filteredSongs[indexPath.row].valueForKey("thumbnail") as! NSData
+        if resultSearchController.isActive && resultSearchController.searchBar.text != "" {
+            songName = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "title") as! String
+            duration = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "durationStr") as! String
+            identifier = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "identifier") as! String
+            imageData = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "thumbnail") as! Data
         }
             
         else{
             let row = x[indexPath.row]
-            songName = songs[row].valueForKey("title") as! String
-            duration = songs[row].valueForKey("durationStr") as! String
-            identifier = songs[row].valueForKey("identifier") as! String
-            imageData = songs[row].valueForKey("thumbnail") as! NSData
+            songName = (songs[row] as AnyObject).value(forKey: "title") as! String
+            duration = (songs[row] as AnyObject).value(forKey: "durationStr") as! String
+            identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
+            imageData = (songs[row] as AnyObject).value(forKey: "thumbnail") as! Data
         }
         
         cell.songLabel.text = songName
@@ -226,16 +250,16 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         cell.identifier = identifier
         cell.imageLabel.image = UIImage(data: imageData)
         cell.positionLabel.text = "\(indexPath.row + 1)"
-        cell.contentView.backgroundColor = UIColor.clearColor()
-        cell.backgroundColor = UIColor.clearColor()
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor.clear
         return cell
     }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if songs != nil{
-            if resultSearchController.active && resultSearchController.searchBar.text != ""{
+            if resultSearchController.isActive && resultSearchController.searchBar.text != ""{
                 return filteredSongs.count
             }
             else{
@@ -249,27 +273,27 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     //called when EditButtonItem() ("Select" button) pressed, disables/enables buttons and toolbars based on editing state
-    override func setEditing(editing: Bool, animated: Bool) {
+    override func setEditing(_ editing: Bool, animated: Bool) {
         
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: true)
         
         if editing {
-            shuffleButton.enabled = false
-            deleteButton.enabled = false
+            shuffleButton.isEnabled = false
+            deleteButton.isEnabled = false
             selectButton.title = "Select All"
-            editButtonItem().title = "Cancel"
-            navigationController!.toolbarHidden = false
-            if !resultSearchController.active {
+            editButtonItem.title = "Cancel"
+            navigationController!.isToolbarHidden = false
+            if !resultSearchController.isActive {
                 navigationController!.hidesBarsOnSwipe = true
             }
         }
             
         else {
-            editButtonItem().title = "Edit"
-            shuffleButton.enabled = true
+            editButtonItem.title = "Edit"
+            shuffleButton.isEnabled = true
             navigationController!.hidesBarsOnSwipe = false
-            navigationController!.toolbarHidden = true
+            navigationController!.isToolbarHidden = true
         }
         
     }
@@ -278,30 +302,30 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     @IBAction func selectPressed() {
         
         if selectButton.title == "Select All"{
-            for row in 0 ..< tableView.numberOfRowsInSection(0) {
-                let indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
+            for row in 0 ..< tableView.numberOfRows(inSection: 0) {
+                let indexPath = IndexPath(row: row, section: 0)
+                tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableViewScrollPosition.none)
             }
             selectButton.title = "Select None"
-            deleteButton.enabled = true
+            deleteButton.isEnabled = true
         }
             
         else{
-            for row in 0 ..< tableView.numberOfRowsInSection(0) {
-                let indexPath = NSIndexPath(forRow: row, inSection: 0)
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            for row in 0 ..< tableView.numberOfRows(inSection: 0) {
+                let indexPath = IndexPath(row: row, section: 0)
+                tableView.deselectRow(at: indexPath, animated: true)
             }
             selectButton.title = "Select All"
-            deleteButton.enabled = false
+            deleteButton.isEnabled = false
         }
         
     }
     
     //disable delete button when less than one item selected
     //function to setup segue to start AVPlayer
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if tableView.editing{
-            deleteButton.enabled = true
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.isEditing{
+            deleteButton.isEnabled = true
         }
             
         else{//playlist cell selected
@@ -314,11 +338,11 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
         }
     }
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
         let selectedRows = tableView.indexPathsForSelectedRows
         if selectedRows == nil {
-            deleteButton.enabled = false
+            deleteButton.isEnabled = false
         }
     }
     
@@ -340,22 +364,22 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     ////////////////   Searchbar Functions
     
     
-    func findNdxInFullList(ndxInSearchList : Int) -> Int{
-        let identifier = filteredSongs[ndxInSearchList].valueForKey("identifier") as! String
-        let ndxIdentifiers = identifiers.indexOf(identifier)!
-        let ndxInFullList = x.indexOf(ndxIdentifiers)!
+    func findNdxInFullList(_ ndxInSearchList : Int) -> Int{
+        let identifier = (filteredSongs[ndxInSearchList] as AnyObject).value(forKey: "identifier") as! String
+        let ndxIdentifiers = identifiers.index(of: identifier)!
+        let ndxInFullList = x.index(of: ndxIdentifiers)!
         return ndxInFullList
     }
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         
         //in editing mode
-        if !shuffleButton.enabled {
+        if !shuffleButton.isEnabled {
             setEditing(false, animated: true)
         }
         
         let curSongs = getCurSongs()
         let predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
-        filteredSongs = curSongs.filteredArrayUsingPredicate(predicate)
+        filteredSongs = curSongs.filtered(using: predicate) as NSArray!
         tableView.reloadData()
         
         
@@ -380,7 +404,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
         else{
             resetX()
-            shuffleButton.tintColor = UIColor.grayColor()
+            shuffleButton.tintColor = UIColor.gray
         }
         tableView.reloadData()
     }
@@ -398,22 +422,22 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     //delete selected songs
     @IBAction func deletePressed() {
         
-        if let selectedIndexPaths = tableView.indexPathsForSelectedRows as [NSIndexPath]?
+        if let selectedIndexPaths = tableView.indexPathsForSelectedRows as [IndexPath]?
         {
             var selectedRows : [Int] = []
             
             //if search active, find indexes of selected rows in the full shuffled playlist
-            if resultSearchController.active && resultSearchController.searchBar.text != "" {
+            if resultSearchController.isActive && resultSearchController.searchBar.text != "" {
                 
-                for indexPath : NSIndexPath in selectedIndexPaths {
+                for indexPath : IndexPath in selectedIndexPaths {
                     
                     var selectedRow = indexPath.row
-                    let id = filteredSongs[selectedRow].valueForKey("identifier") as! String
-                    let ndxIdentifiers = identifiers.indexOf(id)!
-                    selectedRow = x.indexOf(ndxIdentifiers)!
+                    let id = (filteredSongs[selectedRow] as AnyObject).value(forKey: "identifier") as! String
+                    let ndxIdentifiers = identifiers.index(of: id)!
+                    selectedRow = x.index(of: ndxIdentifiers)!
                     
                     selectedRows += [selectedRow]
-                    let identifier = songs[ndxIdentifiers].valueForKey("identifier") as! String
+                    let identifier = (songs[ndxIdentifiers] as AnyObject).value(forKey: "identifier") as! String
                     
                     SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
@@ -422,10 +446,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
                 
             else{
-                for indexPath : NSIndexPath in selectedIndexPaths {
+                for indexPath : IndexPath in selectedIndexPaths {
                     selectedRows += [indexPath.row]
                     let row = x[indexPath.row]
-                    let identifier = songs[row].valueForKey("identifier") as! String
+                    let identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
                     
                     SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
@@ -441,8 +465,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             var index = 0
             while index < x.count {
-                if var _ = selectedSongs.indexOf(x[index]) {
-                    x.removeAtIndex(index)
+                if var _ = selectedSongs.index(of: x[index]) {
+                    x.remove(at: index)
                     index -= 1
                 }
                 index += 1
@@ -450,7 +474,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             var temp2 = x
             for num in temp {
-                if x.indexOf(num) == nil {
+                if x.index(of: num) == nil {
                     for index in 0 ..< x.count {
                         if x[index] > num {
                             temp2[index] -= 1
@@ -465,37 +489,37 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
-        updateSearchResultsForSearchController(resultSearchController)
+        updateSearchResults(for: resultSearchController)
     }
     
     //disable shuffle and editbutton when swiping to delete
-    override func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
-        editButtonItem().enabled = false
-        shuffleButton.enabled = false
+    override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        editButtonItem.isEnabled = false
+        shuffleButton.isEnabled = false
     }
-    override func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
-        editButtonItem().enabled = true
-        shuffleButton.enabled = true
+    override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        editButtonItem.isEnabled = true
+        shuffleButton.isEnabled = true
     }
     
     //swipe to delete
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
             
             var row : Int!
             
-            if resultSearchController.active && resultSearchController.searchBar.text != ""{
+            if resultSearchController.isActive && resultSearchController.searchBar.text != ""{
                 let selectedRow = indexPath.row
                 row = x[findNdxInFullList(selectedRow)]
-                x.removeAtIndex(row)
+                x.remove(at: row)
             }
                 
             else{
                 row = x[indexPath.row]
-                x.removeAtIndex(indexPath.row)
+                x.remove(at: indexPath.row)
             }
             
-            let identifier = songs[row].valueForKey("identifier") as! String
+            let identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
             SongManager.deleteSong(identifier, playlistName: playlistName!)
             
             for index in 0 ..< x.count {
@@ -505,8 +529,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             }
             
             refreshPlaylist()
-            editButtonItem().enabled = true
-            updateSearchResultsForSearchController(resultSearchController)
+            editButtonItem.isEnabled = true
+            updateSearchResults(for: resultSearchController)
             
         }
     }
@@ -521,8 +545,8 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     
     //don't segue to AVPlayer if editing
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if !tableView.editing{
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if !tableView.isEditing{
             setEditing(false, animated: true)
             return true
         }
@@ -534,13 +558,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         playerQueue.removeAllItems()
         
         
-        if resultSearchController.active && resultSearchController.searchBar.text != ""{
+        if resultSearchController.isActive && resultSearchController.searchBar.text != ""{
             let selectedRow = (tableView.indexPathForSelectedRow?.row)!
             curNdx = findNdxInFullList(selectedRow)
             
-            resultSearchController.active = false
-            let path = NSIndexPath(forRow: curNdx, inSection: 0)
-            tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+            resultSearchController.isActive = false
+            let path = IndexPath(row: curNdx, section: 0)
+            tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.middle)
         }
             
             
@@ -550,97 +574,97 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         }
         addSongToQueue(curNdx)
     }
-    func addSongToQueue(index : Int) {
+    func addSongToQueue(_ index : Int) {
         if let curItem = playerQueue.currentItem{
-            curItem.seekToTime(kCMTimeZero)
+            curItem.seek(to: kCMTimeZero)
             playerQueue.advanceToNextItem()
         }
         
         let ndx = x[index]
         curSong = songs[ndx] as! NSObject
-        let isDownloaded = songs[ndx].valueForKey("isDownloaded") as! Bool
-        let identifier = songs[ndx].valueForKey("identifier") as! String
+        let isDownloaded = (songs[ndx] as AnyObject).value(forKey: "isDownloaded") as! Bool
+        let identifier = (songs[ndx] as AnyObject).value(forKey: "identifier") as! String
         
         if isDownloaded {
             
             let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
-            var url = NSURL(fileURLWithPath: filePath)
+            var url = URL(fileURLWithPath: filePath)
             
-            if(!NSFileManager.defaultManager().fileExistsAtPath(filePath)){
-                url = NSURL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a"))
+            if(!FileManager.default.fileExists(atPath: filePath)){
+                url = URL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a"))
             }
             
-            let playerItem = AVPlayerItem(URL: url)
-            playerQueue.insertItem(playerItem, afterItem: nil)
+            let playerItem = AVPlayerItem(url: url)
+            playerQueue.insert(playerItem, after: nil)
         }
             
         else{
-            let songRequest = NSFetchRequest(entityName: "Song")
+            let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
             songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-            let fetchedSongs : NSArray = try! context.executeFetchRequest(songRequest)
+            let fetchedSongs : NSArray = try! context.fetch(songRequest) as NSArray
             let selectedSong = fetchedSongs[0] as! NSManagedObject
             
-            let currentDate = NSDate()
-            let expireDate = songs[ndx].valueForKey("expireDate") as! NSDate
+            let currentDate = Date()
+            let expireDate = (songs[ndx] as AnyObject).value(forKey: "expireDate") as! Date
             
-            if currentDate.compare(expireDate) == NSComparisonResult.OrderedDescending { //update streamURL
+            if currentDate.compare(expireDate) == ComparisonResult.orderedDescending { //update streamURL
                 
-                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
+                XCDYouTubeClient.default().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {
-                        let streamURLs : NSDictionary = video!.valueForKey("streamURLs") as! NSDictionary
-                        let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
+                    //    let streamURLs : NSDictionary = video!.value(forKey: "streamURLs") as! NSDictionary
+                    //    let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
                         
                         selectedSong.setValue(video!.expirationDate, forKey: "expireDate")
-                        selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
+                       /* selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
                         
                         
                         do {
                             try self.context.save()
                         } catch _ as NSError{}
                         
-                        let url = NSURL(string: selectedSong.valueForKey("streamURL") as! String)!
+                        let url = NSURL(string: selectedSong.value(forKey: "streamURL") as! String)!
                         print(url)
-                        let playerItem = AVPlayerItem(URL: url)
-                        self.playerQueue.insertItem(playerItem, afterItem: nil)
+                        let playerItem = AVPlayerItem(url: url as URL)
+                        self.playerQueue.insert(playerItem, after: nil)*/
                     }
                 })
             }
                 
             else {
-                let url = NSURL(string: selectedSong.valueForKey("streamURL") as! String)!
-                let playerItem = AVPlayerItem(URL: url)
-                playerQueue.insertItem(playerItem, afterItem: nil)
+                /*let url = URL(string: selectedSong.value(forKey: "streamURL") as! String)!
+                let playerItem = AVPlayerItem(url: url)
+                playerQueue.insert(playerItem, after: nil)*/
             }
         }
     }
     
     var loopCount = 0
-    var updater : NSTimer!
+    var updater : Timer!
     func updateNowPlayingInfo(){
         loopCount += 1
         let curItem = playerQueue.currentItem
         if(curItem != nil){
-            let title = curSong.valueForKey("title") as! String
-            let imageData = curSong.valueForKey("thumbnail") as! NSData
+            let title = curSong.value(forKey: "title") as! String
+            let imageData = curSong.value(forKey: "thumbnail") as! Data
             let artworkImage = UIImage(data: imageData)
             let artwork = MPMediaItemArtwork(image: artworkImage!)
             
             let songInfo: Dictionary <NSObject, AnyObject> = [
                 
-                MPMediaItemPropertyTitle: title,
+                MPMediaItemPropertyTitle as NSObject: title as AnyObject,
                 
-                MPMediaItemPropertyArtist:"",
+                MPMediaItemPropertyArtist as NSObject:"" as AnyObject,
                 
-                MPMediaItemPropertyArtwork: artwork,
-                MPNowPlayingInfoPropertyPlaybackRate: "\(playerQueue.rate)",
+                MPMediaItemPropertyArtwork as NSObject: artwork,
+                MPNowPlayingInfoPropertyPlaybackRate as NSObject: "\(playerQueue.rate)" as AnyObject,
                 
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(curItem!.currentTime()),
+                MPNowPlayingInfoPropertyElapsedPlaybackTime as NSObject: CMTimeGetSeconds(curItem!.currentTime()) as AnyObject,
                 
-                MPMediaItemPropertyPlaybackDuration: NSTimeInterval(CMTimeGetSeconds(curItem!.duration))
+                MPMediaItemPropertyPlaybackDuration as NSObject: TimeInterval(CMTimeGetSeconds(curItem!.duration)) as AnyObject
                 
             ]
             
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = songInfo as? [String:AnyObject]
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = songInfo as? [String:AnyObject]
             
         }
         
@@ -664,7 +688,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         
         if(updater == nil){
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         
     }
@@ -687,13 +711,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         //set lock screen info
         loopCount = 0
         if(updater == nil){
-            updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         togglePlayPause()
         togglePlayPause()
         
-        let path = NSIndexPath(forRow: curNdx, inSection: 0)
-        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+        let path = IndexPath(row: curNdx, section: 0)
+        tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.middle)
         
         
         
@@ -710,17 +734,17 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             loopCount = 0
             if(updater == nil){
-                updater = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+                updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         togglePlayPause()
         togglePlayPause()
         
-        let path = NSIndexPath(forRow: curNdx, inSection: 0)
-        tableView.selectRowAtIndexPath(path, animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+        let path = IndexPath(row: curNdx, section: 0)
+        tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.middle)
     }
     
-    func playerItemDidReachEnd(notification : NSNotification){
+    func playerItemDidReachEnd(_ notification : Notification){
         enableVidTracks()
         
         if(playerQueue.rate > 0){
@@ -736,13 +760,13 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     //enable vidTracks
-    func enteredForeground(notification: NSNotification){
+    func enteredForeground(_ notification: Notification){
         if playerQueue.currentItem != nil{
             enableVidTracks()
         }
     }
     //disable vidTracks
-    func enteredBackground(notification: NSNotification){
+    func enteredBackground(_ notification: Notification){
         
         if playerQueue.currentItem != nil {
             videoTracks = playerQueue.currentItem!.tracks
@@ -750,7 +774,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             for track : AVPlayerItemTrack in videoTracks{
                 
                 if(!track.assetTrack.hasMediaCharacteristic("AVMediaCharacteristicAudible")){
-                    track.enabled = false; // disable the track
+                    track.isEnabled = false; // disable the track
                 }
             }
             
@@ -760,7 +784,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if curSong != nil {
             loopCount = 0
             if(updater == nil){
-                updater = NSTimer.scheduledTimerWithTimeInterval(0.125, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+                updater = Timer.scheduledTimer(timeInterval: 0.125, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         
@@ -771,7 +795,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if(curItem != nil){
             videoTracks = playerQueue.currentItem!.tracks
             for track : AVPlayerItemTrack in videoTracks{
-                track.enabled = true; // enable the track
+                track.isEnabled = true; // enable the track
             }
         }
     }
@@ -779,10 +803,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     func stop(){
         playerQueue.pause()
         //prevent player from playing another song when different playlist opened
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: AVPlayerItemDidPlayToEndTimeNotification, object: playerQueue.currentItem)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "reloadPlaylistID", object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "enteredBackgroundID", object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "enteredForegroundID", object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerQueue.currentItem)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "enteredBackgroundID"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "enteredForegroundID"), object: nil)
         if (updater != nil){
             updater.invalidate()
         }

@@ -6,5 +6,5 @@ use_frameworks!
 target 'Music Player' do
   pod "XCDYouTubeKit", "~> 2.5"
   pod 'SnapKit'
-  pod  'SwiftFilePath'
+  pod ’SwiftyJSON’
 end

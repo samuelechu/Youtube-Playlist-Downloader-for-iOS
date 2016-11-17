@@ -10,35 +10,37 @@
 import Foundation
 import XCDYouTubeKit
 import CoreData
+import SwiftyJSON
+
 
 class DownloadManager {
     
     let downloadTable : downloadTableViewControllerDelegate
     let playlistName: String
     
-    private var playlist : NSManagedObject!
-    private var songs : NSMutableSet!
+    fileprivate var playlist : NSManagedObject!
+    fileprivate var songs : NSMutableSet!
     
-    private var context : NSManagedObjectContext!
-    private var dataDownloader : DataDownloader!
+    fileprivate var context : NSManagedObjectContext!
+    fileprivate var dataDownloader : DataDownloader!
     
-    private var downloadTasks : [String] = []//array of video identifiers
-    private var downloadedIDs : [String] = [] //array of downloaded video identifiers
-    private var uncachedVideos : [String] = []//array of video identifiers for uncached videos
+    fileprivate var downloadTasks : [String] = []//array of video identifiers
+    fileprivate var downloadedIDs : [String] = [] //array of downloaded video identifiers
+    fileprivate var uncachedVideos : [String] = []//array of video identifiers for uncached videos
     
-    private var numDownloads = 0
-    private var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
+    fileprivate var numDownloads = 0
+    fileprivate var APIKey = "AIzaSyCUeYkR8QSs3ZRjVrTeZwPSv9QiHydFYuw"
     
     
     init(downloadTable : downloadTableViewControllerDelegate, playlistName: String) {
         self.downloadTable = downloadTable
         self.playlistName = playlistName
         
-        let appDel = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDel = UIApplication.shared.delegate as? AppDelegate
         context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
-        MiscFuncs.getSettings()
+        _ = MiscFuncs.getSettings()
         
         //get identifiers from downloadTableViewController
         uncachedVideos = (downloadTable.getUncachedVids())
@@ -61,7 +63,7 @@ class DownloadManager {
         
         //get video quality setting
         let settings = MiscFuncs.getSettings()
-        let qual = settings.valueForKey("quality") as! Int
+        let qual = settings.value(forKey: "quality") as! Int
         
         if let videoId = videoId {
             updateStoredSongs()
@@ -80,55 +82,55 @@ class DownloadManager {
     }
     
     
-    private func updateStoredSongs(){
-        let request = NSFetchRequest(entityName: "Song")
-        request.predicate = NSPredicate(format: "isDownloaded = %@", true)
+    fileprivate func updateStoredSongs(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
+        request.predicate = NSPredicate(format: "isDownloaded = %@", true as CVarArg)
         
-        let songs = try? context.executeFetchRequest(request)
+        let songs = try? context.fetch(request)
         downloadedIDs = []
         for song in songs!{
-            let identifier = song.valueForKey("identifier") as! String
+            let identifier = (song as AnyObject).value(forKey: "identifier") as! String
             downloadedIDs += [identifier]
         }
         
     }
     
     //check if video in stored memory or currently downloading videos
-    private func isVideoStored (videoId : String, qual : Int) -> Bool {
+    fileprivate func isVideoStored (_ videoId : String, qual : Int) -> Bool {
         
-        let isDownloaded = downloadedIDs.indexOf(videoId) != nil || uncachedVideos.indexOf(videoId) != nil
+        let isDownloaded = downloadedIDs.index(of: videoId) != nil || uncachedVideos.index(of: videoId) != nil
         
         if(isDownloaded){
-            let song = SongManager.getSong(videoId) 
-            let quality = song.valueForKey("quality") as! Int
+            let song = SongManager.getSong(videoId)
+            let quality = song.value(forKey: "quality") as! Int
             if(quality == qual){
                 return true
             }
             else{
                 SongManager.deleteSong(videoId, playlistName: playlistName)
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
                 downloadTasks = (downloadTable.getDLTasks())
             }
         }
             
-        else if((downloadTasks.indexOf(videoId)) != nil){
+        else if((downloadTasks.index(of: videoId)) != nil){
             return true
         }
         
         return false
     }
     
-    func addStoredSong(videoId : String){
+    func addStoredSong(_ videoId : String){
         SongManager.addToRelationships(videoId, playlistName: playlistName)
-        NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
     }
     
-    private func startDownloadVideo(ID : String, qual : Int){
-        if(downloadTasks.indexOf(ID) == nil){
-            XCDYouTubeClient.defaultClient().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
+    fileprivate func startDownloadVideo(_ ID : String, qual : Int){
+        if(downloadTasks.index(of: ID) == nil){
+            XCDYouTubeClient.default().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
                     if let video = video {
-                        let streamURLs : NSDictionary = video.valueForKey("streamURLs") as! NSDictionary
+                        let streamURLs : NSDictionary = video.value(forKey: "streamURLs") as! NSDictionary
                         var desiredURL : NSURL!
                         var vidQual : Int
                         
@@ -143,32 +145,37 @@ class DownloadManager {
                         }
                         
                         let vidInfo = VideoDownloadInfo(video: video, playlistName: self.playlistName)
-                        self.dataDownloader.startNewTask(desiredURL, vidInfo: vidInfo, vidQual: vidQual)
+                        self.dataDownloader.startNewTask(desiredURL as URL, vidInfo: vidInfo, vidQual: vidQual)
                     }
                 }
             })
         }
     }
     
-    private func performGetRequest(targetURL: NSURL!, completion: (data: NSData?, HTTPStatusCode: Int, error: NSError?) -> Void) {
-        let request = NSMutableURLRequest(URL: targetURL)
-        request.HTTPMethod = "GET"
+    fileprivate func performGetRequest(_ targetURL: URL!, completion: @escaping (_ data: Data?, _ HTTPStatusCode: Int, _ error: NSError?) -> Void) {
         
-        let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
-        let session = NSURLSession(configuration: sessionConfiguration)
         
-        let task = session.dataTaskWithRequest(request, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completion(data: data, HTTPStatusCode: (response as! NSHTTPURLResponse).statusCode, error: error)
+        
+        
+        
+        let request = URLRequest(url: targetURL)
+        
+        let sessionConfiguration = URLSessionConfiguration.default
+        
+        let session = URLSession(configuration: sessionConfiguration)
+        
+        let task = session.dataTask(with: request, completionHandler: { (data: Data?, response: URLResponse?, error: NSError?) -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
+                completion(data, (response as! HTTPURLResponse).statusCode, error)
             })
-        })
+            } as! (Data?, URLResponse?, Error?) -> Void)
         
         task.resume()
     }
     
-    private var videoIDs : [String] = []
-    private func downloadVideosForPlayist(playlistID : String, pageToken : String?, qual : Int) {
+    fileprivate var videoIDs : [String] = []
+    fileprivate func downloadVideosForPlayist(_ playlistID : String, pageToken : String?, qual : Int) {
         
         if pageToken != nil{
             
@@ -180,24 +187,29 @@ class DownloadManager {
                 urlString = "https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&pageToken=\(pageToken!)&playlistId=\(playlistID)&key=\(APIKey)"
             }
             
-            let targetURL = NSURL(string: urlString)
-            // Fetch the playlist from Google.
-            performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
-                if HTTPStatusCode == 200 && error == nil {
-                    
-                    // Convert the JSON data into a dictionary.
-                    let resultsDict = (try! NSJSONSerialization.JSONObjectWithData(data!, options: [])) as! NSDictionary
-                    // Get all playlist items ("items" array).
-                    let nextPageToken = resultsDict["nextPageToken"] as! String?
-                    let items: Array<Dictionary<NSObject, AnyObject>> = resultsDict["items"] as! Array<Dictionary<NSObject, AnyObject>>
-                    //let pageInfo : Dictionary<NSObject, AnyObject> = resultsDict["pageInfo"] as! Dictionary<NSObject, AnyObject>
-                    //var totalResults : Int = (pageInfo["totalResults"])!.integerValue!
+            let targetURL = URL(string: urlString)
+            
+            let task = URLSession.shared.dataTask(with: targetURL!, completionHandler: {(data, HTTPStatusCode, error) -> Void in
+                let statusCode = (HTTPStatusCode as! HTTPURLResponse).statusCode
+                if statusCode == 200 && error == nil {
                     
                     
-                    for item : Dictionary<NSObject, AnyObject> in items {
-                        let playlistContentDict = item["contentDetails"] as! Dictionary<NSObject, AnyObject>
-                        let vidID : String = playlistContentDict["videoId"] as! String
+                    let json = try! JSONSerialization.jsonObject(with: data!, options: [])
+                    print(json)
+                    let playlistItems = JSON(data: data!)
+                    
+                    var nextPageToken : String?
+                    nextPageToken = playlistItems ["nextPageToken"].stringValue
+                    if nextPageToken == "" { nextPageToken = nil }
+                    
+                    //var totalResults = playlistItems ["pageInfo"]["totalResults"].intValue
+                    
+                    for item in playlistItems["items"].arrayValue {
+                        
+                        let vidID = item["contentDetails"]["videoId"].stringValue
                         self.videoIDs += [vidID]
+                        
+                        
                     }
                     
                     self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
@@ -207,15 +219,45 @@ class DownloadManager {
                     print("HTTP Status Code = \(HTTPStatusCode)")
                     print("Error while loading channel videos: \(error)")
                 }
+                
             })
+            
+            task.resume()
         }
+            // Fetch the playlist Info from Google.
+       /*     performGetRequest(targetURL, completion: { (data, HTTPStatusCode, error) -> Void in
+                if HTTPStatusCode == 200 && error == nil {
+                    
+                    
+                    let playlistItems = JSON(data!);
+                    let nextPageToken = playlistItems ["nextPageToken"].stringValue
+                    //var totalResults = playlistItems ["pageInfo"]["totalResults"].intValue
+                    
+                    for item in playlistItems["items"].arrayValue {
+                        
+                        let vidID = item["contentDetails"]["videoID"].stringValue
+                        self.videoIDs += [vidID]
+                        
+                        
+                    }
+                    
+                    self.downloadVideosForPlayist(playlistID, pageToken: nextPageToken, qual: qual)
+                }
+                    
+                else {
+                    print("HTTP Status Code = \(HTTPStatusCode)")
+                    print("Error while loading channel videos: \(error)")
+                }
+                
+            })
+        }*/
             
         else{
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
                 let settings = MiscFuncs.getSettings()
-                let downloadVid = settings.valueForKey("cache") as! Int
+                let downloadVid = settings.value(forKey: "cache") as! Int
                 
                 //download videos if cache option selected, otherwise save song object to persistent memory
                 if downloadVid != 1 {
@@ -231,17 +273,17 @@ class DownloadManager {
                             self.downloadTable.addDLTask([identifier])
                         }
                             
-                        else if (downloadTasks.indexOf(identifier) == nil){
+                        else if (downloadTasks.index(of: identifier) == nil){
                             let settings = MiscFuncs.getSettings()
-                            let qual = settings.valueForKey("quality") as! Int
+                            let qual = settings.value(forKey: "quality") as! Int
                             let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
                             let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
                             
                             //video option selected but no video file detected
-                            let shouldDownloadVid = (qual == 0 || qual == 1) && !NSFileManager.defaultManager().fileExistsAtPath(filePath0)
+                            let shouldDownloadVid = (qual == 0 || qual == 1) && !FileManager.default.fileExists(atPath: filePath0)
                             
                             //audio option selected but no audio file detected
-                            let shouldDownloadAudio = qual == 2 && !NSFileManager.defaultManager().fileExistsAtPath(filePath1)
+                            let shouldDownloadAudio = qual == 2 && !FileManager.default.fileExists(atPath: filePath1)
                             
                             if(shouldDownloadVid || shouldDownloadAudio){
                                 self.startDownloadVideo(identifier, qual: qual)
@@ -252,13 +294,13 @@ class DownloadManager {
                                 addStoredSong(identifier)
                             }
                         }
-                        
+                            
                         else {
                             
                             let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
                             let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
                             
-                            if( NSFileManager.defaultManager().fileExistsAtPath(filePath0) || NSFileManager.defaultManager().fileExistsAtPath(filePath1)){
+                            if( FileManager.default.fileExists(atPath: filePath0) || FileManager.default.fileExists(atPath: filePath1)){
                                 addStoredSong(identifier)
                             }
                             
@@ -288,23 +330,23 @@ class DownloadManager {
         
     }
     
-    private func saveVideoInfo(identifier : String) {
-        XCDYouTubeClient.defaultClient().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
+    fileprivate func saveVideoInfo(_ identifier : String) {
+        XCDYouTubeClient.default().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
             if error == nil {
-                let newSong = NSEntityDescription.insertNewObjectForEntityForName("Song", inManagedObjectContext: self.context)
+                let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: self.context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video!.title, forKey: "title")
                 newSong.setValue(video!.expirationDate, forKey: "expireDate")
                 newSong.setValue(false, forKey: "isDownloaded")
                 
-                var streamURLs = video!.streamURLs
+                /*var streamURLs = video!.streamURLs
                 let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-                newSong.setValue("\(desiredURL)", forKey: "streamURL")
+                newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
                 
                 let large = video!.largeThumbnailURL
                 let medium = video!.mediumThumbnailURL
                 let small = video!.smallThumbnailURL
-                let imgData = NSData(contentsOfURL: (large != nil ? large : (medium != nil ? medium : small))!)
+                let imgData = NSData(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
                 
                 newSong.setValue(imgData, forKey: "thumbnail")
                 
@@ -314,7 +356,7 @@ class DownloadManager {
                     try self.context.save()
                 }catch _ as NSError{}
                 
-                NSNotificationCenter.defaultCenter().postNotificationName("reloadPlaylistID", object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
             }
         })
     }

@@ -12,20 +12,20 @@ import SnapKit
 
 
 protocol YouTubeSearchWebViewDelegate {
-    func didTapDownloadButton(url: NSURL)
+    func didTapDownloadButton(_ url: URL)
 }
 
 
 enum YoutubeUrlType {
-    case Playlist(id: String)
-    case Video(id: String)
-    case Other
+    case playlist(id: String)
+    case video(id: String)
+    case other
 }
 
 
 class YouTubeSearchWebView: WKWebView {
 
-    private let downloadButton = UIButton()
+    fileprivate let downloadButton = UIButton()
     
     var delegate: YouTubeSearchWebViewDelegate?
     
@@ -38,14 +38,18 @@ class YouTubeSearchWebView: WKWebView {
             conf.mediaPlaybackRequiresUserAction = true
         }
         conf.allowsInlineMediaPlayback = true*/
-        super.init(frame: CGRectZero, configuration: conf)
+        super.init(frame: CGRect.zero, configuration: conf)
         setup()
     }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    private func setup() {
+    fileprivate func setup() {
         allowsBackForwardNavigationGestures = true
         addDownloadButton()
-        addObserver(self, forKeyPath:"URL", options:.New, context:nil)
+        addObserver(self, forKeyPath:"URL", options:.new, context:nil)
     }
     
     deinit {
@@ -53,7 +57,7 @@ class YouTubeSearchWebView: WKWebView {
     }
     
     func didTapDownloadButton() {
-        if let url = self.URL {
+        if let url = self.url {
             delegate?.didTapDownloadButton(url)
         }
     }
@@ -61,20 +65,20 @@ class YouTubeSearchWebView: WKWebView {
     
     // MARK: Check URL
     
-    private func didChangeURL(url: NSURL) {
+    fileprivate func didChangeURL(_ url: URL) {
         switch detectURLType(url) {
-        case .Playlist, .Video: enableButton()
-        case .Other: disableButton()
+        case .playlist, .video: enableButton()
+        case .other: disableButton()
         }
     }
     
     
     // MARK: Download Button
     
-    private func addDownloadButton() {
-        downloadButton.setTitle("↓", forState: .Normal)
-        downloadButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        downloadButton.titleLabel?.font = UIFont(name: "HiraKakuProN-W6", size: 20)
+    fileprivate func addDownloadButton() {
+        downloadButton.setTitle("↓", for: UIControlState())
+        downloadButton.setTitleColor(UIColor.white, for: UIControlState())
+        downloadButton.titleLabel?.font = UIFont(name: "HiraKakuProN-W6", size: 20)!
         disableButton()
         
         // add
@@ -82,25 +86,25 @@ class YouTubeSearchWebView: WKWebView {
         let margin: CGFloat = 12
         downloadButton.layer.cornerRadius = btnSize / 2
         addSubview(downloadButton)
-        downloadButton.snp_makeConstraints { make in
-            make.size.equalTo(btnSize)
-            make.right.equalTo(self).offset(-margin)
-            make.bottom.equalTo(self).offset(-margin)
+        downloadButton.snp.makeConstraints { make in
+            _ = make.size.equalTo(btnSize)
+            _ = make.right.equalTo(self).offset(-margin)
+            _ = make.bottom.equalTo(self).offset(-margin)
         }
 
-        downloadButton.addTarget(self, action: #selector(YouTubeSearchWebView.didTapDownloadButton), forControlEvents: .TouchUpInside)
+        downloadButton.addTarget(self, action: #selector(YouTubeSearchWebView.didTapDownloadButton), for: .touchUpInside)
     }
     
-    private func disableButton() {
-        downloadButton.enabled = false
-        downloadButton.backgroundColor = UIColor.grayColor()
+    fileprivate func disableButton() {
+        downloadButton.isEnabled = false
+        downloadButton.backgroundColor = UIColor.gray
         downloadButton.alpha = 0.1
     }
 
-    private func enableButton() {
-        downloadButton.enabled = true
-        downloadButton.backgroundColor = UIColor.redColor()
-        UIView.animateWithDuration(0.2) { self.downloadButton.alpha = 1 }
+    fileprivate func enableButton() {
+        downloadButton.isEnabled = true
+        downloadButton.backgroundColor = UIColor.red
+        UIView.animate(withDuration: 0.2, animations: { self.downloadButton.alpha = 1 }) 
     }
     
 }
@@ -110,24 +114,24 @@ class YouTubeSearchWebView: WKWebView {
 // util
 extension YouTubeSearchWebView {
     
-    private func detectURLType(url: NSURL) -> YoutubeUrlType {
+    fileprivate func detectURLType(_ url: URL) -> YoutubeUrlType {
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: url.absoluteString)
         if let videoId = videoId {
-            return YoutubeUrlType.Video(id: videoId)
+            return YoutubeUrlType.video(id: videoId)
         }
         else if let playlistId = playlistId {
-            return YoutubeUrlType.Playlist(id: playlistId)
+            return YoutubeUrlType.playlist(id: playlistId)
         }
         else {
-            return YoutubeUrlType.Other
+            return YoutubeUrlType.other
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if let keyPath = keyPath {
             switch keyPath {
             case "URL":
-                if let url = change![NSKeyValueChangeNewKey] as? NSURL {
+                if let url = change![NSKeyValueChangeKey.newKey] as? URL {
                     didChangeURL(url)
                 }
             default: return

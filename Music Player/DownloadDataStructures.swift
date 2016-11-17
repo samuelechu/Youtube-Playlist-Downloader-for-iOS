@@ -9,7 +9,7 @@
 import XCDYouTubeKit
 import Foundation
 
-public class VideoDownloadInfo {
+open class VideoDownloadInfo {
     let video: XCDYouTubeVideo
     let playlistName: String
     init(video: XCDYouTubeVideo, playlistName: String)  {
@@ -31,7 +31,7 @@ class DownloadCellInfo {
         self.progress = 0.0
     }
     
-    func setProgress(progress : Float) {
+    func setProgress(_ progress : Float) {
         self.progress = progress
     }
     

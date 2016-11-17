@@ -7,6 +7,19 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class downloadTableViewController: UITableViewController, downloadTableViewControllerDelegate {
     
@@ -17,11 +30,11 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     var downloadTasks : [String] = []
     var uncachedVideos : [String] = []
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setup()
     }
@@ -32,7 +45,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     }
     
     func setup() {
-        if let appDel = UIApplication.sharedApplication().delegate as? AppDelegate {
+        if let appDel = UIApplication.shared.delegate as? AppDelegate {
             appDel.downloadTable = self
         }
     }
@@ -43,9 +56,9 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         view.addGestureRecognizer(tap)
         
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(downloadTableViewController.resetDownloadTasks(_:)), name: "resetDownloadTasksID", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(downloadTableViewController.resetDownloadTasks(_:)), name: NSNotification.Name(rawValue: "resetDownloadTasksID"), object: nil)
         
-        tableView.backgroundColor = UIColor.clearColor()
+        tableView.backgroundColor = UIColor.clear
         let imgView = UIImageView(image: UIImage(named: "pastel.jpg"))
         imgView.frame = tableView.frame
         tableView.backgroundView = imgView
@@ -53,11 +66,11 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     
     func hideTabBar(){
         setTabBarVisible(!(tabBarIsVisible()), animated: true)
-        let visible = (navigationController?.navigationBarHidden)!
+        let visible = (navigationController?.isNavigationBarHidden)!
         navigationController?.setNavigationBarHidden(!visible, animated: true)
     }
     
-    func setTabBarVisible(visible:Bool, animated:Bool) {
+    func setTabBarVisible(_ visible:Bool, animated:Bool) {
         if (tabBarIsVisible() == visible) { return }
         
         // get a frame calculation ready for tabBar
@@ -66,95 +79,95 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         let offsetY = (visible ? -height : height)
         
         // zero duration means no animation
-        let duration:NSTimeInterval = (animated ? 0.2 : 0.0)
+        let duration:TimeInterval = (animated ? 0.2 : 0.0)
         
         //  animate the tabBar
         if frame != nil {
             
-            UIView.animateWithDuration(duration) {
-                self.tabBarController?.tabBar.frame = CGRectOffset(frame!, 0, offsetY)
+            UIView.animate(withDuration: duration, animations: {
+                self.tabBarController?.tabBar.frame = frame!.offsetBy(dx: 0, dy: offsetY)
                 return
-            }
+            }) 
         }
     }
     
     func tabBarIsVisible() ->Bool {
-        return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
+        return self.tabBarController?.tabBar.frame.origin.y < self.view.frame.maxY
     }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
     
     //func setDLObject(session : DataDownloader){ dataDownloader = session }
     //func getDLObject() -> DataDownloader? { return dataDownloader }
-    func addDLTask(tasks : [String]){ downloadTasks += tasks }
+    func addDLTask(_ tasks : [String]){ downloadTasks += tasks }
     func getDLTasks() -> [String] { return downloadTasks }
-    func addUncachedVid(identifier: [String]) { uncachedVideos += identifier}
+    func addUncachedVid(_ identifier: [String]) { uncachedVideos += identifier}
     func getUncachedVids() -> [String] { return uncachedVideos }
     
-    func resetDownloadTasks(notification: NSNotification){
-        let dict : NSDictionary? = notification.userInfo
+    func resetDownloadTasks(_ notification: Notification){
+        let dict : NSDictionary? = notification.userInfo as NSDictionary?
         if dict == nil {
             downloadTasks = []
         }
         
         else {
-            let identifier = dict!.valueForKey("identifier") as! String
-            let x = downloadTasks.indexOf(identifier)
+            let identifier = dict!.value(forKey: "identifier") as! String
+            let x = downloadTasks.index(of: identifier)
             if x != nil {
-                downloadTasks.removeAtIndex(x!)
+                downloadTasks.remove(at: x!)
             }
             
         }
     }
     
     //update taskProgress of specific cell
-    func setProgressValue(dict : NSDictionary){
-        let cellNum : Int = dict.valueForKey("ndx")!.integerValue
+    func setProgressValue(_ dict : NSDictionary){
+        let cellNum : Int = (dict.value(forKey: "ndx")! as AnyObject).intValue
         
         if cellNum < downloadCells.count {
-            let taskProgress : Float = dict.valueForKey("value") as! Float
+            let taskProgress : Float = dict.value(forKey: "value") as! Float
             downloadCells[cellNum].setProgress(taskProgress)
             reloadCellAtNdx(cellNum)
         }
     }
     
-    func reloadCellAtNdx(cellNum : Int){
+    func reloadCellAtNdx(_ cellNum : Int){
         if cellNum < downloadCells.count{
-            let indexPath = NSIndexPath(forRow: cellNum, inSection: 0)
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            let indexPath = IndexPath(row: cellNum, section: 0)
+            tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
         }
     }
     
-    func addCell(dict : NSDictionary){
-        let newCell = dict.valueForKey("cellInfo") as! DownloadCellInfo
+    func addCell(_ dict : NSDictionary){
+        let newCell = dict.value(forKey: "cellInfo") as! DownloadCellInfo
         downloadCells += [newCell]
         tableView.reloadData()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return downloadCells.count
     }
     
     //populate cells with data from downloadCells : [DownloadCellInfo]
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> downloadCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("downloadCell", forIndexPath: indexPath) as! downloadCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> downloadCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "downloadCell", for: indexPath) as! downloadCell
         
         let cellInfo = downloadCells[indexPath.row]
         
-        cell.accessoryType = UITableViewCellAccessoryType.None
-        if cellInfo.downloadFinished() { cell.accessoryType = UITableViewCellAccessoryType.Checkmark }
+        cell.accessoryType = UITableViewCellAccessoryType.none
+        if cellInfo.downloadFinished() { cell.accessoryType = UITableViewCellAccessoryType.checkmark }
         
         cell.progressBar.progress = cellInfo.progress
         cell.imageLabel.image = cellInfo.image
         cell.durationLabel.text = cellInfo.duration
         cell.nameLabel.text = cellInfo.name
         
-        cell.contentView.backgroundColor = UIColor.clearColor()
-        cell.backgroundColor = UIColor.clearColor()
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor.clear
 
         return cell
     }

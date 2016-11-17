@@ -1,16 +1,18 @@
 PODS:
-  - SnapKit (0.21.1)
-  - SwiftFilePath (0.0.6)
+  - SnapKit (3.0.2)
+  - SwiftyJSON (3.1.1)
   - XCDYouTubeKit (2.5.3)
 
 DEPENDENCIES:
   - SnapKit
-  - SwiftFilePath
-  - XCDYouTubeKit
+  - SwiftyJSON
+  - XCDYouTubeKit (~> 2.5)
 
 SPEC CHECKSUMS:
-  SnapKit: bbad04cb016c7cead63965f16b00c09318d271ee
-  SwiftFilePath: 52c1db61018e0a3941191eb71002cb5cbdaa39e7
+  SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
+  SwiftyJSON: f0be2e604f83e8405a624e9f891898bf6ed4e019
   XCDYouTubeKit: 90690f9e3523735dc93b8024269d991b0cfffe78
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 6d3afddb3ee22596c1d87706066e860bf25b1029
+
+COCOAPODS: 1.1.1
