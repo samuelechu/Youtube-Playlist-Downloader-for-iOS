@@ -21,7 +21,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         addCustomMenuItems()
+        
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), nil,
+                                        {(_,observer, name, _,_) -> Void in
+                                            if((name?.rawValue)! == "com.apple.springboard.lockcomplete" as CFString){
+                                                UserDefaults.standard.set(true, forKey: "kDisplayStatusLocked")
+                                                UserDefaults.standard.synchronize()
+                                            }
+        },
+                                        "com.apple.springboard.lockcomplete" as CFString, nil, .deliverImmediately)
+        
         return true
+    }
+    
+    fileprivate func displayStatusChanged(center : CFNotificationCenter!, observer : UnsafeRawPointer, name : CFString!, object : UnsafeRawPointer, suspensionBehavior: CFNotificationSuspensionBehavior){
+        
+        
     }
     
     fileprivate func addCustomMenuItems() {
@@ -44,14 +59,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        //disable video tracks to allow background audio play
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "enteredBackgroundID"), object: nil)
+        let state = UIApplication.shared.applicationState
+        
+        if(state == UIApplicationState.background){
+            if(!UserDefaults.standard.bool(forKey: "kDisplayStatusLocked")){
+                //disable video tracks to allow background audio play only when home button pressed (not performed on lock button press)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "enteredBackgroundID"), object: nil)
+            }
+        }
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        
         //renable video tracks
         NotificationCenter.default.post(name: Notification.Name(rawValue: "enteredForegroundID"), object: nil)
+        
+        UserDefaults.standard.set(false, forKey: "kDisplayStatusLocked")
+        UserDefaults.standard.synchronize()
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
