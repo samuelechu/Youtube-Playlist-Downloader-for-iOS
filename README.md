@@ -4,7 +4,8 @@ a Youtube video downloader for iOS
 
 ######Installation for iOS 9:
 ```
--clone repo with xcode 7
+-clone repo with the latest Xcode
+-navigate to project directory in Terminal and do 'pod install'
 -build and run app onto connected iPhone
 ```
 
