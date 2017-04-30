@@ -596,6 +596,16 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="c1C-yr-FMJ"/>
+                    <navigationItem key="navigationItem" title="Title" id="Efy-3T-uqq">
+                        <barButtonItem key="rightBarButtonItem" title="Goto.." id="4oK-eW-qUt">
+                            <connections>
+                                <action selector="gotoTapped:" destination="VD7-5s-3Vi" id="Bbd-uF-q4X"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="74t-KO-6PU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

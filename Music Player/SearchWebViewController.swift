@@ -61,4 +61,13 @@ class SearchWebViewController: UIViewController, YouTubeSearchWebViewDelegate {
         downloadManager.startDownloadVideoOrPlaylist(url: url.absoluteString)
         _ = self.navigationController?.popViewController(animated: true)
     }
+    
+    @IBAction func gotoTapped(_ sender: Any) {
+        showTextFieldDialog("Enter address", message: "", placeHolder: "Youtube address", okButtonTitle: "Goto") { (address) in
+            if let address = address, let url = URL(string: address) {
+                self.webView.load(URLRequest(url: url))
+            }
+        }
+    }
+    
 }
