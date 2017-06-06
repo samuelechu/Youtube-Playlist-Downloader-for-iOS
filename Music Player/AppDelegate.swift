@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         },
                                         "com.apple.springboard.lockcomplete" as CFString, nil, .deliverImmediately)
         
+        self.markExistingFilesNoBackupIfNeeded()
         return true
     }
     
@@ -97,6 +98,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         self.saveContext()
+    }
+    
+    func markExistingFilesNoBackupIfNeeded() {
+        let hasNoBackup = UserDefaults.standard.bool(forKey: "has no backup")
+        let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        guard !hasNoBackup, let enumerator = FileManager.default.enumerator(atPath: documents) else {
+            return
+        }
+        
+        for case let filename as String in enumerator
+            where filename.hasSuffix("mp4") || filename.hasSuffix("m4a") {
+                MiscFuncs.addSkipBackupAttribute(toFilepath: MiscFuncs.grabFilePath(filename))
+        }
+        
+        UserDefaults.standard.set(true, forKey: "has no backup")
     }
     
     // MARK: - Core Data stack
