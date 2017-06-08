@@ -120,26 +120,22 @@ class DataDownloader: NSObject, URLSessionDelegate{
         let identifier = vidInfo.video.identifier
         let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
         
-        do{
-            try FileManager.default.moveItem(atPath: tempLocation, toPath: filePath)
-        }catch _ as NSError{}
+        try? fileManager.moveItem(atPath: tempLocation, toPath: filePath)
+        MiscFuncs.addSkipBackupAttribute(toFilepath: filePath)
         
         //if audio only selected in settings, rip audio from video
         let settings = MiscFuncs.getSettings()
         let isAudio = settings.value(forKey: "quality") as! Int == 2
-        if(isAudio && !fileManager.fileExists(atPath: MiscFuncs.grabFilePath("\(identifier).m4a"))){
+        let audioPath = MiscFuncs.grabFilePath("\(identifier).m4a")
+        if(isAudio && !fileManager.fileExists(atPath: audioPath)){
             let asset = AVURLAsset(url: URL(fileURLWithPath: filePath))
-            asset.writeAudioTrackToURL(URL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a")
-            ) as NSURL) {(success, error) -> () in
+            asset.writeAudioTrackToURL(URL(fileURLWithPath: audioPath) as NSURL) {(success, error) -> () in
                 if !success {
                     print(error!)
                 }
             }
             
-            do {
-                try fileManager.removeItem(atPath: filePath)
-            } catch _ {
-            }
+            try? fileManager.removeItem(atPath: filePath)
             qual = 2
         }
         

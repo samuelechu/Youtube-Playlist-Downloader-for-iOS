@@ -134,6 +134,13 @@ open class MiscFuncs{
         }
     }
     
+    class func addSkipBackupAttribute(toFilepath filepath: String) {
+        var url = URL(fileURLWithPath: filepath)
+        var attributes = URLResourceValues()
+        attributes.isExcludedFromBackup = true
+        try? url.setResourceValues(attributes)
+    }
+    
 }
 
 
