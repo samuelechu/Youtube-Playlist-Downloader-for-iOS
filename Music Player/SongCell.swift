@@ -26,14 +26,14 @@ class SongCell: UITableViewCell {
  
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-    } 
+    }
 
     func redownloadVideoAction(_ sender:AnyObject?){
-        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier)"
+        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier!)"
     }
     
     func copyLinkAction(_ sender:AnyObject?){
-        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier)"
+        UIPasteboard.general.string = "youtube.com/watch?v=\(identifier!)"
     }
     
     func saveToCameraRollAction(_ sender:AnyObject?){

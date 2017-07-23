@@ -216,8 +216,8 @@ class DownloadManager {
                 }
                     
                 else {
-                    print("HTTP Status Code = \(HTTPStatusCode)")
-                    print("Error while loading channel videos: \(error)")
+                    print("HTTP Status Code = \(String(describing: HTTPStatusCode))")
+                    print("Error while loading channel videos: \(String(describing: error))")
                 }
                 
             })
