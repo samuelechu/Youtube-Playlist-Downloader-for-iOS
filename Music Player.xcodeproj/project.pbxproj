@@ -593,6 +593,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.samuelechu.Music-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/bridgingHeader.h";
 				SWIFT_VERSION = 3.0;
 			};
@@ -617,6 +618,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.samuelechu.Music-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/bridgingHeader.h";
 				SWIFT_VERSION = 3.0;
 			};
