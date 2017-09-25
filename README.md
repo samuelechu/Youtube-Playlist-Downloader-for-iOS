@@ -2,14 +2,14 @@
 
 a Youtube video downloader for iOS
 
-######Installation for iOS 9:
+###### Installation for iOS 9:
 ```
 -clone repo with the latest Xcode
 -navigate to project directory in Terminal and do 'pod install'
 -build and run app onto connected iPhone
 ```
 
-######Usage:
+###### Usage:
     Go to the Playlists tab
     
     Select a playlist or make a new playlist using the 'plus' button on the top right-hand corner
@@ -29,7 +29,7 @@ Many thanks to Takuya Okamoto as well for implementing the Youtube Search UI and
 https://github.com/entotsu
 
 
-######Features:
+###### Features:
     Playlists
     - Multiple playlists (repeated songs take up no additional space)
     - Shuffle, search, quick addition and deletion of songs
@@ -41,7 +41,7 @@ https://github.com/entotsu
     - Youtube integration using WebView
     - Reliable and efficient background downloading of audio, 360P, and 720P videos
     
-######Screenshots:
+###### Screenshots:
 
 <img src="https://raw.githubusercontent.com/samuelechu/YoutubePlaylist-Downloader/master/Music%20Player/Images/Screenshots/Playlists.PNG" width="300">
 
