@@ -99,20 +99,12 @@ class DataDownloader: NSObject, URLSessionDelegate{
                 let vidInfo = videoData[cellNum!]
                 let qual = qualData[cellNum!]
                 
-                storeVideo(vidInfo, quality: qual, tempLocation: location.path)
-              
-                //display checkmark for completion
-                DispatchQueue.main.async(execute: {
-                    let dict = ["ndx" : cellNum!, "value" : Float(1) ] as [String : Any]
-                    self.tableDelegate.setProgressValue(dict as NSDictionary)
-                })
-                
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
+                storeVideo(vidInfo, quality: qual, tempLocation: location.path, cellNum: cellNum!)
             }
     }
     
     //stores the temporary file (downloaded video) to app data
-    func storeVideo(_ vidInfo : VideoDownloadInfo, quality : Int, tempLocation : String){
+    func storeVideo(_ vidInfo : VideoDownloadInfo, quality : Int, tempLocation : String, cellNum : Int){
         
         var qual = quality
         
@@ -139,7 +131,55 @@ class DataDownloader: NSObject, URLSessionDelegate{
             qual = 2
         }
         
-        SongManager.addNewSong(vidInfo, qual: qual)
+        //from https://www.simplifiedios.net/get-image-from-url-swift-3-tutorial/
+        
+        //only 720p videos and above have maxresdefault
+        let streamURLs : NSDictionary = vidInfo.video.value(forKey: "streamURLs") as! NSDictionary
+        let imgQual = streamURLs[22] != nil ? "/maxresdefault.jpg" : "/hqdefault.jpg"
+        
+        let URL_IMAGE = URL(string: "https://img.youtube.com/vi/" + identifier + imgQual)
+        
+        let config = URLSessionConfiguration.default
+        let session = Foundation.URLSession(configuration: config)
+        
+        //creating a dataTask
+        let getImageFromUrl = session.dataTask(with: URL_IMAGE!) { (data, response, error) in
+            
+            var image: UIImage?
+            //if there is any error
+            if let e = error {
+                //displaying the message
+                print("Error Occurred: \(e)")
+                
+            } else {
+                //in case of now error, checking wheather the response is nil or not
+                if (response as? HTTPURLResponse) != nil {
+                    
+                    //checking if the response contains an image
+                    if let imageData = data {
+                        
+                        //getting the image
+                        image = UIImage(data: imageData)
+                        
+                    } else {
+                        print("Image file is currupted")
+                    }
+                } else {
+                    print("No response from server")
+                }
+            }
+            SongManager.addNewSong(vidInfo, qual: qual, thumbnail: image)
+            //display checkmark for completion
+            DispatchQueue.main.async(execute: {
+                let dict = ["ndx" : cellNum, "value" : Float(1) ] as [String : Any]
+                self.tableDelegate.setProgressValue(dict as NSDictionary)
+            })
+        }
+        
+        //starting the download task
+        getImageFromUrl.resume()
+        
+        
     }
     
 }

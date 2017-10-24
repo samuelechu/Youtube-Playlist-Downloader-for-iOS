@@ -73,7 +73,7 @@ open class SongManager{
         save()
     }
     
-    open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
+    open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int, thumbnail: UIImage?) {
         
         let video = vidInfo.video
         let playlistName = vidInfo.playlistName
@@ -102,7 +102,9 @@ open class SongManager{
             let large = video.largeThumbnailURL
             let medium = video.mediumThumbnailURL
             let small = video.smallThumbnailURL
-            let imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
+            var imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
+            
+            imgData = thumbnail != nil ? UIImagePNGRepresentation(thumbnail!)! : imgData
             newSong.setValue(imgData, forKey: "thumbnail")
         } catch _ {
         }
@@ -155,6 +157,7 @@ open class SongManager{
     fileprivate class func save() {
         do {
             try context.save()
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
         } catch _ {
         }
     }
