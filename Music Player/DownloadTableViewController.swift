@@ -64,7 +64,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         tableView.backgroundView = imgView
     }
     
-    func hideTabBar(){
+    @objc func hideTabBar(){
         setTabBarVisible(!(tabBarIsVisible()), animated: true)
         let visible = (navigationController?.isNavigationBarHidden)!
         navigationController?.setNavigationBarHidden(!visible, animated: true)
@@ -104,7 +104,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     func addUncachedVid(_ identifier: [String]) { uncachedVideos += identifier}
     func getUncachedVids() -> [String] { return uncachedVideos }
     
-    func resetDownloadTasks(_ notification: Notification){
+    @objc func resetDownloadTasks(_ notification: Notification){
         let dict : NSDictionary? = notification.userInfo as NSDictionary?
         if dict == nil {
             downloadTasks = []

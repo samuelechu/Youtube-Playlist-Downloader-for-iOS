@@ -56,7 +56,7 @@ class YouTubeSearchWebView: WKWebView {
         removeObserver(self, forKeyPath: "URL")
     }
     
-    func didTapDownloadButton() {
+    @objc func didTapDownloadButton() {
         if let url = self.url {
             delegate?.didTapDownloadButton(url)
         }

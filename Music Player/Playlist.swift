@@ -119,9 +119,9 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
         editButtonItem.title = "Edit"
-        deleteButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.gray], for: UIControlState.disabled)
+        deleteButton.setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: UIControlState.disabled)
         
-        shuffleButton.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.gray], for: UIControlState.disabled)
+        shuffleButton.setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: UIControlState.disabled)
         shuffleButton.tintColor = UIColor.gray
         
         setEditing(false, animated: true)
@@ -146,7 +146,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         super.didReceiveMemoryWarning()
     }
     
-    func updatePlaylist(_ notification: Notification){
+    @objc func updatePlaylist(_ notification: Notification){
         updatePlaylist()
     }
     
@@ -640,7 +640,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     var loopCount = 0
     var updater : Timer!
-    func updateNowPlayingInfo(){
+    @objc func updateNowPlayingInfo(){
         loopCount += 1
         let curItem = playerQueue.currentItem
         if(curItem != nil){
@@ -744,7 +744,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.middle)
     }
     
-    func playerItemDidReachEnd(_ notification : Notification){
+    @objc func playerItemDidReachEnd(_ notification : Notification){
         enableVidTracks()
         
         if(playerQueue.rate > 0){
@@ -760,20 +760,20 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     }
     
     //enable vidTracks
-    func enteredForeground(_ notification: Notification){
+    @objc func enteredForeground(_ notification: Notification){
         if playerQueue.currentItem != nil{
             enableVidTracks()
         }
     }
     //disable vidTracks
-    func enteredBackground(_ notification: Notification){
+    @objc func enteredBackground(_ notification: Notification){
         
         if playerQueue.currentItem != nil {
             videoTracks = playerQueue.currentItem!.tracks
             
             for track : AVPlayerItemTrack in videoTracks{
                 
-                if(!track.assetTrack.hasMediaCharacteristic("AVMediaCharacteristicAudible")){
+                if(!track.assetTrack.hasMediaCharacteristic(AVMediaCharacteristic(rawValue: "AVMediaCharacteristicAudible"))){
                     track.isEnabled = false; // disable the track
                 }
             }
