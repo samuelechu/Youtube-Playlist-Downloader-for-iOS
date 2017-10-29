@@ -1,5 +1,4 @@
 .DS_Store
-Podfile.lock
 Pods/
 pudding-ios.xcodeproj/xcuserdata/
 pudding-ios.xcworkspace/
