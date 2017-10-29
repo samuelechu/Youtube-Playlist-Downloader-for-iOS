@@ -17,10 +17,12 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     var playlistName : String!
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         stopVid = false
     }
     
@@ -44,6 +46,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
     
     //stop video only when view popped
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         if (stopVid == true){
             player.stop()
             player.player = nil

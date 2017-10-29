@@ -77,7 +77,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //reset tableView
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
