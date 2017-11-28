@@ -66,7 +66,7 @@ class DataDownloader: NSObject, URLSessionDelegate{
     }
     
     //update progress when data is received
-    func URLSession(_ session: Foundation.URLSession,
+    @objc func URLSession(_ session: Foundation.URLSession,
         downloadTask: URLSessionDownloadTask,
         didWriteData bytesWritten: Int64,
         totalBytesWritten: Int64,
@@ -90,7 +90,7 @@ class DataDownloader: NSObject, URLSessionDelegate{
     }
     
     ///save video when download completed
-    func URLSession(_ session: Foundation.URLSession,
+    @objc func URLSession(_ session: Foundation.URLSession,
         downloadTask: URLSessionDownloadTask,
         didFinishDownloadingToURL location: URL){
             let cellNum  = taskIDs.index(of: downloadTask.taskIdentifier)
