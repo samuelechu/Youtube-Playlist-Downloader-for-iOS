@@ -34,7 +34,7 @@ open class MiscFuncs{
         for i in 0..<(c - 1) {
             let j = Int(arc4random_uniform(UInt32(c - i))) + i
             if (i != j){
-                swap(&list[i], &list[j])
+                list.swapAt(i, j)
             }
         }
         

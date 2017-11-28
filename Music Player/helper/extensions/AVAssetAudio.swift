@@ -33,7 +33,7 @@ extension AVAsset {
             return
         }
         
-        exportSession.outputFileType = AVFileTypeAppleM4A
+        exportSession.outputFileType = AVFileType.m4a
         exportSession.outputURL      = URL as URL
         
         exportSession.exportAsynchronously {
@@ -50,17 +50,17 @@ extension AVAsset {
         
         let composition = AVMutableComposition()
         
-        let audioTracks = tracks(withMediaType: AVMediaTypeAudio)
+        let audioTracks = tracks(withMediaType: AVMediaType.audio)
         
         for track in audioTracks {
             
-            let compositionTrack = composition.addMutableTrack(withMediaType: AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
+            let compositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
             do {
-                try compositionTrack.insertTimeRange(track.timeRange, of: track, at: track.timeRange.start)
+                try compositionTrack?.insertTimeRange(track.timeRange, of: track, at: track.timeRange.start)
             } catch {
                 throw error
             }
-            compositionTrack.preferredTransform = track.preferredTransform
+            compositionTrack?.preferredTransform = track.preferredTransform
         }
         return composition
     }

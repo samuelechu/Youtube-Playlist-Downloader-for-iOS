@@ -28,15 +28,15 @@ class SongCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
-    func redownloadVideoAction(_ sender:AnyObject?){
+    @objc func redownloadVideoAction(_ sender:AnyObject?){
         UIPasteboard.general.string = "youtube.com/watch?v=\(identifier!)"
     }
     
-    func copyLinkAction(_ sender:AnyObject?){
+    @objc func copyLinkAction(_ sender:AnyObject?){
         UIPasteboard.general.string = "youtube.com/watch?v=\(identifier!)"
     }
     
-    func saveToCameraRollAction(_ sender:AnyObject?){
+    @objc func saveToCameraRollAction(_ sender:AnyObject?){
         
         let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
         

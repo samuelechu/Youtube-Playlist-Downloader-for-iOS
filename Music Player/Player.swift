@@ -46,7 +46,7 @@ class Player: AVPlayerViewController {
     }
     
     //swipe left : go to next song, swipe right : go to previous song
-    func respondToSwipeGesture(_ gesture: UIGestureRecognizer) {
+    @objc func respondToSwipeGesture(_ gesture: UIGestureRecognizer) {
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
