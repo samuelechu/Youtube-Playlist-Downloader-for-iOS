@@ -77,7 +77,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     //reset tableView
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
         
         setEditing(false, animated: true)
         navigationController!.setNavigationBarHidden(false, animated: true)
@@ -219,6 +219,29 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
     
     override func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
         //needs to be present for the menu to display
+    }
+    
+    @available(iOS 11.0, *)
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let shareAction = UIContextualAction(style: .normal, title: "Share") { [weak self] (_, _, completion) in
+            self?.shareItem(forCellAt: indexPath)
+            completion(true)
+        }
+        return UISwipeActionsConfiguration(actions: [shareAction])
+    }
+    
+    func shareItem(forCellAt indexPath: IndexPath) {
+        guard let cell = self.tableView.cellForRow(at: indexPath) as? SongCell, let identifier = cell.identifier else {
+            return
+        }
+        
+        var filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
+        if !FileManager.default.fileExists(atPath: filePath) {
+            filePath = MiscFuncs.grabFilePath("\(identifier).m4a")
+        }
+        let url = URL(fileURLWithPath: filePath)
+        let activityDialog = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        self.present(activityDialog, animated: true, completion: nil)
     }
     
     //populate tableView
