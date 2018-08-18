@@ -84,11 +84,15 @@ class DownloadManager {
     
     fileprivate func updateStoredSongs(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
-        request.predicate = NSPredicate(format: "isDownloaded = %@", true as CVarArg)
-        
+
         let songs = try? context.fetch(request)
         downloadedIDs = []
         for song in songs!{
+            let isDownloaded = (song as AnyObject).value(forKey: "isDownloaded") as! Bool
+            if !isDownloaded {
+                continue
+            }
+
             let identifier = (song as AnyObject).value(forKey: "identifier") as! String
             downloadedIDs += [identifier]
         }
