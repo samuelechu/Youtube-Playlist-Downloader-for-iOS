@@ -31,7 +31,7 @@ open class MiscFuncs{
     //shuffle int array
     open class func shuffle<C: MutableCollection>(_ list: inout C) where C.Index == Int {
         let c = list.count as! Int
-        for i in 0..<(c - 1) {
+        for i in 0..<max(0, c - 1) {
             let j = Int(arc4random_uniform(UInt32(c - i))) + i
             if (i != j){
                 list.swapAt(i, j)
