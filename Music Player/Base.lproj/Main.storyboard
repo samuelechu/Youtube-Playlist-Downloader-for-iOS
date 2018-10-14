@@ -45,32 +45,35 @@
                                     <rect key="frame" x="0.0" y="0.0" width="341" height="81.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Initializing download... hjkljhlkjhlkjhlkjhlkjhlkjhlkjhlkjhlkjhl hlkjhlkjh" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sil-aW-AWr">
-                                            <rect key="frame" x="137" y="15" width="461" height="36"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing download... hjkljhlkjhlkjhlkjhlkjhlkjhlkjhlkjhlkjhl hlkjhlkjh" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sil-aW-AWr">
+                                            <rect key="frame" x="138" y="18" width="195" height="44"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="black.png" translatesAutoresizingMaskIntoConstraints="NO" id="hkB-Bh-24g" userLabel="bottom">
-                                            <rect key="frame" x="39" y="11" width="90" height="60"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="black.png" translatesAutoresizingMaskIntoConstraints="NO" id="hkB-Bh-24g" userLabel="bottom">
+                                            <rect key="frame" x="40" y="14" width="90" height="55"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W6Z-ns-klj" userLabel="top">
-                                            <rect key="frame" x="39" y="11" width="90" height="60"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W6Z-ns-klj" userLabel="top">
+                                            <rect key="frame" x="40" y="14" width="90" height="55"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="90" id="Gig-Vw-s19"/>
+                                            </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SXT-gz-hx3">
-                                            <rect key="frame" x="0.0" y="24" width="9" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SXT-gz-hx3">
+                                            <rect key="frame" x="0.0" y="27" width="10" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="120" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-Wc-9Gv">
-                                            <rect key="frame" x="8" y="30" width="38" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="120" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-Wc-9Gv">
+                                            <rect key="frame" x="0.0" y="33" width="39" height="15.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LgB-Z9-2r9">
-                                            <rect key="frame" x="42" y="53" width="84" height="18"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LgB-Z9-2r9">
+                                            <rect key="frame" x="43" y="56" width="84" height="13"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="84" id="zpt-Hc-cow"/>
                                             </constraints>
@@ -111,9 +114,11 @@
                                         <constraint firstItem="Sil-aW-AWr" firstAttribute="trailing" secondItem="TxN-5Q-dXq" secondAttribute="trailingMargin" id="etK-sq-QvO"/>
                                         <constraint firstItem="Sil-aW-AWr" firstAttribute="top" secondItem="TxN-5Q-dXq" secondAttribute="topMargin" constant="7" id="fr3-CI-94p"/>
                                         <constraint firstItem="hkB-Bh-24g" firstAttribute="leading" secondItem="W6Z-ns-klj" secondAttribute="leading" id="jxt-ds-yvh"/>
+                                        <constraint firstItem="LgB-Z9-2r9" firstAttribute="leading" secondItem="W6Z-ns-klj" secondAttribute="leading" constant="3" id="lZr-VA-0SV"/>
                                         <constraint firstItem="zI8-Wc-9Gv" firstAttribute="top" secondItem="TxN-5Q-dXq" secondAttribute="topMargin" constant="22" id="ldK-Bi-3TT"/>
                                         <constraint firstItem="zI8-Wc-9Gv" firstAttribute="leading" secondItem="TxN-5Q-dXq" secondAttribute="leading" id="qzE-BI-Qjp"/>
                                         <constraint firstItem="zI8-Wc-9Gv" firstAttribute="leading" secondItem="SXT-gz-hx3" secondAttribute="leading" id="r9n-RF-E3i"/>
+                                        <constraint firstItem="LgB-Z9-2r9" firstAttribute="trailing" secondItem="W6Z-ns-klj" secondAttribute="trailing" constant="-3" id="sOd-BV-9NX"/>
                                         <constraint firstItem="zI8-Wc-9Gv" firstAttribute="centerY" secondItem="TxN-5Q-dXq" secondAttribute="centerY" id="xfg-7n-1Jy"/>
                                     </constraints>
                                     <variation key="default">
@@ -121,15 +126,15 @@
                                             <exclude reference="W6Z-ns-klj"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <exclude reference="DLS-zw-SwV"/>
-                                            <exclude reference="DqB-WU-6TA"/>
-                                            <exclude reference="NUI-E0-ip7"/>
-                                            <exclude reference="Oxu-sF-nSP"/>
                                             <exclude reference="LE0-ux-xwz"/>
                                             <exclude reference="ldK-Bi-3TT"/>
                                             <exclude reference="qzE-BI-Qjp"/>
                                             <exclude reference="r9n-RF-E3i"/>
                                             <exclude reference="xfg-7n-1Jy"/>
+                                            <exclude reference="DLS-zw-SwV"/>
+                                            <exclude reference="DqB-WU-6TA"/>
+                                            <exclude reference="NUI-E0-ip7"/>
+                                            <exclude reference="Oxu-sF-nSP"/>
                                             <exclude reference="4Jd-3U-dGf"/>
                                             <exclude reference="8Ax-zp-abI"/>
                                             <exclude reference="Hp0-pQ-YQX"/>
@@ -152,15 +157,15 @@
                                             <include reference="W6Z-ns-klj"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <include reference="DLS-zw-SwV"/>
-                                            <include reference="DqB-WU-6TA"/>
-                                            <include reference="NUI-E0-ip7"/>
-                                            <include reference="Oxu-sF-nSP"/>
                                             <include reference="LE0-ux-xwz"/>
                                             <include reference="ldK-Bi-3TT"/>
                                             <include reference="qzE-BI-Qjp"/>
                                             <include reference="r9n-RF-E3i"/>
                                             <include reference="xfg-7n-1Jy"/>
+                                            <include reference="DLS-zw-SwV"/>
+                                            <include reference="DqB-WU-6TA"/>
+                                            <include reference="NUI-E0-ip7"/>
+                                            <include reference="Oxu-sF-nSP"/>
                                             <include reference="4Jd-3U-dGf"/>
                                             <include reference="8Ax-zp-abI"/>
                                             <include reference="Hp0-pQ-YQX"/>
