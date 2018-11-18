@@ -17,11 +17,8 @@ class PlaylistsTableViewController: UITableViewController {
             self.refreshPlaylists()
         })
     }
-    let context = Database.shared.managedObjectContext
-    
-    var playlists: [NSManagedObject] = []
-    var playlistNames : [String] = []
-    var playlistSortDescriptor  = NSSortDescriptor(key: "playlistName", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
+    let database = Database.shared
+    var playlists: [Playlist] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,19 +40,18 @@ class PlaylistsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlistNames.count
+        return playlists.count
     }
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell")! as UITableViewCell
-        cell.textLabel?.text = playlistNames[indexPath.row]
+        cell.textLabel?.text = playlists[indexPath.row].playlistName
         return cell
     }
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let playlistName = playlistNames[indexPath.row]
+        let playlistName = playlists[indexPath.row].playlistName
         performSegue(withIdentifier: "PlaylistsToPlaylist", sender: playlistName)
     }
     
@@ -67,68 +63,37 @@ class PlaylistsTableViewController: UITableViewController {
         }
     }
     
-    
     func addPlaylist(_ name: String){
         if(!SongManager.isPlaylist(name)){
-            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: self.context)
-            newPlaylist.setValue(name, forKey: "playlistName")
-            
-            do{
-                try self.context.save()
-            }catch _ as NSError{}
+            database.createPlaylist(named: name)
+            database.save()
         }
         
     }
     
     func refreshPlaylists(){
-        playlistNames = []
-        let request = NSFetchRequest<NSManagedObject>(entityName: "Playlist")
-        request.sortDescriptors = [playlistSortDescriptor]
-        
-        playlists = (try? context.fetch(request)) ?? []
-        for playlist in playlists{
-            let playlistName = (playlist as AnyObject).value(forKey: "playlistName") as! String
-            playlistNames += [playlistName]
-        }
-        
+        playlists = database.playlists(sorted: true)
         tableView.reloadData()
     }
-    
     
     //swipe to delete
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            let row = indexPath.row
-            let playlistName = (playlists[row] as AnyObject).value(forKey: "playlistName") as! String
-            deletePlaylist(playlistName)
+            let playlist = playlists[indexPath.row]
+            deletePlaylist(playlist)
             refreshPlaylists()
         }
     }
     
     //delete playlist and all songs in it
-    func deletePlaylist(_ playlistName : String){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        request.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.fetch(request) as NSArray
-        let selectedPlaylist = fetchedPlaylists[0] as! NSManagedObject
-        
-        let songs = selectedPlaylist.value(forKey: "songs") as! NSSet
-        
-        var songIdentifiers : [String] = []
-        for song in songs{
-            let identifier = (song as AnyObject).value(forKey: "identifier") as! String
-            songIdentifiers += [identifier]
+    func deletePlaylist(_ playlist: Playlist) {
+        for songObj in playlist.songs ?? [] {
+            let song = songObj as! Song
+            SongManager.deleteSong(song.identifier!, playlistName: playlist.playlistName!)
         }
         
-        for identifier in songIdentifiers{
-            SongManager.deleteSong(identifier, playlistName: playlistName)
-        }
-        context.delete(selectedPlaylist)
-        
-        do {
-            try context.save()
-        } catch _ {
-        }
+        database.delete(playlist)
+        database.save()
     }
     
 }

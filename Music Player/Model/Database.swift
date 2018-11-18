@@ -21,4 +21,22 @@ class Database {
         try! self.managedObjectContext.save()
     }
     
+    func playlists(sorted: Bool) -> [Playlist] {
+        let request = Playlist.theFetchRequest()
+        if sorted {
+            request.sortDescriptors = [NSSortDescriptor(key: "playlistName", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        }
+        return try! managedObjectContext.fetch(request)
+    }
+    
+    @discardableResult func createPlaylist(named name: String) -> Playlist {
+        let playlist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: managedObjectContext) as! Playlist
+        playlist.playlistName = name
+        return playlist
+    }
+    
+    func delete(_ object: NSManagedObject) {
+        managedObjectContext.delete(object)
+    }
+    
 }
