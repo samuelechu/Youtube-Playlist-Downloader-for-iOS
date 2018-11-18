@@ -36,7 +36,7 @@ fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
+class PlaylistViewController: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
     
     
     
@@ -92,10 +92,10 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         let appDel = UIApplication.shared.delegate as! AppDelegate
         context = appDel.managedObjectContext
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.enteredBackground(_:)), name: NSNotification.Name(rawValue: "enteredBackgroundID"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.enteredForeground(_:)), name: NSNotification.Name(rawValue: "enteredForegroundID"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.updatePlaylist(_:)), name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Playlist.playerItemDidReachEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerQueue.currentItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.enteredBackground(_:)), name: NSNotification.Name(rawValue: "enteredBackgroundID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.enteredForeground(_:)), name: NSNotification.Name(rawValue: "enteredForegroundID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.updatePlaylist(_:)), name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.playerItemDidReachEnd(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerQueue.currentItem)
         
         //set audio to play in bg
         let audio : AVAudioSession = AVAudioSession()
@@ -711,7 +711,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         
         
         if(updater == nil){
-            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(PlaylistViewController.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         
     }
@@ -734,7 +734,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         //set lock screen info
         loopCount = 0
         if(updater == nil){
-            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+            updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(PlaylistViewController.updateNowPlayingInfo), userInfo: nil, repeats: true)
         }
         togglePlayPause()
         togglePlayPause()
@@ -757,7 +757,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
             
             loopCount = 0
             if(updater == nil){
-                updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+                updater = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(PlaylistViewController.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         togglePlayPause()
@@ -807,7 +807,7 @@ class Playlist: UITableViewController, UISearchResultsUpdating, PlaylistDelegate
         if curSong != nil {
             loopCount = 0
             if(updater == nil){
-                updater = Timer.scheduledTimer(timeInterval: 0.125, target: self, selector: #selector(Playlist.updateNowPlayingInfo), userInfo: nil, repeats: true)
+                updater = Timer.scheduledTimer(timeInterval: 0.125, target: self, selector: #selector(PlaylistViewController.updateNowPlayingInfo), userInfo: nil, repeats: true)
             }
         }
         

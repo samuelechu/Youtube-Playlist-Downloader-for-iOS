@@ -32,7 +32,7 @@
         <!--Playlist-->
         <scene sceneID="9Pk-jp-AAT">
             <objects>
-                <tableViewController id="Mzs-fZ-jAu" customClass="Playlist" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="Mzs-fZ-jAu" customClass="PlaylistViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="86" sectionHeaderHeight="10" sectionFooterHeight="10" id="6XD-mC-Bfd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="490"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -283,10 +283,10 @@
             </objects>
             <point key="canvasLocation" x="2356" y="-1702"/>
         </scene>
-        <!--Playlist View Controller-->
+        <!--Playlist Player View Controller-->
         <scene sceneID="VuV-cl-Iou">
             <objects>
-                <viewController id="ANP-zS-Gpz" customClass="PlaylistViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ANP-zS-Gpz" customClass="PlaylistPlayerViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="M83-v4-xvJ"/>
                         <viewControllerLayoutGuide type="bottom" id="kkO-pP-xSK"/>
@@ -349,10 +349,10 @@
             </objects>
             <point key="canvasLocation" x="1579" y="-1702"/>
         </scene>
-        <!--Settings-->
+        <!--Settings View Controller-->
         <scene sceneID="Cx5-fc-gfh">
             <objects>
-                <tableViewController id="247-Kv-uP9" customClass="Settings" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="247-Kv-uP9" customClass="SettingsViewController" customModule="Music_Player" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ntR-iT-vga">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

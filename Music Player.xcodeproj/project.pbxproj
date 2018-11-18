@@ -32,7 +32,7 @@
 		B093A2A61C34429D00AC86C0 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A51C34429D00AC86C0 /* DownloadManager.swift */; };
 		B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */; };
 		B0DA10F11C380833009BE745 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */; };
-		D2253AA71C39EFE00057767C /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA61C39EFE00057767C /* PlaylistViewController.swift */; };
+		D2253AA71C39EFE00057767C /* PlaylistPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */; };
 		D2253AA91C3A36970057767C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA81C3A36970057767C /* TabBarController.swift */; };
 		D2392EDF1C3757E5004AD31C /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2392EDE1C3757E5004AD31C /* MenuAction.swift */; };
 		D244D1C61C79858300A7E5B5 /* AVAssetAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = D244D1C51C79858300A7E5B5 /* AVAssetAudio.swift */; };
@@ -83,7 +83,7 @@
 		B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		CC4DEA411428B95B5F3B017C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2253AA61C39EFE00057767C /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistPlayerViewController.swift; sourceTree = "<group>"; };
 		D2253AA81C3A36970057767C /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D2263A9E1C14F05600F07C90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -238,7 +238,7 @@
 			children = (
 				D2A1F8D91CA0C4CC00F4ED53 /* PlaylistProtocols.swift */,
 				B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */,
-				D2253AA61C39EFE00057767C /* PlaylistViewController.swift */,
+				D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */,
 				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				D2A23C6C1C784A6E00A9F644 /* SongManager.swift */,
@@ -452,7 +452,7 @@
 				B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */,
 				D2392EDF1C3757E5004AD31C /* MenuAction.swift in Sources */,
 				22AD6B321B47BB7D00428602 /* Settings.swift in Sources */,
-				D2253AA71C39EFE00057767C /* PlaylistViewController.swift in Sources */,
+				D2253AA71C39EFE00057767C /* PlaylistPlayerViewController.swift in Sources */,
 				D2253AA91C3A36970057767C /* TabBarController.swift in Sources */,
 				224340041B47260500C075FF /* DownloadCell.swift in Sources */,
 				D29E202A1CA4E23E0079A261 /* DownloadDataStructures.swift in Sources */,

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class Settings: UITableViewController {
+class SettingsViewController: UITableViewController {
     
     var context : NSManagedObjectContext!
     var settings : NSManagedObject!

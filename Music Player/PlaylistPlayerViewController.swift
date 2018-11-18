@@ -9,10 +9,10 @@
 import UIKit
 
 //the View Controller that contains the Player and Playlist
-class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
+class PlaylistPlayerViewController: UIViewController, PlaylistViewControllerDelegate {
     
     @IBOutlet weak var container: UIView!
-    var playlist: Playlist!
+    var playlist: PlaylistViewController!
     var player : Player!
     var playlistName : String!
     
@@ -63,7 +63,7 @@ class PlaylistViewController: UIViewController, PlaylistViewControllerDelegate {
         if(segue.identifier == "showPlaylist")
         {
             let navController = segue.destination as! UINavigationController
-            playlist = navController.viewControllers[0] as! Playlist
+            playlist = navController.viewControllers[0] as! PlaylistViewController
             playlist.playlistName = playlistName
             playlist.playlistVCDelegate = self
             
