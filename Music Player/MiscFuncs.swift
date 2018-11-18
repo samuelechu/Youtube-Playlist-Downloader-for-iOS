@@ -86,9 +86,7 @@ open class MiscFuncs{
     
     //return current settings or initialize defaults
     open class func getSettings() -> NSManagedObject {
-        
-        let appDel = UIApplication.shared.delegate as? AppDelegate
-        let context = appDel!.managedObjectContext!
+        let context = Database.shared.managedObjectContext
         
         //set initial quality to 360P if uninitialized
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")

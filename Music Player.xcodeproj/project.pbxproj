@@ -30,6 +30,7 @@
 		367D763121A193A700F76423 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762B21A193A700F76423 /* Song.swift */; };
 		367D763321A193A700F76423 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762D21A193A700F76423 /* Settings.swift */; };
 		367D763521A193A700F76423 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762F21A193A700F76423 /* Playlist.swift */; };
+		367D763821A1A98E00F76423 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D763721A1A98E00F76423 /* Database.swift */; };
 		B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */; };
 		B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */; };
 		B093A2A61C34429D00AC86C0 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A51C34429D00AC86C0 /* DownloadManager.swift */; };
@@ -82,6 +83,7 @@
 		367D762B21A193A700F76423 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		367D762D21A193A700F76423 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		367D762F21A193A700F76423 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		367D763721A1A98E00F76423 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		74335E5DADD8F912D3C822E2 /* Pods-Music Player.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Music Player.release.xcconfig"; path = "Pods/Target Support Files/Pods-Music Player/Pods-Music Player.release.xcconfig"; sourceTree = "<group>"; };
 		B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchWebViewController.swift; sourceTree = "<group>"; };
 		B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeSearchWebView.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 		367D762A21A1939400F76423 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				367D763721A1A98E00F76423 /* Database.swift */,
 				367D762B21A193A700F76423 /* Song.swift */,
 				367D762D21A193A700F76423 /* Settings.swift */,
 				367D762F21A193A700F76423 /* Playlist.swift */,
@@ -482,6 +485,7 @@
 				B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */,
 				225F06121B613BB6005D0DEA /* Player.swift in Sources */,
 				D2A1F8DC1CA0C58500F4ED53 /* DownloadProtocols.swift in Sources */,
+				367D763821A1A98E00F76423 /* Database.swift in Sources */,
 				224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */,
 				D2A1F8DA1CA0C4CC00F4ED53 /* PlaylistProtocols.swift in Sources */,
 			);

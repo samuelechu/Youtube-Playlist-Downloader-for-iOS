@@ -11,7 +11,7 @@ import CoreData
 
 open class SongManager{
     
-    static var context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext!
+    static let context = Database.shared.managedObjectContext
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
     //gets song associated with (identifier : String)

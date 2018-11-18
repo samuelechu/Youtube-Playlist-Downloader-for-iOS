@@ -15,7 +15,7 @@ import AssetsLibrary
 //only one instance of DataDownloader declared in AppDelegate.swift
 class DataDownloader: NSObject, URLSessionDelegate{
     
-    var context : NSManagedObjectContext!
+    let context = Database.shared.managedObjectContext
     var session : Foundation.URLSession!
     
     //taskID index corresponds to videoData index, for assigning Song info after download is complete
@@ -33,9 +33,6 @@ class DataDownloader: NSObject, URLSessionDelegate{
         let config = URLSessionConfiguration.background(withIdentifier: "\(randomString)")
         config.timeoutIntervalForRequest = 600
         session = Foundation.URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
-        
-        let appDel = UIApplication.shared.delegate as? AppDelegate
-        context = appDel!.managedObjectContext
     }
     
     func addVideoToDownloadTable(_ vidInfo : VideoDownloadInfo) {

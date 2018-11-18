@@ -21,7 +21,7 @@ class DownloadManager {
     fileprivate var playlist : NSManagedObject!
     fileprivate var songs : NSMutableSet!
     
-    fileprivate var context : NSManagedObjectContext!
+    let context = Database.shared.managedObjectContext
     fileprivate var dataDownloader : DataDownloader!
     
     fileprivate var downloadTasks : [String] = []//array of video identifiers
@@ -37,7 +37,6 @@ class DownloadManager {
         self.playlistName = playlistName
         
         let appDel = UIApplication.shared.delegate as? AppDelegate
-        context = appDel!.managedObjectContext
         
         //set initial quality to 360P if uninitialized
         _ = MiscFuncs.getSettings()

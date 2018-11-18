@@ -11,7 +11,7 @@ import CoreData
 
 class SettingsViewController: UITableViewController {
     
-    var context : NSManagedObjectContext!
+    let context = Database.shared.managedObjectContext
     var settings : NSManagedObject!
     
     func selectRow(_ path : IndexPath){
@@ -27,9 +27,6 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 44
-        
-        let appDel = UIApplication.shared.delegate as? AppDelegate
-        context = appDel!.managedObjectContext
         
         //retrieve settings, or initialize default settings if unset
         settings = MiscFuncs.getSettings()

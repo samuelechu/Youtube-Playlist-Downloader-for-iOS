@@ -17,8 +17,7 @@ class PlaylistsTableViewController: UITableViewController {
             self.refreshPlaylists()
         })
     }
-    
-    fileprivate var context : NSManagedObjectContext!
+    let context = Database.shared.managedObjectContext
     
     var playlists: [NSManagedObject] = []
     var playlistNames : [String] = []
@@ -26,9 +25,6 @@ class PlaylistsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let appDel = UIApplication.shared.delegate as? AppDelegate
-        context = appDel!.managedObjectContext
         
         tableView.dataSource = self
         tableView.delegate = self

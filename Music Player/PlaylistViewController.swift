@@ -56,7 +56,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     var playlistName: String?
     var playlistVCDelegate : PlaylistViewControllerDelegate!
     
-    var context : NSManagedObjectContext!
+    let context = Database.shared.managedObjectContext
     var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
     
     var songs : NSArray!
@@ -88,9 +88,6 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let appDel = UIApplication.shared.delegate as! AppDelegate
-        context = appDel.managedObjectContext
         
         NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.enteredBackground(_:)), name: NSNotification.Name(rawValue: "enteredBackgroundID"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(PlaylistViewController.enteredForeground(_:)), name: NSNotification.Name(rawValue: "enteredForegroundID"), object: nil)
