@@ -37,18 +37,7 @@ fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class PlaylistViewController: UITableViewController, UISearchResultsUpdating, PlaylistDelegate {
-    
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   Initialization
-    
-    
+
     @IBOutlet var selectButton: UIBarButtonItem!
     @IBOutlet var shuffleButton: UIBarButtonItem!
     @IBOutlet var deleteButton: UIBarButtonItem!
@@ -56,15 +45,15 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     var playlistName: String?
     var playlistVCDelegate : PlaylistViewControllerDelegate!
     
-    let context = Database.shared.managedObjectContext
-    var songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
+    let context = Database.shared.managedObjectContext //todo remove
+    let database = Database.shared
     
-    var songs : NSArray!
+    var songs: [Song] = []
     var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     var identifiers : [String] = []
     
     //search control
-    var filteredSongs : NSArray!
+    var filteredSongs: [Song] = []
     var resultSearchController = UISearchController(searchResultsController: nil)
     
     var x : [Int] = [] //for shuffling
@@ -154,18 +143,11 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     }
     
     //get songs from current playlist
-    func getCurSongs() -> NSArray{
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        // request.sortDescriptors = [songSortDescriptor]
-        request.predicate = NSPredicate(format: "playlistName = %@", playlistName!)
-        
-        let playlists = try? context.fetch(request) as NSArray
-        if(playlists?.count >= 1){
-            let playlist = (playlists![0] as AnyObject).value(forKey: "songs") as! NSSet
-            let songsUnsorted = playlist.allObjects as NSArray
-            return songsUnsorted.sortedArray(using: [songSortDescriptor]) as NSArray
-        }
-        return []
+    func getCurSongs() -> [Song] {
+        let playlist = database.findPlaylist(named: playlistName!)
+        let songs = playlist?.songs?.allObjects ?? []
+        let songSortDescriptor = NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
+        return (songs as NSArray).sortedArray(using: [songSortDescriptor]) as! [Song]
     }
     
     func refreshPlaylist(){
@@ -195,15 +177,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
         }
     }
     
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   TableView / Editing Functions
-    
+    //MARK: TableView / Editing Functions
     
     override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -244,52 +218,28 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     //populate tableView
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath) as! SongCell
+        let song = isSearchActive ? filteredSongs[indexPath.row] : songs[x[indexPath.row]]
         
-        var songName : String!
-        var duration : String!
-        var identifier : String!
-        var imageData : Data!
-        
-        if resultSearchController.isActive && resultSearchController.searchBar.text != "" {
-            songName = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "title") as! String
-            duration = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "durationStr") as! String
-            identifier = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "identifier") as! String
-            imageData = (filteredSongs[indexPath.row] as AnyObject).value(forKey: "thumbnail") as! Data
-        }
-            
-        else{
-            let row = x[indexPath.row]
-            songName = (songs[row] as AnyObject).value(forKey: "title") as! String
-            duration = (songs[row] as AnyObject).value(forKey: "durationStr") as! String
-            identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
-            imageData = (songs[row] as AnyObject).value(forKey: "thumbnail") as! Data
-        }
-        
-        cell.songLabel.text = songName
-        cell.durationLabel.text = duration
-        cell.identifier = identifier
-        cell.imageLabel.image = UIImage(data: imageData)
+        cell.songLabel.text = song.title
+        cell.durationLabel.text = song.durationStr
+        cell.identifier = song.identifier
+        cell.imageLabel.image = song.thumbnail?.asImage()
         cell.positionLabel.text = "\(indexPath.row + 1)"
         cell.contentView.backgroundColor = UIColor.clear
         cell.backgroundColor = UIColor.clear
         return cell
     }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+    var isSearchActive: Bool {
+        return resultSearchController.isActive && resultSearchController.searchBar.text != ""
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if songs != nil{
-            if resultSearchController.isActive && resultSearchController.searchBar.text != ""{
-                return filteredSongs.count
-            }
-            else{
-                return songs.count
-            }
-        }
-            
-        else{
-            return 0
-        }
+        return isSearchActive ? filteredSongs.count : songs.count
     }
     
     //called when EditButtonItem() ("Select" button) pressed, disables/enables buttons and toolbars based on editing state
@@ -373,16 +323,8 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
             playlistVCDelegate.pushWebView()
         }
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   Searchbar Functions
-    
+
+    //MARK: Searchbar Functions
     
     func findNdxInFullList(_ ndxInSearchList : Int) -> Int{
         let identifier = (filteredSongs[ndxInSearchList] as AnyObject).value(forKey: "identifier") as! String
@@ -399,20 +341,13 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
         
         let curSongs = getCurSongs()
         let predicate = NSPredicate(format: "title CONTAINS[c] %@", searchController.searchBar.text!)
-        filteredSongs = curSongs.filtered(using: predicate) as NSArray!
+        filteredSongs = (curSongs as NSArray).filtered(using: predicate) as! [Song]
         tableView.reloadData()
         
         
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   Shuffle Functions
+
+    //MARK: Shuffle Functions
     
     @IBAction func shufflePlaylist() {
         
@@ -428,16 +363,8 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
         }
         tableView.reloadData()
     }
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   Delete Functions
-    
+
+    //MARK: Delete Functions
     
     //delete selected songs
     @IBAction func deletePressed() {
@@ -554,15 +481,8 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
             
         }
     }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////
-    ////////
-    //////////
-    ////////////
-    //////////////
-    ////////////////   AVPlayer Functions
-    
+
+    //MARK: AVPlayer Functions
     
     //don't segue to AVPlayer if editing
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

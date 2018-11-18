@@ -141,15 +141,8 @@ open class MiscFuncs{
     
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+extension Data {
+    func asImage() -> UIImage? {
+        return UIImage(data: self)
+    }
+}

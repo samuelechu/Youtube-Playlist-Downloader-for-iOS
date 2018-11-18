@@ -14,7 +14,7 @@ public class Song: NSManagedObject {
     @NSManaged public var isDownloaded: NSNumber?
     @NSManaged public var quality: NSNumber?
     @NSManaged public var streamURL: String?
-    @NSManaged public var thumbnail: NSData?
+    @NSManaged public var thumbnail: Data?
     @NSManaged public var title: String?
     @NSManaged public var playlists: NSSet?
     

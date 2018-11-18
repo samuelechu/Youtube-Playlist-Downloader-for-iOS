@@ -29,6 +29,13 @@ class Database {
         return try! managedObjectContext.fetch(request)
     }
     
+    func findPlaylist(named name: String) -> Playlist? {
+        let request = Playlist.theFetchRequest()
+        request.predicate = NSPredicate(format: "playlistName = %@", name)
+        request.fetchLimit = 1
+        return try! managedObjectContext.fetch(request).first
+    }
+    
     @discardableResult func createPlaylist(named name: String) -> Playlist {
         let playlist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: managedObjectContext) as! Playlist
         playlist.playlistName = name
