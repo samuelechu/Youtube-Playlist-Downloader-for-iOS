@@ -11,6 +11,7 @@ import CoreData
 
 open class SongManager{
     
+    static let database = Database.shared
     static let context = Database.shared.managedObjectContext
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
@@ -23,27 +24,8 @@ open class SongManager{
         return fetchedSongs[0] as! NSManagedObject
     }
     
-    //gets playlist associated with (playlistName : String)
-    open class func getPlaylist(_ playlistName : String) -> NSManagedObject {
-        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
-        return fetchedPlaylists[0] as! NSManagedObject
-    }
-    
-    open class func isPlaylist(_ playlistName: String) -> Bool {
-        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
-        if(fetchedPlaylists.count > 0) {
-            return true
-        }
-        return false
-    }
-    
     open class func addToRelationships(_ identifier : String, playlistName : String){
-        
-        let selectedPlaylist = getPlaylist(playlistName)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName) else { return }
         let selectedSong = getSong(identifier)
         
         //add song reference to songs relationship (in playlist entity)
@@ -59,7 +41,7 @@ open class SongManager{
     
     
     open class func removeFromRelationships(_ identifier : String, playlistName : String){
-        let selectedPlaylist = getPlaylist(playlistName)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName) else { return }
         let selectedSong = getSong(identifier)
         
         //delete song reference in songs relationship (in playlist entity)

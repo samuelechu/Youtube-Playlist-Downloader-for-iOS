@@ -64,11 +64,10 @@ class PlaylistsTableViewController: UITableViewController {
     }
     
     func addPlaylist(_ name: String){
-        if(!SongManager.isPlaylist(name)){
+        if database.findPlaylist(named: name) == nil {
             database.createPlaylist(named: name)
             database.save()
         }
-        
     }
     
     func refreshPlaylists(){
