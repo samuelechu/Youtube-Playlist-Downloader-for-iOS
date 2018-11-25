@@ -15,7 +15,7 @@ import AssetsLibrary
 //only one instance of DataDownloader declared in AppDelegate.swift
 class DataDownloader: NSObject, URLSessionDelegate{
     
-    let context = Database.shared.managedObjectContext
+    let database = Database.shared
     var session : Foundation.URLSession!
     
     //taskID index corresponds to videoData index, for assigning Song info after download is complete
@@ -121,8 +121,7 @@ class DataDownloader: NSObject, URLSessionDelegate{
         MiscFuncs.addSkipBackupAttribute(toFilepath: filePath)
         
         //if audio only selected in settings, rip audio from video
-        let settings = MiscFuncs.getSettings()
-        let isAudio = settings.value(forKey: "quality") as! Int == 2
+        let isAudio = (database.settings.quality?.intValue ?? 0) == 2
         let audioPath = MiscFuncs.grabFilePath("\(identifier).m4a")
         if(isAudio && !fileManager.fileExists(atPath: audioPath)){
             let asset = AVURLAsset(url: URL(fileURLWithPath: filePath))

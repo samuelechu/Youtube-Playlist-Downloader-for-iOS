@@ -84,31 +84,6 @@ open class MiscFuncs{
         return (videoId: videoId, playlistId: playlistId)
     }
     
-    //return current settings or initialize defaults
-    open class func getSettings() -> NSManagedObject {
-        let context = Database.shared.managedObjectContext
-        
-        //set initial quality to 360P if uninitialized
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
-        var results : NSArray = try! context.fetch(request) as NSArray
-        
-        //default settings : quality = 360P, cache videos within app
-        if results.count == 0 {
-            let settings = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
-            
-            settings.setValue(0, forKey: "quality")
-            settings.setValue(0, forKey: "cache")
-            settings.setValue("https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha", forKey: "playlist")
-            do {
-                try context.save()
-            } catch _ {
-            }
-            results = try! context.fetch(request) as NSArray
-        }
-        
-        return results[0] as! NSManagedObject
-    }
-    
     //return path of video, input : video identifier
     open class func grabFilePath(_ fileName : String) -> String {
         let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]

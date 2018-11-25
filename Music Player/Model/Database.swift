@@ -9,12 +9,22 @@ class Database {
     
     private let coordinator: NSPersistentStoreCoordinator
     private(set) var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    let settings: Settings
     
     init(url: URL) {
         let model = NSManagedObjectModel(contentsOf: Bundle.main.url(forResource: "Music_Player", withExtension: "momd")!)!
         coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         try! coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
         managedObjectContext.persistentStoreCoordinator = coordinator
+        
+        if let settings = try! managedObjectContext.fetch(Settings.theFetchRequest()).first {
+            self.settings = settings
+        } else {
+            settings = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: managedObjectContext) as! Settings
+            settings.quality = 0 //todo enums
+            settings.cache = 0
+            settings.playlist = "https://www.youtube.com/playlist?list=PLyD2IQPajS7Z3VcvQmqJWPOQtXQ1qnDha"
+        }
     }
     
     func save() {

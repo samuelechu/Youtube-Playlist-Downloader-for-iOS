@@ -21,7 +21,7 @@ class DownloadManager {
     fileprivate var playlist : NSManagedObject!
     fileprivate var songs : NSMutableSet!
     
-    let context = Database.shared.managedObjectContext
+    let database = Database.shared
     fileprivate var dataDownloader : DataDownloader!
     
     fileprivate var downloadTasks : [String] = []//array of video identifiers
@@ -37,9 +37,6 @@ class DownloadManager {
         self.playlistName = playlistName
         
         let appDel = UIApplication.shared.delegate as? AppDelegate
-        
-        //set initial quality to 360P if uninitialized
-        _ = MiscFuncs.getSettings()
         
         //get identifiers from downloadTableViewController
         uncachedVideos = (downloadTable.getUncachedVids())
@@ -61,8 +58,7 @@ class DownloadManager {
         let (videoId, playlistId) = MiscFuncs.parseIDs(url: playlistOrVideoUrl)
         
         //get video quality setting
-        let settings = MiscFuncs.getSettings()
-        let qual = settings.value(forKey: "quality") as! Int
+        let qual = database.settings.quality?.intValue ?? 0
         
         if let videoId = videoId {
             updateStoredSongs()
@@ -83,7 +79,8 @@ class DownloadManager {
     
     fileprivate func updateStoredSongs(){
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
-
+        let context = Database.shared.managedObjectContext
+        
         let songs = try? context.fetch(request)
         downloadedIDs = []
         for song in songs!{
@@ -259,8 +256,7 @@ class DownloadManager {
             if(!videoIDs.isEmpty){
                 
                 updateStoredSongs()
-                let settings = MiscFuncs.getSettings()
-                let downloadVid = settings.value(forKey: "cache") as! Int
+                let downloadVid = database.settings.cache?.intValue ?? 0
                 
                 //download videos if cache option selected, otherwise save song object to persistent memory
                 if downloadVid != 1 {
@@ -277,8 +273,7 @@ class DownloadManager {
                         }
                             
                         else if (downloadTasks.index(of: identifier) == nil){
-                            let settings = MiscFuncs.getSettings()
-                            let qual = settings.value(forKey: "quality") as! Int
+                            let qual = database.settings.quality?.intValue ?? 0
                             let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
                             let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
                             
@@ -334,9 +329,10 @@ class DownloadManager {
     }
     
     fileprivate func saveVideoInfo(_ identifier : String) {
+        let context = Database.shared.managedObjectContext
         XCDYouTubeClient.default().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
             if error == nil {
-                let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: self.context)
+                let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: context)
                 newSong.setValue(identifier, forKey: "identifier")
                 newSong.setValue(video!.title, forKey: "title")
                 newSong.setValue(video!.expirationDate, forKey: "expireDate")
@@ -352,13 +348,7 @@ class DownloadManager {
                 let imgData = NSData(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
                 
                 newSong.setValue(imgData, forKey: "thumbnail")
-                
-                
-                
-                do{
-                    try self.context.save()
-                }catch _ as NSError{}
-                
+                self.database.save()
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
             }
         })

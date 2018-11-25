@@ -6,7 +6,7 @@ import CoreData
 //or store settings in the UserDefaults instead
 public class Settings: NSManagedObject {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Settings> {
+    @nonobjc public class func theFetchRequest() -> NSFetchRequest<Settings> {
         return NSFetchRequest<Settings>(entityName: "Settings")
     }
     

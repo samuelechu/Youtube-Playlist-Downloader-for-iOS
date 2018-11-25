@@ -11,8 +11,7 @@ import CoreData
 
 class SettingsViewController: UITableViewController {
     
-    let context = Database.shared.managedObjectContext
-    var settings : NSManagedObject!
+    let database = Database.shared
     
     func selectRow(_ path : IndexPath){
         tableView.selectRow(at: path, animated: false, scrollPosition: UITableViewScrollPosition.none)
@@ -29,12 +28,11 @@ class SettingsViewController: UITableViewController {
         tableView.rowHeight = 44
         
         //retrieve settings, or initialize default settings if unset
-        settings = MiscFuncs.getSettings()
-        let qualRow = IndexPath(row: settings.value(forKey: "quality") as! Int, section: 0)
+        let qualRow = IndexPath(row: database.settings.quality?.intValue ?? 0, section: 0)
         deselectRow(qualRow)
         selectRow(qualRow)
         
-        let cacheRow = IndexPath(row: settings.value(forKey: "cache") as! Int, section: 1)
+        let cacheRow = IndexPath(row: database.settings.cache?.intValue ?? 0, section: 1)
         deselectRow(cacheRow)
         selectRow(cacheRow)
         
@@ -73,17 +71,13 @@ class SettingsViewController: UITableViewController {
         tableView.cellForRow(at: indexPath)?.accessoryType = UITableViewCellAccessoryType.checkmark
         switch indexPath.section {
         case 0: //Video Quality
-            settings.setValue(indexPath.row, forKey: "quality")
+            database.settings.quality = NSNumber(value: indexPath.row)
         case 1://Video Caching
-            settings.setValue(indexPath.row, forKey: "cache")
+            database.settings.cache =  NSNumber(value: indexPath.row)
         default:
             break
         }
-        
-        do {
-            try context.save()
-        } catch _ {
-        }
+        database.save()
     }
     
    //user cannot deselect cells manually
