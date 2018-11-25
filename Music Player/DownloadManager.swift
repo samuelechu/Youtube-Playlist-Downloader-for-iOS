@@ -78,7 +78,7 @@ class DownloadManager {
     
     
     fileprivate func updateStoredSongs(){
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
+        let request = Song.theFetchRequest()
         let context = Database.shared.managedObjectContext
         
         let songs = try? context.fetch(request)
@@ -329,28 +329,12 @@ class DownloadManager {
     }
     
     fileprivate func saveVideoInfo(_ identifier : String) {
-        let context = Database.shared.managedObjectContext
         XCDYouTubeClient.default().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
-            if error == nil {
-                let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: context)
-                newSong.setValue(identifier, forKey: "identifier")
-                newSong.setValue(video!.title, forKey: "title")
-                newSong.setValue(video!.expirationDate, forKey: "expireDate")
-                newSong.setValue(false, forKey: "isDownloaded")
-                
-                /*var streamURLs = video!.streamURLs
-                let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-                newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
-                
-                let large = video!.largeThumbnailURL
-                let medium = video!.mediumThumbnailURL
-                let small = video!.smallThumbnailURL
-                let imgData = NSData(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
-                
-                newSong.setValue(imgData, forKey: "thumbnail")
-                self.database.save()
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
-            }
+            guard let video = video, error == nil else { return }
+            let newSong = SongManager.addSongObject(from: video)
+            newSong.isDownloaded = NSNumber(value: false)
+            self.database.save()
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reloadPlaylistID"), object: nil)
         })
     }
 }

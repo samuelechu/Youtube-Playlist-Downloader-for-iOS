@@ -53,6 +53,13 @@ class Database {
         return try! managedObjectContext.fetch(request).first
     }
     
+    func createSong(titled title: String, identifier: String) -> Song {
+        let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: managedObjectContext) as! Song
+        newSong.identifier = identifier
+        newSong.title = title
+        return newSong
+    }
+    
     @discardableResult func createPlaylist(named name: String) -> Playlist {
         let playlist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: managedObjectContext) as! Playlist
         playlist.playlistName = name

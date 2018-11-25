@@ -12,7 +12,6 @@ import CoreData
 open class SongManager{
     
     static let database = Database.shared
-    static let context = Database.shared.managedObjectContext
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
     open class func addToRelationships(_ identifier : String, playlistName : String){
@@ -46,44 +45,26 @@ open class SongManager{
         database.save()
     }
     
-    open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
+    open class func addSongObject(from video: XCDYouTubeVideo) -> Song {
+        let newSong = database.createSong(titled: video.title, identifier: video.identifier)
+        newSong.duration = NSNumber(value: video.duration)
+        newSong.durationStr = MiscFuncs.stringFromTimeInterval(video.duration)
+        newSong.expireDate = video.expirationDate as NSDate?
         
-        let video = vidInfo.video
-        let playlistName = vidInfo.playlistName
-        
-        //save to CoreData
-        let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: context)
-        
-        newSong.setValue(video.identifier, forKey: "identifier")
-        newSong.setValue(video.title, forKey: "title")
-        
-        var expireDate = video.expirationDate
-        expireDate = expireDate!.addingTimeInterval(-60*60) //decrease expire time by 1 hour
-        newSong.setValue(expireDate, forKey: "expireDate")
-        newSong.setValue(true, forKey: "isDownloaded")
-        
-        let duration = video.duration
-        let durationStr = MiscFuncs.stringFromTimeInterval(duration)
-        newSong.setValue(duration, forKey: "duration")
-        newSong.setValue(durationStr, forKey: "durationStr")
-        
-       /* var streamURLs = video.streamURLs
-        let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-        newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
-        
-        do {
-            let large = video.largeThumbnailURL
-            let medium = video.mediumThumbnailURL
-            let small = video.smallThumbnailURL
-            let imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
-            newSong.setValue(imgData, forKey: "thumbnail")
-        } catch _ {
+        if let url = video.largeThumbnailURL ?? video.mediumThumbnailURL ?? video.smallThumbnailURL,
+            let imgData = try? Data(contentsOf: url) {
+            newSong.thumbnail = imgData
         }
         
-        
-        newSong.setValue(qual, forKey: "quality")
-        
-        addToRelationships(video.identifier, playlistName: playlistName)
+        return newSong
+    }
+    
+    open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
+        let newSong = addSongObject(from: vidInfo.video)
+        newSong.quality = NSNumber(value: qual)
+        newSong.isDownloaded = true
+        newSong.expireDate = newSong.expireDate?.addingTimeInterval(-60*60) //decrease expire time by 1 hour)
+        addToRelationships(vidInfo.video.identifier, playlistName: vidInfo.playlistName)
         database.save()
     }
     
@@ -107,18 +88,8 @@ open class SongManager{
             
             //remove item in both documents directory and persistentData
             if isDownloaded {
-                let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
-                let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
-
-                do {
-                    try fileManager.removeItem(atPath: filePath0)
-                } catch _ {
-                }
-                
-                do {
-                    try fileManager.removeItem(atPath: filePath1)
-                } catch _ {
-                }
+                try? fileManager.removeItem(atPath: MiscFuncs.grabFilePath(identifier + ".mp4"))
+                try? fileManager.removeItem(atPath: MiscFuncs.grabFilePath(identifier + ".m4a"))
             }
             database.delete(selectedSong)
         }
