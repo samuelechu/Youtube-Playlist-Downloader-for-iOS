@@ -101,7 +101,7 @@ class DownloadManager {
         let isDownloaded = downloadedIDs.index(of: videoId) != nil || uncachedVideos.index(of: videoId) != nil
         
         if(isDownloaded){
-            let song = SongManager.getSong(videoId)
+            let song = database.findSong(with: videoId)!
             let quality = song.value(forKey: "quality") as! Int
             if(quality == qual){
                 return true

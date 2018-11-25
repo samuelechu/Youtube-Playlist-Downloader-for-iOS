@@ -539,10 +539,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
         }
             
         else{
-            let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
-            songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-            let fetchedSongs : NSArray = try! context.fetch(songRequest) as NSArray
-            let selectedSong = fetchedSongs[0] as! NSManagedObject
+            let selectedSong = database.findSong(with: identifier)!
             
             let currentDate = Date()
             let expireDate = (songs[ndx] as AnyObject).value(forKey: "expireDate") as! Date
@@ -551,29 +548,9 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
                 
                 XCDYouTubeClient.default().getVideoWithIdentifier(identifier, completionHandler: {(video, error) -> Void in
                     if error == nil {
-                    //    let streamURLs : NSDictionary = video!.value(forKey: "streamURLs") as! NSDictionary
-                    //    let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36])) as! NSURL
-                        
-                        selectedSong.setValue(video!.expirationDate, forKey: "expireDate")
-                       /* selectedSong.setValue("\(desiredURL)", forKey: "streamURL")
-                        
-                        
-                        do {
-                            try self.context.save()
-                        } catch _ as NSError{}
-                        
-                        let url = NSURL(string: selectedSong.value(forKey: "streamURL") as! String)!
-                        print(url)
-                        let playerItem = AVPlayerItem(url: url as URL)
-                        self.playerQueue.insert(playerItem, after: nil)*/
+                        selectedSong.expireDate = video!.expirationDate as NSDate?
                     }
                 })
-            }
-                
-            else {
-                /*let url = URL(string: selectedSong.value(forKey: "streamURL") as! String)!
-                let playerItem = AVPlayerItem(url: url)
-                playerQueue.insert(playerItem, after: nil)*/
             }
         }
     }

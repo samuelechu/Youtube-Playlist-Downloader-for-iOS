@@ -3,7 +3,7 @@ import CoreData
 
 public class Song: NSManagedObject {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Song> {
+    @nonobjc public class func theFetchRequest() -> NSFetchRequest<Song> {
         return NSFetchRequest<Song>(entityName: "Song")
     }
     

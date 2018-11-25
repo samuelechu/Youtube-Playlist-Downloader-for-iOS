@@ -15,18 +15,9 @@ open class SongManager{
     static let context = Database.shared.managedObjectContext
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
-    //gets song associated with (identifier : String)
-    open class func getSong(_ identifier : String) -> NSManagedObject {
-        //relevant song : selectedSong
-        let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
-        songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-        let fetchedSongs : NSArray = try! context.fetch(songRequest) as NSArray
-        return fetchedSongs[0] as! NSManagedObject
-    }
-    
     open class func addToRelationships(_ identifier : String, playlistName : String){
-        guard let selectedPlaylist = database.findPlaylist(named: playlistName) else { return }
-        let selectedSong = getSong(identifier)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName),
+            let selectedSong = database.findSong(with: identifier) else { return }
         
         //add song reference to songs relationship (in playlist entity)
         let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
@@ -36,13 +27,13 @@ open class SongManager{
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         inPlaylists.add(selectedPlaylist)
         
-        save()
+        database.save()
     }
     
     
     open class func removeFromRelationships(_ identifier : String, playlistName : String){
-        guard let selectedPlaylist = database.findPlaylist(named: playlistName) else { return }
-        let selectedSong = getSong(identifier)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName),
+            let selectedSong = database.findSong(with: identifier) else { return }
         
         //delete song reference in songs relationship (in playlist entity)
         let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
@@ -52,7 +43,7 @@ open class SongManager{
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         inPlaylists.remove(selectedPlaylist)
         
-        save()
+        database.save()
     }
     
     open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
@@ -93,7 +84,7 @@ open class SongManager{
         newSong.setValue(qual, forKey: "quality")
         
         addToRelationships(video.identifier, playlistName: playlistName)
-        save()
+        database.save()
     }
     
     //deletes song only if not in other playlists
@@ -101,7 +92,7 @@ open class SongManager{
         
         removeFromRelationships(identifier, playlistName: playlistName)
         
-        let selectedSong = getSong(identifier)
+        guard let selectedSong = database.findSong(with: identifier) else { return }
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         
         if (inPlaylists.count < 1){
@@ -129,17 +120,11 @@ open class SongManager{
                 } catch _ {
                 }
             }
-            context.delete(selectedSong)
+            database.delete(selectedSong)
         }
-        save()
+        database.save()
     }
     
-    fileprivate class func save() {
-        do {
-            try context.save()
-        } catch _ {
-        }
-    }
 }
 
 
