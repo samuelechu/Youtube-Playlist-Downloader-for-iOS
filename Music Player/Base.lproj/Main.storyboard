@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="nfX-Dt-vOK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="nfX-Dt-vOK">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -122,19 +122,16 @@
                                         <constraint firstItem="zI8-Wc-9Gv" firstAttribute="centerY" secondItem="TxN-5Q-dXq" secondAttribute="centerY" id="xfg-7n-1Jy"/>
                                     </constraints>
                                     <variation key="default">
-                                        <mask key="subviews">
-                                            <exclude reference="W6Z-ns-klj"/>
-                                        </mask>
                                         <mask key="constraints">
+                                            <exclude reference="DLS-zw-SwV"/>
+                                            <exclude reference="DqB-WU-6TA"/>
+                                            <exclude reference="NUI-E0-ip7"/>
+                                            <exclude reference="Oxu-sF-nSP"/>
                                             <exclude reference="LE0-ux-xwz"/>
                                             <exclude reference="ldK-Bi-3TT"/>
                                             <exclude reference="qzE-BI-Qjp"/>
                                             <exclude reference="r9n-RF-E3i"/>
                                             <exclude reference="xfg-7n-1Jy"/>
-                                            <exclude reference="DLS-zw-SwV"/>
-                                            <exclude reference="DqB-WU-6TA"/>
-                                            <exclude reference="NUI-E0-ip7"/>
-                                            <exclude reference="Oxu-sF-nSP"/>
                                             <exclude reference="4Jd-3U-dGf"/>
                                             <exclude reference="8Ax-zp-abI"/>
                                             <exclude reference="Hp0-pQ-YQX"/>
@@ -157,15 +154,15 @@
                                             <include reference="W6Z-ns-klj"/>
                                         </mask>
                                         <mask key="constraints">
+                                            <include reference="DLS-zw-SwV"/>
+                                            <include reference="DqB-WU-6TA"/>
+                                            <include reference="NUI-E0-ip7"/>
+                                            <include reference="Oxu-sF-nSP"/>
                                             <include reference="LE0-ux-xwz"/>
                                             <include reference="ldK-Bi-3TT"/>
                                             <include reference="qzE-BI-Qjp"/>
                                             <include reference="r9n-RF-E3i"/>
                                             <include reference="xfg-7n-1Jy"/>
-                                            <include reference="DLS-zw-SwV"/>
-                                            <include reference="DqB-WU-6TA"/>
-                                            <include reference="NUI-E0-ip7"/>
-                                            <include reference="Oxu-sF-nSP"/>
                                             <include reference="4Jd-3U-dGf"/>
                                             <include reference="8Ax-zp-abI"/>
                                             <include reference="Hp0-pQ-YQX"/>
