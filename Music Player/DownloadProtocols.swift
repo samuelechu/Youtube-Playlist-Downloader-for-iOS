@@ -10,8 +10,8 @@ import Foundation
 
 
 protocol downloadTableViewControllerDelegate{
-    func setProgressValue(_ dict : NSDictionary)
-    func addCell(_ dict : NSDictionary)
+    func setProgressValue(cellIndex: Int, taskProgress: Float)
+    func addCell(_: DownloadCellInfo)
     
     //necessary to avoid duplicate downloads
     func addDLTask(_ tasks : [String])

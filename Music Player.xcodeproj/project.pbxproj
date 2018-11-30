@@ -25,14 +25,18 @@
 		224340081B472FB800C075FF /* DataDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224340071B472FB800C075FF /* DataDownloader.swift */; };
 		225F06121B613BB6005D0DEA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F06111B613BB6005D0DEA /* Player.swift */; };
 		2291DEE01B6F2CD500DEF0E8 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */; };
-		22AD6B321B47BB7D00428602 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* Settings.swift */; };
-		22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* Playlist.swift */; };
+		22AD6B321B47BB7D00428602 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD6B311B47BB7D00428602 /* SettingsViewController.swift */; };
+		22CB59E41B4EE65B001BD2AA /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CB59E31B4EE65B001BD2AA /* PlaylistViewController.swift */; };
+		367D763121A193A700F76423 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762B21A193A700F76423 /* Song.swift */; };
+		367D763321A193A700F76423 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762D21A193A700F76423 /* Settings.swift */; };
+		367D763521A193A700F76423 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D762F21A193A700F76423 /* Playlist.swift */; };
+		367D763821A1A98E00F76423 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367D763721A1A98E00F76423 /* Database.swift */; };
 		B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */; };
 		B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */; };
 		B093A2A61C34429D00AC86C0 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B093A2A51C34429D00AC86C0 /* DownloadManager.swift */; };
 		B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */; };
 		B0DA10F11C380833009BE745 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */; };
-		D2253AA71C39EFE00057767C /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA61C39EFE00057767C /* PlaylistViewController.swift */; };
+		D2253AA71C39EFE00057767C /* PlaylistPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */; };
 		D2253AA91C3A36970057767C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2253AA81C3A36970057767C /* TabBarController.swift */; };
 		D2392EDF1C3757E5004AD31C /* MenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2392EDE1C3757E5004AD31C /* MenuAction.swift */; };
 		D244D1C61C79858300A7E5B5 /* AVAssetAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = D244D1C51C79858300A7E5B5 /* AVAssetAudio.swift */; };
@@ -74,8 +78,12 @@
 		2256FC321B70B47500FFEB93 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		225F06111B613BB6005D0DEA /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
-		22AD6B311B47BB7D00428602 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		22CB59E31B4EE65B001BD2AA /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		22AD6B311B47BB7D00428602 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		22CB59E31B4EE65B001BD2AA /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		367D762B21A193A700F76423 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		367D762D21A193A700F76423 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		367D762F21A193A700F76423 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		367D763721A1A98E00F76423 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		74335E5DADD8F912D3C822E2 /* Pods-Music Player.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Music Player.release.xcconfig"; path = "Pods/Target Support Files/Pods-Music Player/Pods-Music Player.release.xcconfig"; sourceTree = "<group>"; };
 		B093A2A11C3424D000AC86C0 /* SearchWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchWebViewController.swift; sourceTree = "<group>"; };
 		B093A2A31C3427CE00AC86C0 /* YouTubeSearchWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeSearchWebView.swift; sourceTree = "<group>"; };
@@ -83,7 +91,7 @@
 		B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsTableViewController.swift; sourceTree = "<group>"; };
 		B0DA10F01C380833009BE745 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		CC4DEA411428B95B5F3B017C /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2253AA61C39EFE00057767C /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistPlayerViewController.swift; sourceTree = "<group>"; };
 		D2253AA81C3A36970057767C /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D2263A9E1C14F05600F07C90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2263AA01C14F06100F07C90 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -138,6 +146,7 @@
 		22433FD71B47212F00C075FF /* Music Player */ = {
 			isa = PBXGroup;
 			children = (
+				367D762A21A1939400F76423 /* Model */,
 				D2A97C311C3F015C0075BF59 /* Main/Misc */,
 				D2A97C2E1C3F011B0075BF59 /* Downloads Tab */,
 				D2A97C291C3F00770075BF59 /* Playlists Tab */,
@@ -182,6 +191,17 @@
 				22433FF21B47212F00C075FF /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		367D762A21A1939400F76423 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				367D763721A1A98E00F76423 /* Database.swift */,
+				367D762B21A193A700F76423 /* Song.swift */,
+				367D762D21A193A700F76423 /* Settings.swift */,
+				367D762F21A193A700F76423 /* Playlist.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		43023294B39B809D25A34FED /* Frameworks */ = {
@@ -238,8 +258,8 @@
 			children = (
 				D2A1F8D91CA0C4CC00F4ED53 /* PlaylistProtocols.swift */,
 				B0DA10EB1C3804AC009BE745 /* PlaylistsTableViewController.swift */,
-				D2253AA61C39EFE00057767C /* PlaylistViewController.swift */,
-				22CB59E31B4EE65B001BD2AA /* Playlist.swift */,
+				D2253AA61C39EFE00057767C /* PlaylistPlayerViewController.swift */,
+				22CB59E31B4EE65B001BD2AA /* PlaylistViewController.swift */,
 				225F06111B613BB6005D0DEA /* Player.swift */,
 				D2A23C6C1C784A6E00A9F644 /* SongManager.swift */,
 				2291DEDF1B6F2CD500DEF0E8 /* SongCell.swift */,
@@ -292,7 +312,7 @@
 		D2A97C321C3F016D0075BF59 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				22AD6B311B47BB7D00428602 /* Settings.swift */,
+				22AD6B311B47BB7D00428602 /* SettingsViewController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -448,13 +468,16 @@
 				D2A23C6D1C784A6E00A9F644 /* SongManager.swift in Sources */,
 				B0DA10F11C380833009BE745 /* UIViewController+Alert.swift in Sources */,
 				222ABEFB1BA6715C003B05A1 /* MiscFuncs.swift in Sources */,
-				22CB59E41B4EE65B001BD2AA /* Playlist.swift in Sources */,
+				22CB59E41B4EE65B001BD2AA /* PlaylistViewController.swift in Sources */,
+				367D763521A193A700F76423 /* Playlist.swift in Sources */,
 				B093A2A41C3427CE00AC86C0 /* YouTubeSearchWebView.swift in Sources */,
 				D2392EDF1C3757E5004AD31C /* MenuAction.swift in Sources */,
-				22AD6B321B47BB7D00428602 /* Settings.swift in Sources */,
-				D2253AA71C39EFE00057767C /* PlaylistViewController.swift in Sources */,
+				22AD6B321B47BB7D00428602 /* SettingsViewController.swift in Sources */,
+				D2253AA71C39EFE00057767C /* PlaylistPlayerViewController.swift in Sources */,
 				D2253AA91C3A36970057767C /* TabBarController.swift in Sources */,
 				224340041B47260500C075FF /* DownloadCell.swift in Sources */,
+				367D763121A193A700F76423 /* Song.swift in Sources */,
+				367D763321A193A700F76423 /* Settings.swift in Sources */,
 				D29E202A1CA4E23E0079A261 /* DownloadDataStructures.swift in Sources */,
 				B093A2A61C34429D00AC86C0 /* DownloadManager.swift in Sources */,
 				B093A2A21C3424D000AC86C0 /* SearchWebViewController.swift in Sources */,
@@ -462,6 +485,7 @@
 				B0DA10EC1C3804AC009BE745 /* PlaylistsTableViewController.swift in Sources */,
 				225F06121B613BB6005D0DEA /* Player.swift in Sources */,
 				D2A1F8DC1CA0C58500F4ED53 /* DownloadProtocols.swift in Sources */,
+				367D763821A1A98E00F76423 /* Database.swift in Sources */,
 				224340061B47266F00C075FF /* DownloadTableViewController.swift in Sources */,
 				D2A1F8DA1CA0C4CC00F4ED53 /* PlaylistProtocols.swift in Sources */,
 			);

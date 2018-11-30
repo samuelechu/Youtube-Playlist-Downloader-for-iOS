@@ -37,8 +37,7 @@ class SongCell: UITableViewCell {
     }
     
     @objc func saveToCameraRollAction(_ sender:AnyObject?){
-        
-        let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
+        let filePath0 = MiscFuncs.grabFilePath(identifier + ".mp4")
         
         if(FileManager.default.fileExists(atPath: filePath0)){
             UISaveVideoAtPathToSavedPhotosAlbum(filePath0, nil, nil, nil)

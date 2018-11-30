@@ -11,40 +11,12 @@ import CoreData
 
 open class SongManager{
     
-    static var context = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext!
+    static let database = Database.shared
     static var documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     
-    //gets song associated with (identifier : String)
-    open class func getSong(_ identifier : String) -> NSManagedObject {
-        //relevant song : selectedSong
-        let songRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Song")
-        songRequest.predicate = NSPredicate(format: "identifier = %@", identifier)
-        let fetchedSongs : NSArray = try! context.fetch(songRequest) as NSArray
-        return fetchedSongs[0] as! NSManagedObject
-    }
-    
-    //gets playlist associated with (playlistName : String)
-    open class func getPlaylist(_ playlistName : String) -> NSManagedObject {
-        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
-        return fetchedPlaylists[0] as! NSManagedObject
-    }
-    
-    open class func isPlaylist(_ playlistName: String) -> Bool {
-        let playlistRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
-        playlistRequest.predicate = NSPredicate(format: "playlistName = %@", playlistName)
-        let fetchedPlaylists : NSArray = try! context.fetch(playlistRequest) as NSArray
-        if(fetchedPlaylists.count > 0) {
-            return true
-        }
-        return false
-    }
-    
     open class func addToRelationships(_ identifier : String, playlistName : String){
-        
-        let selectedPlaylist = getPlaylist(playlistName)
-        let selectedSong = getSong(identifier)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName),
+            let selectedSong = database.findSong(with: identifier) else { return }
         
         //add song reference to songs relationship (in playlist entity)
         let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
@@ -54,13 +26,13 @@ open class SongManager{
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         inPlaylists.add(selectedPlaylist)
         
-        save()
+        database.save()
     }
     
     
     open class func removeFromRelationships(_ identifier : String, playlistName : String){
-        let selectedPlaylist = getPlaylist(playlistName)
-        let selectedSong = getSong(identifier)
+        guard let selectedPlaylist = database.findPlaylist(named: playlistName),
+            let selectedSong = database.findSong(with: identifier) else { return }
         
         //delete song reference in songs relationship (in playlist entity)
         let playlist = selectedPlaylist.mutableSetValue(forKey: "songs")
@@ -70,48 +42,30 @@ open class SongManager{
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         inPlaylists.remove(selectedPlaylist)
         
-        save()
+        database.save()
+    }
+    
+    open class func addSongObject(from video: XCDYouTubeVideo) -> Song {
+        let newSong = database.createSong(titled: video.title, identifier: video.identifier)
+        newSong.duration = NSNumber(value: video.duration)
+        newSong.durationStr = MiscFuncs.stringFromTimeInterval(video.duration)
+        newSong.expireDate = video.expirationDate as NSDate?
+        
+        if let url = video.largeThumbnailURL ?? video.mediumThumbnailURL ?? video.smallThumbnailURL,
+            let imgData = try? Data(contentsOf: url) {
+            newSong.thumbnail = imgData
+        }
+        
+        return newSong
     }
     
     open class func addNewSong(_ vidInfo : VideoDownloadInfo, qual : Int) {
-        
-        let video = vidInfo.video
-        let playlistName = vidInfo.playlistName
-        
-        //save to CoreData
-        let newSong = NSEntityDescription.insertNewObject(forEntityName: "Song", into: context)
-        
-        newSong.setValue(video.identifier, forKey: "identifier")
-        newSong.setValue(video.title, forKey: "title")
-        
-        var expireDate = video.expirationDate
-        expireDate = expireDate!.addingTimeInterval(-60*60) //decrease expire time by 1 hour
-        newSong.setValue(expireDate, forKey: "expireDate")
-        newSong.setValue(true, forKey: "isDownloaded")
-        
-        let duration = video.duration
-        let durationStr = MiscFuncs.stringFromTimeInterval(duration)
-        newSong.setValue(duration, forKey: "duration")
-        newSong.setValue(durationStr, forKey: "durationStr")
-        
-       /* var streamURLs = video.streamURLs
-        let desiredURL = (streamURLs[22] != nil ? streamURLs[22] : (streamURLs[18] != nil ? streamURLs[18] : streamURLs[36]))! as NSURL
-        newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
-        
-        do {
-            let large = video.largeThumbnailURL
-            let medium = video.mediumThumbnailURL
-            let small = video.smallThumbnailURL
-            let imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
-            newSong.setValue(imgData, forKey: "thumbnail")
-        } catch _ {
-        }
-        
-        
-        newSong.setValue(qual, forKey: "quality")
-        
-        addToRelationships(video.identifier, playlistName: playlistName)
-        save()
+        let newSong = addSongObject(from: vidInfo.video)
+        newSong.quality = NSNumber(value: qual)
+        newSong.isDownloaded = true
+        newSong.expireDate = newSong.expireDate?.addingTimeInterval(-60*60) //decrease expire time by 1 hour)
+        addToRelationships(vidInfo.video.identifier, playlistName: vidInfo.playlistName)
+        database.save()
     }
     
     //deletes song only if not in other playlists
@@ -119,7 +73,7 @@ open class SongManager{
         
         removeFromRelationships(identifier, playlistName: playlistName)
         
-        let selectedSong = getSong(identifier)
+        guard let selectedSong = database.findSong(with: identifier) else { return }
         let inPlaylists = selectedSong.mutableSetValue(forKey: "playlists")
         
         if (inPlaylists.count < 1){
@@ -134,30 +88,14 @@ open class SongManager{
             
             //remove item in both documents directory and persistentData
             if isDownloaded {
-                let filePath0 = MiscFuncs.grabFilePath("\(identifier).mp4")
-                let filePath1 = MiscFuncs.grabFilePath("\(identifier).m4a")
-
-                do {
-                    try fileManager.removeItem(atPath: filePath0)
-                } catch _ {
-                }
-                
-                do {
-                    try fileManager.removeItem(atPath: filePath1)
-                } catch _ {
-                }
+                try? fileManager.removeItem(atPath: MiscFuncs.grabFilePath(identifier + ".mp4"))
+                try? fileManager.removeItem(atPath: MiscFuncs.grabFilePath(identifier + ".m4a"))
             }
-            context.delete(selectedSong)
+            database.delete(selectedSong)
         }
-        save()
+        database.save()
     }
     
-    fileprivate class func save() {
-        do {
-            try context.save()
-        } catch _ {
-        }
-    }
 }
 
 

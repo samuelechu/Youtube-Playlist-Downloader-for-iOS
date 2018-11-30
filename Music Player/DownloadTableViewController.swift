@@ -7,19 +7,6 @@
 //
 
 import UIKit
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
 
 class downloadTableViewController: UITableViewController, downloadTableViewControllerDelegate {
     
@@ -93,7 +80,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     }
     
     func tabBarIsVisible() ->Bool {
-        return self.tabBarController?.tabBar.frame.origin.y < self.view.frame.maxY
+        return self.tabBarController!.tabBar.frame.origin.y < self.view.frame.maxY
     }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
@@ -106,27 +93,19 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     func getUncachedVids() -> [String] { return uncachedVideos }
     
     @objc func resetDownloadTasks(_ notification: Notification){
-        let dict : NSDictionary? = notification.userInfo as NSDictionary?
-        if dict == nil {
+        guard let dict = notification.userInfo else {
             downloadTasks = []
+            return
         }
-        
-        else {
-            let identifier = dict!.value(forKey: "identifier") as! String
-            let x = downloadTasks.index(of: identifier)
-            if x != nil {
-                downloadTasks.remove(at: x!)
-            }
-            
+        if let identifier = dict["identifier"] as? String,
+            let index = downloadTasks.index(of: identifier) {
+                downloadTasks.remove(at: index)
         }
     }
     
     //update taskProgress of specific cell
-    func setProgressValue(_ dict : NSDictionary){
-        let cellNum : Int = (dict.value(forKey: "ndx")! as AnyObject).intValue
-        
+    func setProgressValue(cellIndex cellNum: Int, taskProgress: Float) {
         if cellNum < downloadCells.count {
-            let taskProgress : Float = dict.value(forKey: "value") as! Float
             downloadCells[cellNum].setProgress(taskProgress)
             reloadCellAtNdx(cellNum)
         }
@@ -139,8 +118,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         }
     }
     
-    func addCell(_ dict : NSDictionary){
-        let newCell = dict.value(forKey: "cellInfo") as! DownloadCellInfo
+    func addCell(_ newCell: DownloadCellInfo) {
         downloadCells += [newCell]
         tableView.reloadData()
     }

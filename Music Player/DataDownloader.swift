@@ -15,7 +15,7 @@ import AssetsLibrary
 //only one instance of DataDownloader declared in AppDelegate.swift
 class DataDownloader: NSObject, URLSessionDelegate{
     
-    var context : NSManagedObjectContext!
+    let database = Database.shared
     var session : Foundation.URLSession!
     
     //taskID index corresponds to videoData index, for assigning Song info after download is complete
@@ -33,27 +33,18 @@ class DataDownloader: NSObject, URLSessionDelegate{
         let config = URLSessionConfiguration.background(withIdentifier: "\(randomString)")
         config.timeoutIntervalForRequest = 600
         session = Foundation.URLSession(configuration: config, delegate: self, delegateQueue: OperationQueue.main)
-        
-        let appDel = UIApplication.shared.delegate as? AppDelegate
-        context = appDel!.managedObjectContext
     }
     
     func addVideoToDownloadTable(_ vidInfo : VideoDownloadInfo) {
         let video = vidInfo.video
         let duration = MiscFuncs.stringFromTimeInterval(video.duration)
-        
         //get thumbnail
-        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
-        
-        do {
-            let data = try Data(contentsOf: thumbnailURL!)
-            let image = UIImage(data: data)!
+        if let thumbnailURL = video.mediumThumbnailURL ?? video.smallThumbnailURL,
+            let data = try? Data(contentsOf: thumbnailURL),
+            let image = data.asImage() {
             let newCell = DownloadCellInfo(image: image, duration: duration, name: video.title)
-            let dict = ["cellInfo" : newCell]
-            self.tableDelegate.addCell(dict as NSDictionary)
-        } catch _ {
+            self.tableDelegate.addCell(newCell)
         }
-        
     }
     
     func startNewTask(_ targetUrl : URL, vidInfo : VideoDownloadInfo, vidQual : Int) {
@@ -71,18 +62,14 @@ class DataDownloader: NSObject, URLSessionDelegate{
         didWriteData bytesWritten: Int64,
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64){
-        
             //cell order in tableDelegate identical to order in taskIDs
-            let cellNum = taskIDs.index(of: downloadTask.taskIdentifier)
-            
-            if cellNum != nil{
+            if let cellNum = taskIDs.index(of: downloadTask.taskIdentifier) {
                 let taskProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
                 let num = taskProgress * 100
                 
                 if ( num.truncatingRemainder(dividingBy: 10) ) < 0.8 && taskProgress != 1.0 {
                     DispatchQueue.main.async(execute: {
-                        let dict = ["ndx" : cellNum!, "value" : taskProgress ] as [String : Any]
-                        self.tableDelegate.setProgressValue(dict as NSDictionary)
+                        self.tableDelegate.setProgressValue(cellIndex: cellNum, taskProgress: taskProgress)
                     })
                 }
             }
@@ -93,18 +80,12 @@ class DataDownloader: NSObject, URLSessionDelegate{
     @objc func URLSession(_ session: Foundation.URLSession,
         downloadTask: URLSessionDownloadTask,
         didFinishDownloadingToURL location: URL){
-            let cellNum  = taskIDs.index(of: downloadTask.taskIdentifier)
-            if cellNum != nil{
-                
-                let vidInfo = videoData[cellNum!]
-                let qual = qualData[cellNum!]
-                
-                storeVideo(vidInfo, quality: qual, tempLocation: location.path)
+            if let cellNum = taskIDs.index(of: downloadTask.taskIdentifier) {
+                storeVideo(videoData[cellNum], quality: qualData[cellNum], tempLocation: location.path)
               
                 //display checkmark for completion
                 DispatchQueue.main.async(execute: {
-                    let dict = ["ndx" : cellNum!, "value" : Float(1) ] as [String : Any]
-                    self.tableDelegate.setProgressValue(dict as NSDictionary)
+                    self.tableDelegate.setProgressValue(cellIndex: cellNum, taskProgress: 1.0)
                 })
                 
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "reloadPlaylistID"), object: nil)
@@ -124,8 +105,7 @@ class DataDownloader: NSObject, URLSessionDelegate{
         MiscFuncs.addSkipBackupAttribute(toFilepath: filePath)
         
         //if audio only selected in settings, rip audio from video
-        let settings = MiscFuncs.getSettings()
-        let isAudio = settings.value(forKey: "quality") as! Int == 2
+        let isAudio = (database.settings.quality?.intValue ?? 0) == 2
         let audioPath = MiscFuncs.grabFilePath("\(identifier).m4a")
         if(isAudio && !fileManager.fileExists(atPath: audioPath)){
             let asset = AVURLAsset(url: URL(fileURLWithPath: filePath))
