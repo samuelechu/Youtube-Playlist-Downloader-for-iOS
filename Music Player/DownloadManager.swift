@@ -88,7 +88,7 @@ class DownloadManager {
         
         if(isDownloaded){
             let song = database.findSong(with: videoId)!
-            let quality = song.value(forKey: "quality") as! Int
+            let quality = song.quality!.intValue
             if(quality == qual){
                 return true
             }
@@ -116,9 +116,9 @@ class DownloadManager {
             XCDYouTubeClient.default().getVideoWithIdentifier(ID, completionHandler: {(video, error) -> Void in
                 if error == nil {
                     if let video = video {
-                        let streamURLs : NSDictionary = video.value(forKey: "streamURLs") as! NSDictionary
-                        var desiredURL : NSURL!
-                        var vidQual : Int
+                        let streamURLs: NSDictionary = video.streamURLs as NSDictionary
+                        var desiredURL: NSURL
+                        var vidQual: Int
                         
                         if (qual == 0  || qual == 2){ //360P or audio only
                             desiredURL = (streamURLs[18] != nil ? streamURLs[18] : (streamURLs[22] != nil ? streamURLs[22] : streamURLs[36])) as! NSURL

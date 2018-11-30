@@ -106,27 +106,19 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     func getUncachedVids() -> [String] { return uncachedVideos }
     
     @objc func resetDownloadTasks(_ notification: Notification){
-        let dict : NSDictionary? = notification.userInfo as NSDictionary?
-        if dict == nil {
+        guard let dict = notification.userInfo else {
             downloadTasks = []
+            return
         }
-        
-        else {
-            let identifier = dict!.value(forKey: "identifier") as! String
-            let x = downloadTasks.index(of: identifier)
-            if x != nil {
-                downloadTasks.remove(at: x!)
-            }
-            
+        if let identifier = dict["identifier"] as? String,
+            let index = downloadTasks.index(of: identifier) {
+                downloadTasks.remove(at: index)
         }
     }
     
     //update taskProgress of specific cell
-    func setProgressValue(_ dict : NSDictionary){
-        let cellNum : Int = (dict.value(forKey: "ndx")! as AnyObject).intValue
-        
+    func setProgressValue(cellIndex cellNum: Int, taskProgress: Float) {
         if cellNum < downloadCells.count {
-            let taskProgress : Float = dict.value(forKey: "value") as! Float
             downloadCells[cellNum].setProgress(taskProgress)
             reloadCellAtNdx(cellNum)
         }
@@ -139,8 +131,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
         }
     }
     
-    func addCell(_ dict : NSDictionary){
-        let newCell = dict.value(forKey: "cellInfo") as! DownloadCellInfo
+    func addCell(_ newCell: DownloadCellInfo) {
         downloadCells += [newCell]
         tableView.reloadData()
     }
