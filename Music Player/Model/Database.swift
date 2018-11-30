@@ -8,7 +8,7 @@ class Database {
     static var shared = Database(url: sharedURL)
     
     private let coordinator: NSPersistentStoreCoordinator
-    private(set) var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    private let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     let settings: Settings
     
     init(url: URL) {
@@ -58,6 +58,12 @@ class Database {
         newSong.identifier = identifier
         newSong.title = title
         return newSong
+    }
+    
+    func downloadedSongs() -> [Song] {
+        let request = Song.theFetchRequest()
+        request.predicate = NSPredicate(format: "isDownloaded = true")
+        return try! managedObjectContext.fetch(request)
     }
     
     @discardableResult func createPlaylist(named name: String) -> Playlist {

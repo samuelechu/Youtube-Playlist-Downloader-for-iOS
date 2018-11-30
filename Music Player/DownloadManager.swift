@@ -78,21 +78,7 @@ class DownloadManager {
     
     
     fileprivate func updateStoredSongs(){
-        let request = Song.theFetchRequest()
-        let context = Database.shared.managedObjectContext
-        
-        let songs = try? context.fetch(request)
-        downloadedIDs = []
-        for song in songs!{
-            let isDownloaded = (song as AnyObject).value(forKey: "isDownloaded") as! Bool
-            if !isDownloaded {
-                continue
-            }
-
-            let identifier = (song as AnyObject).value(forKey: "identifier") as! String
-            downloadedIDs += [identifier]
-        }
-        
+        downloadedIDs = database.downloadedSongs().compactMap { $0.identifier }
     }
     
     //check if video in stored memory or currently downloading videos

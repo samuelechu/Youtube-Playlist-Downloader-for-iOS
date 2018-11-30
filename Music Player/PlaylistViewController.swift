@@ -45,7 +45,6 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     var playlistName: String?
     var playlistVCDelegate : PlaylistViewControllerDelegate!
     
-    let context = Database.shared.managedObjectContext //todo remove
     let database = Database.shared
     
     var songs: [Song] = []
