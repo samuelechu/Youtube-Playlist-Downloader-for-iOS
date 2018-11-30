@@ -182,7 +182,7 @@ class DownloadManager {
                     
                     let json = try! JSONSerialization.jsonObject(with: data!, options: [])
                     print(json)
-                    let playlistItems = try! JSON(data: data!)
+                    let playlistItems = JSON(data: data!)
                     
                     var nextPageToken : String?
                     nextPageToken = playlistItems ["nextPageToken"].stringValue

@@ -7,19 +7,6 @@
 //
 
 import UIKit
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
 
 class downloadTableViewController: UITableViewController, downloadTableViewControllerDelegate {
     
@@ -93,7 +80,7 @@ class downloadTableViewController: UITableViewController, downloadTableViewContr
     }
     
     func tabBarIsVisible() ->Bool {
-        return self.tabBarController?.tabBar.frame.origin.y < self.view.frame.maxY
+        return self.tabBarController!.tabBar.frame.origin.y < self.view.frame.maxY
     }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
