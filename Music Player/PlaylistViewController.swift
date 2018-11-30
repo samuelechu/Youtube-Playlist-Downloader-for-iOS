@@ -59,7 +59,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     var playerQueue = AVQueuePlayer()
     var curNdx = 0
     var videoTracks : [AVPlayerItemTrack]!
-    var curSong : NSObject! //current song in queue
+    var curSong: Song! //current song in queue
     
     var isConnected = false
     
@@ -153,16 +153,9 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
         if (playlistName != nil) {
             songs = getCurSongs()
             
-            identifiers = []
-            var playlistDuration = 0.0
-            for song in songs{
-                let identifier = (song as AnyObject).value(forKey: "identifier") as! String
-                let duration = (song as AnyObject).value(forKey: "duration") as! Double
-                identifiers += [identifier]
-                playlistDuration += duration
-            }
-            
-            navigationItem.title = "Duration - \(MiscFuncs.hrsAndMinutes(playlistDuration))"
+            identifiers = songs.compactMap { $0.identifier }
+            let playlistDuration = songs.compactMap { $0.duration?.doubleValue }.reduce(0.0) { $0 + $1 }
+            navigationItem.title = "Duration - " + MiscFuncs.hrsAndMinutes(playlistDuration)
             
             tableView.reloadData()
         }
@@ -326,7 +319,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     //MARK: Searchbar Functions
     
     func findNdxInFullList(_ ndxInSearchList : Int) -> Int{
-        let identifier = (filteredSongs[ndxInSearchList] as AnyObject).value(forKey: "identifier") as! String
+        let identifier = filteredSongs[ndxInSearchList].identifier!
         let ndxIdentifiers = identifiers.index(of: identifier)!
         let ndxInFullList = x.index(of: ndxIdentifiers)!
         return ndxInFullList
@@ -378,12 +371,12 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
                 for indexPath : IndexPath in selectedIndexPaths {
                     
                     var selectedRow = indexPath.row
-                    let id = (filteredSongs[selectedRow] as AnyObject).value(forKey: "identifier") as! String
+                    let id = filteredSongs[selectedRow].identifier!
                     let ndxIdentifiers = identifiers.index(of: id)!
                     selectedRow = x.index(of: ndxIdentifiers)!
                     
                     selectedRows += [selectedRow]
-                    let identifier = (songs[ndxIdentifiers] as AnyObject).value(forKey: "identifier") as! String
+                    let identifier = songs[ndxIdentifiers].identifier!
                     
                     SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
@@ -395,7 +388,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
                 for indexPath : IndexPath in selectedIndexPaths {
                     selectedRows += [indexPath.row]
                     let row = x[indexPath.row]
-                    let identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
+                    let identifier = songs[row].identifier!
                     
                     SongManager.deleteSong(identifier, playlistName: playlistName!)
                 }
@@ -465,7 +458,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
                 x.remove(at: indexPath.row)
             }
             
-            let identifier = (songs[row] as AnyObject).value(forKey: "identifier") as! String
+            let identifier = songs[row].identifier!
             SongManager.deleteSong(identifier, playlistName: playlistName!)
             
             for index in 0 ..< x.count {
@@ -519,18 +512,15 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
             playerQueue.advanceToNextItem()
         }
         
-        let ndx = x[index]
-        curSong = songs[ndx] as! NSObject
-        let isDownloaded = (songs[ndx] as AnyObject).value(forKey: "isDownloaded") as! Bool
-        let identifier = (songs[ndx] as AnyObject).value(forKey: "identifier") as! String
+        curSong = songs[x[index]]
+        let identifier = curSong.identifier!
         
-        if isDownloaded {
-            
-            let filePath = MiscFuncs.grabFilePath("\(identifier).mp4")
+        if curSong.isDownloaded == .some(true) {
+            let filePath = MiscFuncs.grabFilePath(identifier + ".mp4")
             var url = URL(fileURLWithPath: filePath)
             
             if(!FileManager.default.fileExists(atPath: filePath)){
-                url = URL(fileURLWithPath: MiscFuncs.grabFilePath("\(identifier).m4a"))
+                url = URL(fileURLWithPath: MiscFuncs.grabFilePath(identifier + ".m4a"))
             }
             
             let playerItem = AVPlayerItem(url: url)
@@ -541,7 +531,7 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
             let selectedSong = database.findSong(with: identifier)!
             
             let currentDate = Date()
-            let expireDate = (songs[ndx] as AnyObject).value(forKey: "expireDate") as! Date
+            let expireDate = curSong.expireDate! as Date
             
             if currentDate.compare(expireDate) == ComparisonResult.orderedDescending { //update streamURL
                 
@@ -558,29 +548,18 @@ class PlaylistViewController: UITableViewController, UISearchResultsUpdating, Pl
     var updater : Timer!
     @objc func updateNowPlayingInfo(){
         loopCount += 1
-        let curItem = playerQueue.currentItem
-        if(curItem != nil){
-            let title = curSong.value(forKey: "title") as! String
-            let imageData = curSong.value(forKey: "thumbnail") as! Data
-            let artworkImage = UIImage(data: imageData)
-            let artwork = MPMediaItemArtwork(image: artworkImage!)
-            
-            let songInfo: Dictionary <NSObject, AnyObject> = [
-                
-                MPMediaItemPropertyTitle as NSObject: title as AnyObject,
-                
-                MPMediaItemPropertyArtist as NSObject:"" as AnyObject,
-                
-                MPMediaItemPropertyArtwork as NSObject: artwork,
-                MPNowPlayingInfoPropertyPlaybackRate as NSObject: "\(playerQueue.rate)" as AnyObject,
-                
-                MPNowPlayingInfoPropertyElapsedPlaybackTime as NSObject: CMTimeGetSeconds(curItem!.currentTime()) as AnyObject,
-                
-                MPMediaItemPropertyPlaybackDuration as NSObject: TimeInterval(CMTimeGetSeconds(curItem!.duration)) as AnyObject
-                
+        if let curItem = playerQueue.currentItem {
+            var songInfo: [String: Any] = [
+                MPMediaItemPropertyTitle: curSong.title ?? "",
+                MPMediaItemPropertyArtist: "",
+                MPNowPlayingInfoPropertyPlaybackRate: playerQueue.rate,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(curItem.currentTime()),
+                MPMediaItemPropertyPlaybackDuration: TimeInterval(CMTimeGetSeconds(curItem.duration))
             ]
-            
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = songInfo as? [String:AnyObject]
+            if let artworkImage = curSong.thumbnail?.asImage() {
+                songInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: artworkImage)
+            }
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = songInfo
             
         }
         
