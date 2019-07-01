@@ -43,7 +43,7 @@ class DataDownloader: NSObject, URLSessionDelegate{
         let duration = MiscFuncs.stringFromTimeInterval(video.duration)
         
         //get thumbnail
-        let thumbnailURL = (video.mediumThumbnailURL != nil ? video.mediumThumbnailURL : video.smallThumbnailURL)
+        let thumbnailURL = video.thumbnailURL
         
         do {
             let data = try Data(contentsOf: thumbnailURL!)

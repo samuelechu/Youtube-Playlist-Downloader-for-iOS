@@ -309,7 +309,6 @@
 				22433FD21B47212F00C075FF /* Frameworks */,
 				22433FD31B47212F00C075FF /* Resources */,
 				A3CCF5E1D4A984E44DD05345 /* [CP] Embed Pods Frameworks */,
-				2886A2EF78982119339BC291 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -379,21 +378,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2886A2EF78982119339BC291 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Music Player/Pods-Music Player-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		A3CCF5E1D4A984E44DD05345 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

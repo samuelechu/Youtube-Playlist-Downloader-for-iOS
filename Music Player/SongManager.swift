@@ -99,10 +99,8 @@ open class SongManager{
         newSong.setValue("\(desiredURL)", forKey: "streamURL")*/
         
         do {
-            let large = video.largeThumbnailURL
-            let medium = video.mediumThumbnailURL
-            let small = video.smallThumbnailURL
-            let imgData = try Data(contentsOf: (large != nil ? large : (medium != nil ? medium : small))!)
+            let thumbnailUrl = video.thumbnailURL
+            let imgData = try Data(contentsOf: thumbnailUrl!)
             newSong.setValue(imgData, forKey: "thumbnail")
         } catch _ {
         }
