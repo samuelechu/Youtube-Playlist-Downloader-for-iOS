@@ -20,7 +20,7 @@ class PlaylistsTableViewController: UITableViewController {
     
     fileprivate var context : NSManagedObjectContext!
     
-    var playlists: NSArray!
+    var playlists: [NSManagedObject] = []
     var playlistNames : [String] = []
     var playlistSortDescriptor  = NSSortDescriptor(key: "playlistName", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
     
@@ -86,10 +86,10 @@ class PlaylistsTableViewController: UITableViewController {
     
     func refreshPlaylists(){
         playlistNames = []
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Playlist")
+        let request = NSFetchRequest<NSManagedObject>(entityName: "Playlist")
         request.sortDescriptors = [playlistSortDescriptor]
         
-        playlists = try? context.fetch(request) as NSArray!
+        playlists = (try? context.fetch(request)) ?? []
         for playlist in playlists{
             let playlistName = (playlist as AnyObject).value(forKey: "playlistName") as! String
             playlistNames += [playlistName]
